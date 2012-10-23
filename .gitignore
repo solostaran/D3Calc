@@ -17,6 +17,7 @@ local.properties
 .loadpath
 dropbox.xml
 gen/
+ext_res/
 
 # External tool builders
 .externalToolBuilders/

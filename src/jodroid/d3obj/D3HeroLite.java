@@ -14,4 +14,8 @@ public class D3HeroLite extends D3Obj {
 	public int gender;
 	public boolean dead;
 	public String _class;
+	
+	public String toString() {
+		return level+" "+name+" {"+_class+"}"+(hardcore ? " hardcore":"");
+	}
 }

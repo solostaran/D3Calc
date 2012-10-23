@@ -25,5 +25,7 @@
     <string name="deletion_ok">deleted.</string>
     <string name="deletion_canceled">Deletion canceled.</string>
     <string name="title_activity_profile_menu">D3Calc</string>
+    <string name="lifetime_kills">Lifetime Kills</string>
+    <string name="elite_kills">Elite Kills</string>
 
 </resources>

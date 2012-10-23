@@ -18,6 +18,8 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
+        android:layout_marginBottom="10dp"
+        style="@style/ButtonBW"
         android:onClick="onClickNewProfile"
         android:text="@string/bt_new" />
 

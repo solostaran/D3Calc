@@ -1,15 +1,93 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"    
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/profile_detail_frame"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:padding="16dp"
-    tools:context=".ProfileDetailFragment">
-    
-    <TextView
-        android:id="@+id/profile_detail"
-        style="?android:attr/textAppearanceLarge" 
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+    tools:context=".ProfileDetailFragment" >
 
-</FrameLayout>
+    <RelativeLayout
+        android:id="@+id/relativeLayout1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true" >
+
+        <ImageView
+            android:id="@+id/imageLifetimeKills"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:contentDescription="@string/lifetime_kills"
+            android:src="@drawable/lifetime_kills"
+            android:layout_marginRight="10dp" />
+        
+        <TextView
+        	android:id="@+id/textLifetimeKillsValue"
+        	android:tag="D3Profile.kills.monsters"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:layout_alignParentTop="true"
+	        android:layout_toRightOf="@+id/imageLifetimeKills"
+	        android:text="@string/lifetime_kills"
+	        android:textAppearance="?android:attr/textAppearanceLarge" />
+
+	    <TextView
+	        android:id="@+id/textLifetimeKills"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:layout_alignLeft="@+id/textLifetimeKillsValue"
+	        android:layout_below="@+id/textLifetimeKillsValue"
+	        android:text="@string/lifetime_kills"
+	        android:textAppearance="?android:attr/textAppearanceMedium"
+	        android:textAllCaps="true" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/relativeLayout2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/relativeLayout1"
+        android:layout_alignParentLeft="true"
+        android:layout_marginTop="10dp" >
+
+        <ImageView
+            android:id="@+id/imageEliteKills"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:contentDescription="@string/elite_kills"
+            android:src="@drawable/elite_kills"
+            android:layout_marginRight="10dp" />
+        
+        <TextView
+        	android:id="@+id/textEliteKillsValue"
+        	android:tag="D3Profile.kills.elites"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:layout_alignParentTop="true"
+	        android:layout_toRightOf="@+id/imageEliteKills"
+	        android:text="@string/elite_kills"
+	        android:textAppearance="?android:attr/textAppearanceLarge" />
+
+	    <TextView
+	        android:id="@+id/textEliteKills"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:layout_alignLeft="@+id/textEliteKillsValue"
+	        android:layout_below="@+id/textEliteKillsValue"
+	        android:text="@string/elite_kills"
+	        android:textAppearance="?android:attr/textAppearanceMedium"
+	        android:textAllCaps="true" />
+    </RelativeLayout>
+
+    <ListView
+        android:id="@+id/listHeroesLite"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/relativeLayout2"
+        android:layout_marginTop="10dp" >
+    </ListView>
+
+</RelativeLayout>

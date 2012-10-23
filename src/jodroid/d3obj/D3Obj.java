@@ -14,7 +14,7 @@ import android.util.Log;
  * Superclass of all D3 Objects.
  * Each object can construct itself through a JSONObject and reflection.
  * @author JRD
- *
+ * @see <a href="http://blizzard.github.com/d3-api-docs/">Diablo 3 Web API</a>
  */
 public abstract class D3Obj {
 	/**

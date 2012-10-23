@@ -10,9 +10,16 @@ import android.util.Log;
 import d3api.D3json;
 
 /**
- * Represents a Diablo 3 player profile that the D3api provides in the form of a JSON file.
+ * Represents a Diablo 3 player profile that the D3api provides in the form of a JSON file.<br/>
+ * The JSON Resource file can be found with :
+ * <ul>
+ * <li>battletag-name ::= &lt;regional battletag allowed characters&gt;</li>
+ * <li>battletag-code ::= &lt;integer&gt;</li>
+ * <li>url ::= &lt;host&gt; "/api/d3/profile/" &lt;battletag-name&gt; "-" &lt;battletag-code&gt; "/"</li>
+ * </ul>
  * @author JRD
- *
+ * @see D3HeroLite
+ * @see <a href="http://blizzard.github.com/d3-api-docs/">Diablo 3 Web API</a>
  */
 public class D3Profile extends D3Obj {
 	public D3HeroLite [] heroes;
