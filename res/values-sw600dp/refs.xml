@@ -1,0 +1,3 @@
+<resources>
+    <item type="layout" name="activity_profile_list">@layout/activity_profile_twopane</item>
+</resources>
