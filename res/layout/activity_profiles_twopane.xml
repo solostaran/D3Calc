@@ -1,0 +1,40 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="horizontal"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_marginLeft="16dp"
+    android:layout_marginRight="16dp"
+    android:divider="?android:attr/dividerHorizontal"
+    android:showDividers="middle"
+    tools:context=".ProfileMenuActivity">
+    
+    <LinearLayout android:orientation="vertical"
+    	android:layout_width="0dp"
+    	android:layout_height="match_parent"
+    	android:layout_marginLeft="16dp"
+    	android:layout_marginRight="16dp"
+    	android:layout_weight="1">
+
+	    <ListView
+        	android:id="@+id/profileListView"
+        	android:layout_width="match_parent"
+        	android:layout_height="0dp"
+        	android:layout_weight="9" />
+	    
+	    <Button
+	        android:id="@+id/btNewProfile"
+	        android:layout_width="match_parent"
+	        android:layout_height="0dp"
+        	android:layout_weight="1"
+        	android:onClick="onClickNewProfile"
+	        android:text="@string/bt_new" />
+    
+    </LinearLayout>
+
+    <FrameLayout android:id="@+id/profile_detail_container"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="3" />
+
+</LinearLayout>

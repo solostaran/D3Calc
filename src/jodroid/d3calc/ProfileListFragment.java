@@ -146,7 +146,8 @@ public class ProfileListFragment extends ListFragment {
 //									ProfileListContent.ITEMS.get(position).toString()+" "+getText(R.string.deletion_ok),
 //									Toast.LENGTH_LONG).show();
 					ProfileListContent.removeItem(ProfileListContent.ITEMS.get(position));
-					((ProfileListActivity)getActivity()).refreshList();
+					ProfileListContent.adapter.notifyDataSetChanged();
+//					((ProfileListActivity)getActivity()).refreshList();
 
 				} else {
 					Toast.makeText(getActivity(), getText(R.string.deletion_canceled), Toast.LENGTH_LONG).show();

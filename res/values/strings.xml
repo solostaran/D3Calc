@@ -24,5 +24,6 @@
     <string name="deletion_message">Would you like to delete this profile ?</string>
     <string name="deletion_ok">deleted.</string>
     <string name="deletion_canceled">Deletion canceled.</string>
+    <string name="title_activity_profile_menu">D3Calc</string>
 
 </resources>

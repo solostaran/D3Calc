@@ -70,10 +70,10 @@ public class ProfileListContent {
     }
     
     public static void removeItem(ProfileItem item) {
-    	if (ITEMS.remove(item)) {
-    		ITEM_MAP.remove(item);
-    		db.removeProfile(item);
-    	}
+    	if (adapter != null) adapter.remove(item);
+    	ITEMS.remove(item); // the adapter.remove should remove the item from ITEMS ?
+    	ITEM_MAP.remove(item);
+    	db.removeProfile(item);
     }
     
     public static void insertProfile(ProfileItem profile) {

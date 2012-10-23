@@ -15,16 +15,12 @@
         android:theme="@style/AppTheme" >
         <activity
             android:name=".ProfileListActivity"
-            android:label="@string/app_name">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
+            android:label="@string/app_name" >
         </activity>
         <activity
             android:name=".ProfileDetailActivity"
-            android:label="@string/title_profile_detail" android:screenOrientation="portrait">
+            android:label="@string/title_profile_detail"
+            android:screenOrientation="portrait" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".ProfileListActivity" />
@@ -40,6 +36,15 @@
             android:name="jodroid.util.EditTextActivity"
             android:label="@string/editText"
             android:theme="@android:style/Theme.Dialog" />
+        <activity
+            android:name=".ProfileMenuActivity"
+            android:label="@string/title_activity_profile_menu" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
     </application>
 
 </manifest>

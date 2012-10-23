@@ -37,6 +37,7 @@ public class ProfileDetailFragment extends Fragment {
         if (getArguments().containsKey(ARG_ITEM_ID)) {
             mItem = ProfileListContent.ITEM_MAP.get(getArguments().getString(ARG_ITEM_ID));
             playerProfile = new D3Profile();
+            Log.i(this.getClass().getName(), "btag:"+mItem.toString());
             getUrlProfile("http://www.ecole.ensicaen.fr/~reynaud/android/solo-2284.json");
 //            getProfile(mItem.battlehost, mItem.battlename, mItem.battletag);
         }
@@ -62,7 +63,8 @@ public class ProfileDetailFragment extends Fragment {
     	playerProfile.jsonBuild(obj);
     	Activity act = getActivity();
     	if (act == null) return;
-    	if (act.getClass() == ProfileDetailActivity.class) return;
+    	if (getView() == null) return;
+//    	if (act.getClass() == ProfileDetailActivity.class) return; // wrong the master activity is sometimes another activity
     	act.setTitle(playerProfile.toString());
     	String str = "\nMonster kills="+playerProfile.kills.monsters;
     	str += "\nElite kills="+playerProfile.kills.elites;
