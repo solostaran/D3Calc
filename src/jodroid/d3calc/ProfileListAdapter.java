@@ -2,8 +2,7 @@ package jodroid.d3calc;
 
 import java.util.List;
 
-import jodroid.d3calc.dummy.ProfileListContent;
-import jodroid.d3calc.dummy.ProfileListContent.ProfileItem;
+import jodroid.d3calc.ProfileListContent.ProfileItem;
 import android.app.Activity;
 import android.content.Context;
 import android.view.LayoutInflater;

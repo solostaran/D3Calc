@@ -24,7 +24,7 @@
         
         <TextView
         	android:id="@+id/textLifetimeKillsValue"
-        	android:tag="D3Profile.kills.monsters"
+        	android:tag="D3Kills.monsters"
 	        android:layout_width="wrap_content"
 	        android:layout_height="wrap_content"
 	        android:layout_alignParentTop="true"
@@ -62,7 +62,7 @@
         
         <TextView
         	android:id="@+id/textEliteKillsValue"
-        	android:tag="D3Profile.kills.elites"
+        	android:tag="D3Kills.elites"
 	        android:layout_width="wrap_content"
 	        android:layout_height="wrap_content"
 	        android:layout_alignParentTop="true"

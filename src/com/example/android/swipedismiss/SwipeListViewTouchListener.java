@@ -35,6 +35,9 @@ import android.widget.AbsListView;
 import android.widget.ListView;
 
 /**
+ * README : Modified version from the original swipe-to-dismiss to a special version with swipe-to-action.
+ * There are two possible actions depending on the swipe direction : left or right.<br/>
+ * 
  * A {@link android.view.View.OnTouchListener} that makes the list items in a {@link ListView}
  * dismissable. {@link ListView} is given special treatment because by default it handles touches
  * for its list items... i.e. it's in charge of drawing the pressed state (the list selector),
@@ -71,6 +74,7 @@ import android.widget.ListView;
  * <p>For a generalized {@link android.view.View.OnTouchListener} that makes any view dismissable,
  * see {@link SwipeDismissTouchListener}.</p>
  *
+ * @see SwipeDismissListViewTouchListener
  * @see SwipeDismissTouchListener
  */
 public class SwipeListViewTouchListener implements View.OnTouchListener {
@@ -84,9 +88,11 @@ public class SwipeListViewTouchListener implements View.OnTouchListener {
     private ListView mListView;
     private OnSwipeCallback mCallback;
     private int mViewWidth = 1; // 1 and not 0 to prevent dividing by zero
+    private boolean dismissLeft = true;
+    private boolean dismissRight = true;
 
     // Transient properties
-    private List<PendingDismissData> mPendingDismisses = new ArrayList<PendingDismissData>();
+    private List<PendingSwipeData> mPendingSwipes = new ArrayList<PendingSwipeData>();
     private int mDismissAnimationRefCount = 0;
     private float mDownX;
     private boolean mSwiping;
@@ -107,13 +113,13 @@ public class SwipeListViewTouchListener implements View.OnTouchListener {
          * @param reverseSortedPositions An array of positions to dismiss, sorted in descending
          *                               order for convenience.
          */
-        void onSwipeLeft(ListView listView, int[] reverseSortedPositions);
+        void onSwipeLeft(ListView listView, int [] reverseSortedPositions);
         
-        void onSwipeRight(ListView listView, int[] reverseSortedPositions);
+        void onSwipeRight(ListView listView, int [] reverseSortedPositions);
     }
 
     /**
-     * Constructs a new swipe-to-dismiss touch listener for the given list view.
+     * Constructs a new swipe-to-action touch listener for the given list view.
      *
      * @param listView The list view whose items should be dismissable.
      * @param callback The callback to trigger when the user has indicated that she would like to
@@ -128,6 +134,22 @@ public class SwipeListViewTouchListener implements View.OnTouchListener {
                 android.R.integer.config_shortAnimTime);
         mListView = listView;
         mCallback = callback;
+    }
+    
+    /**
+     * Constructs a new swipe-to-action touch listener for the given list view.
+     * 
+     * @param listView The list view whose items should be dismissable.
+     * @param callback The callback to trigger when the user has indicated that she would like to
+     *                 dismiss one or more list items.
+     * @param dismissLeft set if the dismiss animation is up when the user swipe to the left
+     * @param dismissRight set if the dismiss animation is up when the user swipe to the right
+     * @see #SwipeListViewTouchListener(ListView, OnSwipeCallback, boolean, boolean)
+     */
+    public SwipeListViewTouchListener(ListView listView, OnSwipeCallback callback, boolean dismissLeft, boolean dismissRight) {
+        this(listView, callback);
+        this.dismissLeft = dismissLeft;
+        this.dismissRight = dismissRight;
     }
 
     /**
@@ -211,32 +233,34 @@ public class SwipeListViewTouchListener implements View.OnTouchListener {
 
                 float deltaX = motionEvent.getRawX() - mDownX;
                 mVelocityTracker.addMovement(motionEvent);
-                mVelocityTracker.computeCurrentVelocity(1000);
+                mVelocityTracker.computeCurrentVelocity(500); // 1000 by defaut but it was too much
                 float velocityX = Math.abs(mVelocityTracker.getXVelocity());
                 float velocityY = Math.abs(mVelocityTracker.getYVelocity());
-                boolean dismiss = false;
-                boolean dismissRight = false;
+                boolean swipe = false;
+                boolean swipeRight = false;
+                
                 if (Math.abs(deltaX) > mViewWidth / 2) {
-                    dismiss = true;
-                    dismissRight = deltaX > 0;
+                    swipe = true;
+                    swipeRight = deltaX > 0;
                 } else if (mMinFlingVelocity <= velocityX && velocityX <= mMaxFlingVelocity
                         && velocityY < velocityX) {
-                    dismiss = true;
-                    dismissRight = mVelocityTracker.getXVelocity() > 0;
+                    swipe = true;
+                    swipeRight = mVelocityTracker.getXVelocity() > 0;
                 }
-                if (dismiss) {
-                    // dismiss
+                if (swipe) {
+                    // sufficent swipe value
                     final View downView = mDownView; // mDownView gets null'd before animation ends
                     final int downPosition = mDownPosition;
+                    final boolean toTheRight = swipeRight;
                     ++mDismissAnimationRefCount;
                     mDownView.animate()
-                            .translationX(dismissRight ? mViewWidth : -mViewWidth)
+                            .translationX(swipeRight ? mViewWidth : -mViewWidth)
                             .alpha(0)
                             .setDuration(mAnimationTime)
                             .setListener(new AnimatorListenerAdapter() {
                                 @Override
                                 public void onAnimationEnd(Animator animation) {
-                                    performDismiss(downView, downPosition);
+                                    performSwipeAction(downView, downPosition, toTheRight, toTheRight ? dismissRight : dismissLeft);
                                 }
                             });
                 } else {
@@ -286,31 +310,37 @@ public class SwipeListViewTouchListener implements View.OnTouchListener {
         return false;
     }
 
-    class PendingDismissData implements Comparable<PendingDismissData> {
+    class PendingSwipeData implements Comparable<PendingSwipeData> {
         public int position;
         public View view;
 
-        public PendingDismissData(int position, View view) {
+        public PendingSwipeData(int position, View view) {
             this.position = position;
             this.view = view;
         }
 
         @Override
-        public int compareTo(PendingDismissData other) {
+        public int compareTo(PendingSwipeData other) {
             // Sort by descending position
             return other.position - position;
         }
     }
 
-    private void performDismiss(final View dismissView, final int dismissPosition) {
+    private void performSwipeAction(final View swipeView, final int swipePosition, boolean toTheRight, boolean dismiss) {
         // Animate the dismissed list item to zero-height and fire the dismiss callback when
         // all dismissed list item animations have completed. This triggers layout on each animation
         // frame; in the future we may want to do something smarter and more performant.
 
-        final ViewGroup.LayoutParams lp = dismissView.getLayoutParams();
-        final int originalHeight = dismissView.getHeight();
+        final ViewGroup.LayoutParams lp = swipeView.getLayoutParams();
+        final int originalHeight = swipeView.getHeight();
+        final boolean swipeRight = toTheRight;
 
-        ValueAnimator animator = ValueAnimator.ofInt(originalHeight, 1).setDuration(mAnimationTime);
+        ValueAnimator animator;
+        if (dismiss)
+        	animator = ValueAnimator.ofInt(originalHeight, 1).setDuration(mAnimationTime);
+        else
+        	animator = ValueAnimator.ofInt(originalHeight, originalHeight - 1).setDuration(mAnimationTime);
+        	
 
         animator.addListener(new AnimatorListenerAdapter() {
             @Override
@@ -319,16 +349,19 @@ public class SwipeListViewTouchListener implements View.OnTouchListener {
                 if (mDismissAnimationRefCount == 0) {
                     // No active animations, process all pending dismisses.
                     // Sort by descending position
-                    Collections.sort(mPendingDismisses);
+                    Collections.sort(mPendingSwipes);
 
-                    int[] dismissPositions = new int[mPendingDismisses.size()];
-                    for (int i = mPendingDismisses.size() - 1; i >= 0; i--) {
-                        dismissPositions[i] = mPendingDismisses.get(i).position;
+                    int[] swipePositions = new int[mPendingSwipes.size()];
+                    for (int i = mPendingSwipes.size() - 1; i >= 0; i--) {
+                        swipePositions[i] = mPendingSwipes.get(i).position;
                     }
-                    mCallback.onSwipeLeft(mListView, dismissPositions);
+                    if (swipeRight)
+                    	mCallback.onSwipeRight(mListView, swipePositions);
+                    else
+                    	mCallback.onSwipeLeft(mListView, swipePositions);
 
                     ViewGroup.LayoutParams lp;
-                    for (PendingDismissData pendingDismiss : mPendingDismisses) {
+                    for (PendingSwipeData pendingDismiss : mPendingSwipes) {
                         // Reset view presentation
                         pendingDismiss.view.setAlpha(1f);
                         pendingDismiss.view.setTranslationX(0);
@@ -337,7 +370,7 @@ public class SwipeListViewTouchListener implements View.OnTouchListener {
                         pendingDismiss.view.setLayoutParams(lp);
                     }
 
-                    mPendingDismisses.clear();
+                    mPendingSwipes.clear();
                 }
             }
         });
@@ -346,11 +379,11 @@ public class SwipeListViewTouchListener implements View.OnTouchListener {
             @Override
             public void onAnimationUpdate(ValueAnimator valueAnimator) {
                 lp.height = (Integer) valueAnimator.getAnimatedValue();
-                dismissView.setLayoutParams(lp);
+                swipeView.setLayoutParams(lp);
             }
         });
 
-        mPendingDismisses.add(new PendingDismissData(dismissPosition, dismissView));
+        mPendingSwipes.add(new PendingSwipeData(swipePosition, swipeView));
         animator.start();
     }
 }

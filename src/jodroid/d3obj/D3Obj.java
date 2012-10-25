@@ -9,6 +9,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.util.Log;
+import android.view.View;
+import android.widget.TextView;
 
 /**
  * Superclass of all D3 Objects.
@@ -162,6 +164,34 @@ public abstract class D3Obj {
 		}
 		str+=blankStr(marginleft)+"}\n";
 		return str;
+	}
+	
+	/**
+	 * Reflection through fields of this instance to fill in TextViews.<br/>
+	 * We are searching for TextView with android:tag = "&lt;simple name of this class&gt;.&lt;field name&gt;".<br/>
+	 * @param view Android view source
+	 */
+	public void fieldsToView(View view) {
+		if (view == null) return;
+		Class<?> c=this.getClass();
+		Field[] fields=c.getFields();
+		TextView v = null;
+		for (Field f : fields) {
+			if ((f.getModifiers() & Modifier.TRANSIENT) != 0) continue;
+			if (f.getType().isPrimitive() || f.getType().getCanonicalName().equals("String")) {
+				String tag = this.getClass().getSimpleName()+"."+f.getName();
+				Log.i(this.getClass().getName(), "tag="+tag);
+				v = (TextView)view.findViewWithTag(tag);
+				if (v != null)
+					try {
+						v.setText(""+f.get(this));
+					} catch (IllegalArgumentException e) {
+						Log.e(this.getClass().getName(), e.getClass().getName() + ": " + e.getMessage());
+					} catch (IllegalAccessException e) {
+						Log.e(this.getClass().getName(), e.getClass().getName() + ": " + e.getMessage());
+					}
+			}
+		}
 	}
 	
 	/**

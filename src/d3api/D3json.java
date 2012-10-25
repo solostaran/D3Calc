@@ -83,13 +83,17 @@ public class D3json {
 				content.close();
 			} else {
 				Log.e(D3json.class.getName(), "Failed to download file");
+				return null;
 			}
 		} catch (UnsupportedEncodingException e) {
             e.printStackTrace();
+            return null;
 		} catch (ClientProtocolException e) {
 			e.printStackTrace();
+			return null;
 		} catch (IOException e) {
 			e.printStackTrace();
+			return null;
 		}
 		return builder.toString();
 	}

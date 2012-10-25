@@ -38,6 +38,7 @@ public class D3Profile extends D3Obj {
 	 */
 	public static D3Profile getStaticUrlProfile(String url) {
 		String jsonProfile = D3json.jsonGet(url);
+		if (jsonProfile == null) return null;
 		JSONObject o;
 		D3Profile prof = null;
 		try {

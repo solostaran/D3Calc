@@ -3,10 +3,10 @@ package jodroid.d3calc;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 
-import jodroid.d3calc.dummy.ProfileListContent;
 import jodroid.d3obj.D3HeroLite;
 import jodroid.d3obj.D3Profile;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.app.Activity;
@@ -19,7 +19,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
-import android.widget.TextView;
+import android.widget.Toast;
 
 import com.loopj.android.http.JsonHttpResponseHandler;
 
@@ -44,8 +44,8 @@ public class ProfileDetailFragment extends Fragment {
             mItem = ProfileListContent.ITEM_MAP.get(getArguments().getString(ARG_ITEM_ID));
             playerProfile = new D3Profile();
             Log.i(this.getClass().getName(), "btag:"+mItem.toString());
-//            getUrlProfile("http://www.ecole.ensicaen.fr/~reynaud/android/solo-2284.json"); // dev example
             progressDialog = ProgressDialog.show(getActivity(), "", "Loading profile ...");
+//            getUrlProfile("http://www.ecole.ensicaen.fr/~reynaud/android/solo-2284.json"); // dev example
             getProfile(mItem.battlehost, mItem.battlename, mItem.battletag);
         }
     }
@@ -68,19 +68,14 @@ public class ProfileDetailFragment extends Fragment {
      */
     private void buildAndDisplay(JSONObject obj) {
     	playerProfile.jsonBuild(obj);
-    	if (progressDialog != null) progressDialog.dismiss();
     	Activity act = getActivity();
     	if (act == null) return;
     	if (getView() == null) return;
-//    	if (act.getClass() == ProfileDetailActivity.class) return; // wrong the master activity is sometimes another activity
+//    	if (act.getClass() == ProfileDetailActivity.class) return; // wrong : the master activity is sometimes another activity
     	
     	act.setTitle(playerProfile.toString());
     	
-    	TextView v = (TextView)(getView().findViewWithTag("D3Profile.kills.monsters"));;
-    	if (v != null) v.setText(""+playerProfile.kills.monsters);
-    	
-    	v = (TextView)(getView().findViewWithTag("D3Profile.kills.elites"));;
-    	if (v != null) v.setText(""+playerProfile.kills.elites);
+    	playerProfile.kills.fieldsToView(getView());
     	
     	ListView lv = (ListView)getView().findViewById(R.id.listHeroesLite);
     	lv.setAdapter(new ArrayAdapter<D3HeroLite>(getActivity(), android.R.layout.simple_list_item_1, android.R.id.text1, playerProfile.heroes));	
@@ -96,7 +91,15 @@ public class ProfileDetailFragment extends Fragment {
 	public void getUrlProfile(String url) {
 		D3json.get(url, null, new JsonHttpResponseHandler() {
 			public void onSuccess(JSONObject obj) {
-				Log.i(D3Profile.class.getName(), "json get successful");
+				if (progressDialog != null) progressDialog.dismiss();
+				try {
+					String code = obj.getString("code");
+					if (code != null) {
+						Log.w(getActivity().getClass().getName(), "code="+code);
+						Toast.makeText(getActivity(), obj.getString("reason"), Toast.LENGTH_LONG).show();
+						return;
+					}	
+				} catch (JSONException e) {}
 				buildAndDisplay(obj);
 			}
 			

@@ -1,6 +1,5 @@
 package jodroid.d3calc;
 
-import jodroid.d3calc.dummy.ProfileListContent;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
@@ -36,6 +35,11 @@ public class ProfileListActivity extends FragmentActivity
         this.overridePendingTransition(R.anim.enter_from_left, R.anim.exit_to_right);
     }
 
+    /**
+     * If an item is selected, we trigger a different action depending on the layout.<br/>
+     * On large screen (two panel, landscape), it modifies a fragment.<br/>
+     * On small screen (one main frame, portrait), it calls a new activity.<br/>
+     */
     @Override
     public void onItemSelected(String id) {
         if (mTwoPane) {

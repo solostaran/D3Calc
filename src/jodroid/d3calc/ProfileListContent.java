@@ -1,13 +1,10 @@
-package jodroid.d3calc.dummy;
+package jodroid.d3calc;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import jodroid.d3calc.D3CalcDBoperations;
-import jodroid.d3calc.ProfileListAdapter;
-import jodroid.d3calc.ProfileListActivity;
 import android.content.Context;
 import android.database.Cursor;
 import android.os.Bundle;

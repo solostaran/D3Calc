@@ -1,6 +1,5 @@
 package jodroid.d3calc;
 
-import jodroid.d3calc.dummy.ProfileListContent;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;

@@ -1,6 +1,5 @@
 package jodroid.d3calc;
 
-import jodroid.d3calc.dummy.ProfileListContent;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -18,7 +17,7 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
 import android.widget.Toast;
 
-import com.example.android.swipedismiss.SwipeDismissListViewTouchListener;
+import com.example.android.swipedismiss.SwipeListViewTouchListener;
 
 public class ProfileMenuActivity extends FragmentActivity implements OnItemClickListener {
 	
@@ -70,22 +69,35 @@ public class ProfileMenuActivity extends FragmentActivity implements OnItemClick
         // Create a ListView-specific touch listener. ListViews are given special treatment because
         // by default they handle touches for their list items... i.e. they're in charge of drawing
         // the pressed state (the list selector), handling list item clicks, etc.
-        SwipeDismissListViewTouchListener touchListener =
-                new SwipeDismissListViewTouchListener(
+        SwipeListViewTouchListener touchListener =
+                new SwipeListViewTouchListener(
                 		listView,
-                        new SwipeDismissListViewTouchListener.OnDismissCallback() {
-                            @Override
-                            public void onDismiss(ListView listView, int[] reverseSortedPositions) {
-                                for (int position : reverseSortedPositions) {
-                                	removeItem(position);
-                                }
+                        new SwipeListViewTouchListener.OnSwipeCallback() {
+							@Override
+							public void onSwipeLeft(ListView listView, int [] reverseSortedPositions) {
+//								Log.i(this.getClass().getName(), "swipe left : pos="+reverseSortedPositions[0]);
+								for (int pos : reverseSortedPositions ) {
+									removeItem(pos);
+								}
                                 ProfileListContent.adapter.notifyDataSetChanged();
-                            }
-                        });
+							}
+
+							@Override
+							public void onSwipeRight(ListView listView, int [] reverseSortedPositions) {
+//								Log.i(ProfileMenuActivity.class.getClass().getName(), "swipe right : pos="+reverseSortedPositions[0]);
+								onItemClick(null, null, reverseSortedPositions[0], 0);
+							}
+                        },
+                        true,
+                        false);
         listView.setOnTouchListener(touchListener);
         // Setting this scroll listener is required to ensure that during ListView scrolling,
         // we don't look for swipes.
         listView.setOnScrollListener(touchListener.makeScrollListener());
+        
+        getActionBar().setTitle("D3Calc YODA");
+        getActionBar().setSubtitle("Yet anOther Diablo App");
+        
     }
     
     /**
@@ -184,7 +196,7 @@ public class ProfileMenuActivity extends FragmentActivity implements OnItemClick
 			ProfileListContent.adapter.notifyDataSetChanged();
 
 		} else {
-			Toast.makeText(this, getText(R.string.deletion_canceled), Toast.LENGTH_LONG).show();
+			Toast.makeText(this, getText(R.string.deletion_canceled), Toast.LENGTH_SHORT).show();
 		}
 	}
 
@@ -197,6 +209,8 @@ public class ProfileMenuActivity extends FragmentActivity implements OnItemClick
 	public void onItemClick(AdapterView<?> arg0, View view, int position, long id) {
 		String itemId = ProfileListContent.ITEMS.get(position).id;
 		if (mTwoPane) {
+			ListView lv = (ListView)findViewById(R.id.profileListView);
+			lv.setItemChecked(position, true);
 			Bundle arguments = new Bundle();
             arguments.putString(ProfileDetailFragment.ARG_ITEM_ID, itemId);
             ProfileDetailFragment fragment = new ProfileDetailFragment();
