@@ -3,7 +3,6 @@ package jodroid.d3calc;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 
-import jodroid.d3obj.D3HeroLite;
 import jodroid.d3obj.D3Profile;
 
 import org.json.JSONException;
@@ -17,15 +16,16 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
+import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.Toast;
+import android.widget.AdapterView.OnItemClickListener;
 
 import com.loopj.android.http.JsonHttpResponseHandler;
 
 import d3api.D3json;
 
-public class ProfileDetailFragment extends Fragment {
+public class ProfileDetailFragment extends Fragment implements OnItemClickListener {
 
     public static final String ARG_ITEM_ID = "item_id";
     private D3Profile playerProfile = null;
@@ -78,7 +78,12 @@ public class ProfileDetailFragment extends Fragment {
     	playerProfile.kills.fieldsToView(getView());
     	
     	ListView lv = (ListView)getView().findViewById(R.id.listHeroesLite);
-    	lv.setAdapter(new ArrayAdapter<D3HeroLite>(getActivity(), android.R.layout.simple_list_item_1, android.R.id.text1, playerProfile.heroes));	
+    	D3ObjArrayAdapter adapter = new D3ObjArrayAdapter(getActivity(), R.layout.hero_list_item, playerProfile.heroes);
+    	lv.setAdapter(adapter);
+//    	lv.setAdapter(new ArrayAdapter<D3HeroLite>(getActivity(), android.R.layout.simple_list_item_1, android.R.id.text1, playerProfile.heroes));
+    	adapter.notifyDataSetChanged();
+    	
+    	lv.setOnItemClickListener(this);
     }
     
     
@@ -121,5 +126,10 @@ public class ProfileDetailFragment extends Fragment {
 		} catch (UnsupportedEncodingException e) {
 			Log.e(D3Profile.class.getName(), e.getClass().getName() + ": " + e.getMessage());
 		}
+	}
+
+	@Override
+	public void onItemClick(AdapterView<?> adapterView, View itemView, int position, long id) {
+		Toast.makeText(getActivity(), "Hero choice = "+playerProfile.heroes[position].name, Toast.LENGTH_LONG).show();
 	}
 }

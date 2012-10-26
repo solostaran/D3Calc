@@ -28,5 +28,10 @@
     <string name="elite_kills">Elite Kills</string>
     <string name="remove">remove</string>
     <string name="display">display</string>
+    <string name="level">level</string>
+    <string name="gendermale">male</string>
+    <string name="genderfemale">female</string>
+    <string name="paragon">paragon</string>
+    <string name="hardcore">hardcore</string>
 
 </resources>

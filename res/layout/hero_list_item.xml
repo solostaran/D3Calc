@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:minHeight="?android:attr/listPreferredItemHeight"
+    android:background="@drawable/item_selector">
+    
+    <TextView
+        android:id="@+id/heroLiteName"
+        android:tag="D3HeroLite.name"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+    	android:layout_marginLeft="?android:attr/listPreferredItemPaddingLeft"
+		android:textAppearance="?android:attr/textAppearanceListItem"
+		android:textColor="#550000"
+	/>
+    
+    <TextView
+        android:id="@+id/heroLiteClass"
+        android:tag="D3HeroLite._class"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_below="@+id/heroLiteName"
+		android:layout_alignParentRight="true"
+		android:layout_marginLeft="5dp"
+		android:layout_marginRight="5dp"
+		android:textStyle="italic"
+		android:textAppearance="?android:attr/textAppearanceSmall"
+	/>
+    
+    <TextView
+        android:id="@+id/heroLiteGender"
+        android:tag="D3HeroLite.gender"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_alignTop="@+id/heroLiteClass"
+		android:layout_toLeftOf="@+id/heroLiteClass"
+		android:layout_marginLeft="5dp"
+		android:textStyle="italic"
+		android:textAppearance="?android:attr/textAppearanceSmall"
+	/>
+    
+    <TextView
+        android:id="@+id/heroLiteLevel"
+        android:tag="D3HeroLite.level"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_alignTop="@+id/heroLiteClass"
+		android:layout_toLeftOf="@+id/heroLiteGender"
+		android:layout_marginLeft="5dp"
+		android:textStyle="italic"
+		android:textAppearance="?android:attr/textAppearanceSmall"
+	/>
+    
+    <TextView
+        android:id="@+id/labelLevel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/heroLiteClass"
+		android:layout_toLeftOf="@+id/heroLiteLevel"
+		android:textStyle="italic"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:text="@string/level" />
+    
+    <TextView
+        android:id="@+id/parangonLevel"
+        android:tag="D3HeroLite.paragonLevel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginRight="5dp"
+        android:textStyle="italic"
+        android:textColor="@color/blue"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        />
+    
+    <TextView
+        android:id="@+id/hardcore"
+        android:tag="D3HeroLite.hardcore"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/heroLiteName"
+        android:layout_marginLeft="5dp"
+        android:textStyle="italic"
+        android:textColor="@color/red"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        />
+
+</RelativeLayout>

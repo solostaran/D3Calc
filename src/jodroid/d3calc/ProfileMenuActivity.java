@@ -11,6 +11,7 @@ import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
 import android.support.v4.app.FragmentActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
@@ -65,7 +66,7 @@ public class ProfileMenuActivity extends FragmentActivity implements OnItemClick
 				ProfileListContent.ITEMS);
         listView.setAdapter(ProfileListContent.adapter);
         listView.setOnItemClickListener(this);
-        
+
         // Create a ListView-specific touch listener. ListViews are given special treatment because
         // by default they handle touches for their list items... i.e. they're in charge of drawing
         // the pressed state (the list selector), handling list item clicks, etc.
@@ -94,10 +95,9 @@ public class ProfileMenuActivity extends FragmentActivity implements OnItemClick
         // Setting this scroll listener is required to ensure that during ListView scrolling,
         // we don't look for swipes.
         listView.setOnScrollListener(touchListener.makeScrollListener());
-        
+
         getActionBar().setTitle("D3Calc YODA");
         getActionBar().setSubtitle("Yet anOther Diablo App");
-        
     }
     
     /**
@@ -208,9 +208,14 @@ public class ProfileMenuActivity extends FragmentActivity implements OnItemClick
 	@Override
 	public void onItemClick(AdapterView<?> arg0, View view, int position, long id) {
 		String itemId = ProfileListContent.ITEMS.get(position).id;
+		
+		Log.i(this.getClass().getName(), "click pos="+position);
+		
 		if (mTwoPane) {
 			ListView lv = (ListView)findViewById(R.id.profileListView);
+			lv.setSelected(true);
 			lv.setItemChecked(position, true);
+			
 			Bundle arguments = new Bundle();
             arguments.putString(ProfileDetailFragment.ARG_ITEM_ID, itemId);
             ProfileDetailFragment fragment = new ProfileDetailFragment();

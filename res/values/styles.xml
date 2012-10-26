@@ -2,6 +2,12 @@
 
     <color name="black">#000000</color>
     <color name="white">#ffffff</color>
+    <color name="green">#00ff00</color>
+    <color name="red">#ff0000</color>
+    <color name="blue">#0000ff</color>
+    <color name="lightblue">#ccccff</color>
+    <color name="mediumblue">#6666ff</color>
+    <color name="lightgrey">#eeeeee</color>
     <style name="AppTheme" parent="android:Theme.Light" />
     <style name="ButtonBW" parent="android:Theme.Light">
         <item name="android:textColor">@color/white</item>

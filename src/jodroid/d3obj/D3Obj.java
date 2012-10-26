@@ -4,10 +4,13 @@ import java.lang.reflect.Array;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 
+import jodroid.d3calc.R;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.content.Context;
 import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
@@ -169,7 +172,7 @@ public abstract class D3Obj {
 	/**
 	 * Reflection through fields of this instance to fill in TextViews.<br/>
 	 * We are searching for TextView with android:tag = "&lt;simple name of this class&gt;.&lt;field name&gt;".<br/>
-	 * @param view Android view source
+	 * @param view Android view source (gives us the context and the base view containing subviews for display)
 	 */
 	public void fieldsToView(View view) {
 		if (view == null) return;
@@ -178,20 +181,52 @@ public abstract class D3Obj {
 		TextView v = null;
 		for (Field f : fields) {
 			if ((f.getModifiers() & Modifier.TRANSIENT) != 0) continue;
-			if (f.getType().isPrimitive() || f.getType().getCanonicalName().equals("String")) {
+			if (f.getType().isPrimitive() || f.getType().getSimpleName().equals("String")) {
 				String tag = this.getClass().getSimpleName()+"."+f.getName();
-				Log.i(this.getClass().getName(), "tag="+tag);
 				v = (TextView)view.findViewWithTag(tag);
-				if (v != null)
+				if (v != null) {
+//					Log.i(this.getClass().getName(), "tag="+tag);
 					try {
-						v.setText(""+f.get(this));
+						String value = convertValueToString(view.getContext(), f.getName(), f.get(this));
+						v.setText(value);
 					} catch (IllegalArgumentException e) {
 						Log.e(this.getClass().getName(), e.getClass().getName() + ": " + e.getMessage());
 					} catch (IllegalAccessException e) {
 						Log.e(this.getClass().getName(), e.getClass().getName() + ": " + e.getMessage());
 					}
+				}
 			}
 		}
+	}
+	
+	/**
+	 * Some values need conversion before being displayed.<br/>
+	 * I do conversions depending on the field name.
+	 * @param c We need the context to access to resource strings
+	 * @param fieldName conversion based on field name
+	 * @param value the value to convert
+	 * @return this will be displayed
+	 */
+	private String convertValueToString(Context c, String fieldName, Object value) {
+		if (fieldName.equals("gender")) {
+			if (((Integer)value).intValue() == 0)
+				return c.getText(R.string.gendermale).toString();
+			else
+				return c.getText(R.string.genderfemale).toString();
+		}
+		if (fieldName.equals("paragonLevel")) {
+			if (((Integer)value).intValue() > 0)
+				return c.getText(R.string.paragon)+" ("+value.toString()+")";
+			else
+				return new String();
+		}
+		if (fieldName.equals("hardcore")) {
+			if (((Boolean)value).booleanValue())
+				return c.getText(R.string.hardcore).toString();
+			else
+				return new String();
+		}
+		return value.toString();
 	}
 	
 	/**
