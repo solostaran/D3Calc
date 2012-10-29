@@ -1,5 +1,6 @@
 package jodroid.d3calc;
 
+import jodroid.d3obj.D3Obj;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -38,6 +39,7 @@ public class ProfileMenuActivity extends FragmentActivity implements OnItemClick
     @Override
     public void onCreate(Bundle savedInstanceState) {
     	ProfileListContent.setContext(this); // before fragment allocation
+    	D3Obj.setContext(this);
     	
         super.onCreate(savedInstanceState);
 //        setContentView(R.layout.activity_profiles);

@@ -130,6 +130,6 @@ public class ProfileDetailFragment extends Fragment implements OnItemClickListen
 
 	@Override
 	public void onItemClick(AdapterView<?> adapterView, View itemView, int position, long id) {
-		Toast.makeText(getActivity(), "Hero choice = "+playerProfile.heroes[position].name, Toast.LENGTH_LONG).show();
+		Toast.makeText(getActivity(), "Hero choice = "+playerProfile.heroes[position].name, Toast.LENGTH_SHORT).show();
 	}
 }

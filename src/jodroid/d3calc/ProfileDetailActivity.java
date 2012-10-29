@@ -1,5 +1,6 @@
 package jodroid.d3calc;
 
+import jodroid.d3obj.D3Obj;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
@@ -10,6 +11,8 @@ public class ProfileDetailActivity extends FragmentActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+    	D3Obj.setContext(this);
+    	
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile_detail);
 

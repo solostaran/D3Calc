@@ -1,10 +1,15 @@
 package jodroid.d3obj;
 
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Inherited;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 import java.lang.reflect.Array;
 import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
-
-import jodroid.d3calc.R;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -15,6 +20,14 @@ import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
+@Retention(RetentionPolicy.RUNTIME)
+@Target(ElementType.FIELD)
+@Inherited
+@interface D3Annotation {
+	String value() default "get";
+	String method();
+}
+
 /**
  * Superclass of all D3 Objects.
  * Each object can construct itself through a JSONObject and reflection.
@@ -22,6 +35,15 @@ import android.widget.TextView;
  * @see <a href="http://blizzard.github.com/d3-api-docs/">Diablo 3 Web API</a>
  */
 public abstract class D3Obj {
+	
+	protected static Context context;
+	public static void setContext(Context c) {
+		context = c;
+	}
+	public static Context getContext() {
+		return context;
+	}
+	
 	/**
 	 * Parse recursively a JSONObject.
 	 * @param jsonObject the json object to parse
@@ -150,10 +172,17 @@ public abstract class D3Obj {
 			} else { // non array field
 				try {
 					String strtmp;
-					if (f.getType().getSuperclass() == D3Obj.class)
-						strtmp = ((D3Obj)f.get(this)).toString(marginleft+2);
-					else
-						strtmp = f.get(this).toString();
+					
+					D3Annotation annot = f.getAnnotation(D3Annotation.class);
+					if (annot != null) {
+						Method m = c.getMethod(annot.method());
+						strtmp = (String)(m.invoke(this));
+					} else {
+						if (f.getType().getSuperclass() == D3Obj.class)
+							strtmp = ((D3Obj)f.get(this)).toString(marginleft+2);
+						else
+							strtmp = f.get(this).toString();
+					}
 					if (f.getName().startsWith("_"))
 						str += blankStr(marginleft)+f.getName().substring(1)+"="+strtmp+"\n";
 					else
@@ -162,6 +191,11 @@ public abstract class D3Obj {
 					Log.e(this.getClass().getName(), e.getClass().getName() + ": " + e.getMessage());
 				} catch (IllegalAccessException e) {
 					Log.e(this.getClass().getName(), e.getClass().getName() + ": " + e.getMessage());
+				} catch (NoSuchMethodException e) {
+					Log.e(this.getClass().getName(), e.getClass().getName() + ": " + e.getMessage());
+				} catch (InvocationTargetException e) {
+					Log.e(this.getClass().getName(), e.getClass().getName() + ": " + e.getMessage());
+					e.printStackTrace();
 				}
 			}
 		}
@@ -187,11 +221,21 @@ public abstract class D3Obj {
 				if (v != null) {
 //					Log.i(this.getClass().getName(), "tag="+tag);
 					try {
-						String value = convertValueToString(view.getContext(), f.getName(), f.get(this));
-						v.setText(value);
+						D3Annotation annot = f.getAnnotation(D3Annotation.class);
+						if (annot != null) {
+							Method m = c.getMethod(annot.method());
+							v.setText((String)(m.invoke(this)));
+						} else {
+//							String value = convertValueToString(view.getContext(), f.getName(), f.get(this));
+							v.setText(""+f.get(this));
+						}
 					} catch (IllegalArgumentException e) {
 						Log.e(this.getClass().getName(), e.getClass().getName() + ": " + e.getMessage());
 					} catch (IllegalAccessException e) {
+						Log.e(this.getClass().getName(), e.getClass().getName() + ": " + e.getMessage());
+					} catch (InvocationTargetException e) {
+						Log.e(this.getClass().getName(), e.getClass().getName() + ": " + e.getMessage());
+					} catch (NoSuchMethodException e) {
 						Log.e(this.getClass().getName(), e.getClass().getName() + ": " + e.getMessage());
 					}
 				}
@@ -206,7 +250,7 @@ public abstract class D3Obj {
 	 * @param fieldName conversion based on field name
 	 * @param value the value to convert
 	 * @return this will be displayed
-	 */
+	 *
 	private String convertValueToString(Context c, String fieldName, Object value) {
 		if (fieldName.equals("gender")) {
 			if (((Integer)value).intValue() == 0)
@@ -227,7 +271,7 @@ public abstract class D3Obj {
 				return new String();
 		}
 		return value.toString();
-	}
+	}*/
 	
 	/**
 	 * classic toString
