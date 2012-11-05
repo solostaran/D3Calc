@@ -12,28 +12,35 @@ public class D3HeroLite extends D3Obj {
 	public String name;
 	public long id;
 	public int level;
-	@D3Annotation(method="getHardcore")
+	@D3FieldAnnotation(method="getHardcore")
 	public boolean hardcore;
-	@D3Annotation(method="getParagon")
+	@D3FieldAnnotation(method="getParagon")
 	public int paragonLevel;
-	@D3Annotation(method="getGender")
+	@D3FieldAnnotation(method="getGender")
 	public int gender;
 	public boolean dead;
+	@D3FieldAnnotation(jsonName="class")
 	public String _class;
+	@D3FieldAnnotation(jsonName="last-updated", method="getLastUpdated")
+	public long last_updated;
 	
 	public String toString() {
 		return level+" "+name+" {"+_class+"}"+(hardcore ? " hardcore":"");
 	}
 	
 	public String getHardcore() {
-		return hardcore ? context.getText(R.string.hardcore).toString() : new String();
+		return hardcore ? context.getString(R.string.hardcore) : new String();
 	}
 	
 	public String getGender() {
-		return gender == 0 ? context.getText(R.string.gendermale).toString() : context.getText(R.string.genderfemale).toString();
+		return gender == 0 ? context.getString(R.string.gendermale) : context.getString(R.string.genderfemale);
 	}
 	
 	public String getParagon() {
-		return paragonLevel > 0 ? context.getText(R.string.paragon)+" ("+paragonLevel+")" : new String();
+		return paragonLevel > 0 ? context.getString(R.string.paragon)+" ("+paragonLevel+")" : new String();
+	}
+	
+	public String getLastUpdated() {
+		return "DATE("+last_updated+")"; // TODO : return formatted date
 	}
 }

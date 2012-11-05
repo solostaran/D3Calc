@@ -33,5 +33,54 @@
     <string name="genderfemale">female</string>
     <string name="paragon">paragon</string>
     <string name="hardcore">hardcore</string>
-
+    <string name="title_activity_hero_dropdown">HeroDropdownActivity</string>
+    <string name="title_activity_hero_tab">HeroFullActivity</string>
+    <string name="title_activity_hero_strip">HeroActivity</string>
+    <string name="title_section1">Section 1</string>
+    <string name="title_section3">Section 3</string>
+    <string name="title_section2">Section 2</string>
+    <string name="title_sectionDetails">Details</string>
+    <string name="title_sectionHead">Head</string>
+    <string name="title_sectionShoulders">Shoulders</string>
+    <string name="title_sectionNeck">Neck</string>
+	<string name="title_sectionTorso">Torso</string>
+	<string-array name="HeroTabs">
+		<item >Details</item>
+		<item >Head</item>
+		<item >Shoulders</item>
+		<item >Neck</item>
+		<item >Torso</item>
+		<item >Wrists</item>
+		<item >Hands</item>
+		<item >Waist</item>
+		<item >Right finger</item>
+		<item >Left finger</item>
+		<item >Legs</item>
+		<item >Feet</item>
+		<item >Main-hand</item>
+		<item >Off-hand</item>
+	</string-array>
+	<string-array name="ItemsJsonNames">
+		<item >filler</item>
+		<item >head</item>
+		<item >shoulders</item>
+		<item >neck</item>
+		<item >torso</item>
+		<item >bracers</item>
+		<item >hands</item>
+		<item >waist</item>
+		<item >rightFinger</item>
+		<item >leftFinger</item>
+		<item >legs</item>
+		<item >feet</item>
+		<item >mainHand</item>
+		<item >offHand</item>
+	</string-array>
+	<string-array name="StatsNames">
+		<item >Armor</item>
+		<item >Strength</item>
+		<item >Dexterity</item>
+		<item >Vitality</item>
+		<item >Intelligence</item>
+	</string-array>
 </resources>

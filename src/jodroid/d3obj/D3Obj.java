@@ -23,9 +23,9 @@ import android.widget.TextView;
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.FIELD)
 @Inherited
-@interface D3Annotation {
-	String value() default "get";
-	String method();
+@interface D3FieldAnnotation {
+	String jsonName() default "";
+	String method() default "";
 }
 
 /**
@@ -35,7 +35,7 @@ import android.widget.TextView;
  * @see <a href="http://blizzard.github.com/d3-api-docs/">Diablo 3 Web API</a>
  */
 public abstract class D3Obj {
-	
+
 	protected static Context context;
 	public static void setContext(Context c) {
 		context = c;
@@ -43,7 +43,7 @@ public abstract class D3Obj {
 	public static Context getContext() {
 		return context;
 	}
-	
+
 	/**
 	 * Parse recursively a JSONObject.
 	 * @param jsonObject the json object to parse
@@ -51,27 +51,32 @@ public abstract class D3Obj {
 	public void jsonBuild(JSONObject jsonObject) {
 		Class<?> c=this.getClass();
 		Field[] fields=c.getFields();  // Get all fields
-		
+
 		for (Field f : fields) {
 			if ((f.getModifiers() & Modifier.TRANSIENT) != 0) continue;
-			
+
 			String t=f.getGenericType().toString();
 			if(t.startsWith("class")) {
 				t=t.substring(6);
 			}
-//			Log.i(this.getClass().getName(), t+" "+f.getName());
-			
-			// If we expect an array
-			if (f.getType().isArray()) {
-				try {
+
+			D3FieldAnnotation annot = f.getAnnotation(D3FieldAnnotation.class);
+			String jsonName = f.getName();
+			if (annot != null && !annot.jsonName().isEmpty()) jsonName = annot.jsonName();
+			//			Log.i(this.getClass().getName(), t+" "+f.getName());
+
+			try {
+				// If we expect an array
+				if (f.getType().isArray()) {
+
 					// Getting the array
-					JSONArray jsonArray = jsonObject.getJSONArray(f.getName());
+					JSONArray jsonArray = jsonObject.getJSONArray(jsonName);
 					// Allocating the new array
 					Class<?> arrayComponentType = f.getType().getComponentType();
 					Object tab = Array.newInstance(arrayComponentType, jsonArray.length());
 					// Setting the array to this new instance
 					f.set(this, tab);
-//					Log.i(this.getClass().getName(), tab.getClass().getSimpleName() + " ["+jsonArray.length()+"]");
+					//					Log.i(this.getClass().getName(), tab.getClass().getSimpleName() + " ["+jsonArray.length()+"]");
 					// Parsing each item of the array
 					for (int i =  0; i < jsonArray.length(); i++) {
 						// Getting one array item
@@ -82,51 +87,41 @@ public abstract class D3Obj {
 						// Parsing this item
 						((D3Obj)val).jsonBuild(jsonTmp);
 					}
-					
-				} catch (IllegalArgumentException e) {
-					Log.e(this.getClass().getName(), e.getClass().getName() + ": " + e.getMessage());
-				} catch (IllegalAccessException e) {
-					Log.e(this.getClass().getName(), e.getClass().getName() + ": " + e.getMessage());
-				} catch (JSONException e) {
-					Log.e(this.getClass().getName(), e.getClass().getName() + ": " + e.getMessage());
-				} catch (InstantiationException e) {
-					Log.e(this.getClass().getName(), e.getClass().getName() + ": " + e.getMessage());
-				}
-				
-			} else { // if this is not an array
-				try {
+				} else { // if this is not an array
+
 					// Getting the object depends on type (other types invoke an exception)
 					if (f.getType().isPrimitive() || f.getType() == String.class) {
 						// primitive types and Strings
-						if (f.getName().startsWith("_"))
-							f.set(this, jsonObject.get(f.getName().substring(1)));
-						else
-							f.set(this, jsonObject.get(f.getName()));
-					} else {
+						//						if (f.getName().startsWith("_"))
+						//							f.set(this, jsonObject.get(f.getName().substring(1)));
+						//						else
+						//							f.set(this, jsonObject.get(f.getName()));
+						f.set(this, jsonObject.get(jsonName));
+					} else { 
 						// all D3Obj types
 						JSONObject obj;
-						if (f.getName().startsWith("_"))
-							obj = jsonObject.getJSONObject(f.getName().substring(1)); 
-						else
-							obj = jsonObject.getJSONObject(f.getName()); 
+						//						if (f.getName().startsWith("_"))
+						//							obj = jsonObject.getJSONObject(f.getName().substring(1)); 
+						//						else
+						//							obj = jsonObject.getJSONObject(f.getName());
+						obj = jsonObject.getJSONObject(jsonName);
 						Object val = f.getType().newInstance();
 						f.set(this, val);
 						((D3Obj)val).jsonBuild(obj); // exception if not a D3Obj
 					}
-				} catch (JSONException e) {
-					Log.e(this.getClass().getName(), e.getClass().getName() + ": " + e.getMessage());
-					e.printStackTrace();
-				} catch (IllegalArgumentException e) {
-					Log.e(this.getClass().getName(), e.getClass().getName() + ": " + e.getMessage());
-				} catch (IllegalAccessException e) {
-					Log.e(this.getClass().getName(), e.getClass().getName() + ": " + e.getMessage());
-				} catch (InstantiationException e) {
-					Log.e(this.getClass().getName(), e.getClass().getName() + ": " + e.getMessage());
 				}
+			} catch (IllegalArgumentException e) {
+				Log.e(this.getClass().getName(), e.getClass().getName() + "["+f.getName()+"]: " + e.getMessage());
+			} catch (IllegalAccessException e) {
+				Log.e(this.getClass().getName(), e.getClass().getName() + "["+f.getName()+"]: " + e.getMessage());
+			} catch (JSONException e) {
+				Log.w(this.getClass().getName(), e.getClass().getName() + ": " + e.getMessage());
+			} catch (InstantiationException e) {
+				Log.e(this.getClass().getName(), e.getClass().getName() + "["+f.getName()+"]: " + e.getMessage());
 			}
 		}
 	}
-	
+
 	/**
 	 * Generate a blank (fill with spaces) string.
 	 * @param i length of the string
@@ -138,7 +133,7 @@ public abstract class D3Obj {
 			str +=" ";
 		return str;
 	}
-	
+
 	/**
 	 * Return a string representation of the object with a left margin of blank characters.
 	 * @param marginleft size in character of the left margin
@@ -148,11 +143,15 @@ public abstract class D3Obj {
 		String str = new String();
 		Class<?> c=this.getClass();
 		Field[] fields=c.getFields();  // Get all fields
-		
+
 		str+=blankStr(marginleft)+"{\n";
 		for (Field f : fields) {
 			if ((f.getModifiers() & Modifier.TRANSIENT) != 0) continue;
-			
+
+			D3FieldAnnotation annot = f.getAnnotation(D3FieldAnnotation.class);
+			String jsonName = f.getName();
+			if (annot != null && !annot.jsonName().isEmpty()) jsonName = annot.jsonName();
+
 			if (f.getType().isArray()) { // array field
 				try {
 					int length = Array.getLength(f.get(this));
@@ -172,9 +171,7 @@ public abstract class D3Obj {
 			} else { // non array field
 				try {
 					String strtmp;
-					
-					D3Annotation annot = f.getAnnotation(D3Annotation.class);
-					if (annot != null) {
+					if (annot != null && !annot.method().isEmpty()) {
 						Method m = c.getMethod(annot.method());
 						strtmp = (String)(m.invoke(this));
 					} else {
@@ -183,10 +180,11 @@ public abstract class D3Obj {
 						else
 							strtmp = f.get(this).toString();
 					}
-					if (f.getName().startsWith("_"))
-						str += blankStr(marginleft)+f.getName().substring(1)+"="+strtmp+"\n";
-					else
-						str += blankStr(marginleft)+f.getName()+"="+strtmp+"\n";
+					//					if (f.getName().startsWith("_"))
+					//						str += blankStr(marginleft)+f.getName().substring(1)+"="+strtmp+"\n";
+					//					else
+					//						str += blankStr(marginleft)+f.getName()+"="+strtmp+"\n";
+					str += blankStr(marginleft)+jsonName+"="+strtmp+"\n";
 				} catch (IllegalArgumentException e) {
 					Log.e(this.getClass().getName(), e.getClass().getName() + ": " + e.getMessage());
 				} catch (IllegalAccessException e) {
@@ -194,7 +192,10 @@ public abstract class D3Obj {
 				} catch (NoSuchMethodException e) {
 					Log.e(this.getClass().getName(), e.getClass().getName() + ": " + e.getMessage());
 				} catch (InvocationTargetException e) {
-					Log.e(this.getClass().getName(), e.getClass().getName() + ": " + e.getMessage());
+					Log.e(this.getClass().getName(), e.getClass().getName()
+							+": field="+f.getName()
+							+", method="+f.getAnnotation(D3FieldAnnotation.class).method()
+							+", msg="+e.getMessage());
 					e.printStackTrace();
 				}
 			}
@@ -202,7 +203,7 @@ public abstract class D3Obj {
 		str+=blankStr(marginleft)+"}\n";
 		return str;
 	}
-	
+
 	/**
 	 * Reflection through fields of this instance to fill in TextViews.<br/>
 	 * We are searching for TextView with android:tag = "&lt;simple name of this class&gt;.&lt;field name&gt;".<br/>
@@ -221,12 +222,12 @@ public abstract class D3Obj {
 				if (v != null) {
 //					Log.i(this.getClass().getName(), "tag="+tag);
 					try {
-						D3Annotation annot = f.getAnnotation(D3Annotation.class);
-						if (annot != null) {
+						D3FieldAnnotation annot = f.getAnnotation(D3FieldAnnotation.class);
+						if (annot != null && !annot.method().isEmpty()) {
 							Method m = c.getMethod(annot.method());
 							v.setText((String)(m.invoke(this)));
 						} else {
-//							String value = convertValueToString(view.getContext(), f.getName(), f.get(this));
+							//							String value = convertValueToString(view.getContext(), f.getName(), f.get(this));
 							v.setText(""+f.get(this));
 						}
 					} catch (IllegalArgumentException e) {
@@ -242,7 +243,7 @@ public abstract class D3Obj {
 			}
 		}
 	}
-	
+
 	/**
 	 * Some values need conversion before being displayed.<br/>
 	 * I do conversions depending on the field name.
@@ -272,14 +273,14 @@ public abstract class D3Obj {
 		}
 		return value.toString();
 	}*/
-	
+
 	/**
 	 * classic toString
 	 */
 	public String toString() {
 		return toFormattedString(0);
 	}
-	
+
 	/**
 	 * Modification of the toString to insert a left margin.
 	 * @param i size in character of the left margin

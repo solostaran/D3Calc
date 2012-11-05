@@ -12,7 +12,6 @@ import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
 import android.support.v4.app.FragmentActivity;
-import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
@@ -187,8 +186,8 @@ public class ProfileMenuActivity extends FragmentActivity implements OnItemClick
 	 */
 	public void removeItem(int position) {
 		boolean b = getYesNoWithExecutionStop(
-				getText(R.string.deletion_title).toString(),
-				getText(R.string.deletion_message).toString()+"\n"+ProfileListContent.ITEMS.get(position).toString(),
+				getString(R.string.deletion_title),
+				getString(R.string.deletion_message)+"\n"+ProfileListContent.ITEMS.get(position).toString(),
 				this);
 		if (b) {
 			Toast.makeText(this,
@@ -211,7 +210,7 @@ public class ProfileMenuActivity extends FragmentActivity implements OnItemClick
 	public void onItemClick(AdapterView<?> arg0, View view, int position, long id) {
 		String itemId = ProfileListContent.ITEMS.get(position).id;
 		
-		Log.i(this.getClass().getName(), "click pos="+position);
+//		Log.i(this.getClass().getName(), "click pos="+position);
 		
 		if (mTwoPane) {
 			ListView lv = (ListView)findViewById(R.id.profileListView);

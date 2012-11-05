@@ -10,6 +10,7 @@ import org.json.JSONObject;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -45,8 +46,8 @@ public class ProfileDetailFragment extends Fragment implements OnItemClickListen
             playerProfile = new D3Profile();
             Log.i(this.getClass().getName(), "btag:"+mItem.toString());
             progressDialog = ProgressDialog.show(getActivity(), "", "Loading profile ...");
-//            getUrlProfile("http://www.ecole.ensicaen.fr/~reynaud/android/solo-2284.json"); // dev example
-            getProfile(mItem.battlehost, mItem.battlename, mItem.battletag);
+            getUrlProfile("http://www.ecole.ensicaen.fr/~reynaud/android/solo-2284.json"); // dev example
+//            getProfile(mItem.battlehost, mItem.battlename, mItem.battletag);
         }
     }
     
@@ -130,6 +131,21 @@ public class ProfileDetailFragment extends Fragment implements OnItemClickListen
 
 	@Override
 	public void onItemClick(AdapterView<?> adapterView, View itemView, int position, long id) {
-		Toast.makeText(getActivity(), "Hero choice = "+playerProfile.heroes[position].name, Toast.LENGTH_SHORT).show();
+//		Toast.makeText(getActivity(), "Hero choice = "+playerProfile.heroes[position].name, Toast.LENGTH_SHORT).show();
+//		Intent heroIntent = new Intent(getActivity(), HeroStripActivity.class);
+//		heroIntent.putExtra(ARG_ITEM_ID, mItem.id);
+//		heroIntent.putExtra(HeroStripActivity.ARG_HOST_VAL, mItem.battlehost);
+//		heroIntent.putExtra(HeroStripActivity.ARG_NAME_VAL, mItem.battlename);
+//		heroIntent.putExtra(HeroStripActivity.ARG_TAG_VAL, mItem.battletag);
+//		heroIntent.putExtra(HeroStripActivity.ARG_HERO_VAL, playerProfile.heroes[position].name);
+//		startActivity(heroIntent);
+		
+//		Intent heroIntent = new Intent(getActivity(), HeroTabActivity.class);
+//		startActivity(heroIntent);
+		
+		Intent heroIntent = new Intent(getActivity(), HeroDropdownActivity.class);
+		heroIntent.putExtra(ARG_ITEM_ID, mItem.id);
+		heroIntent.putExtra(HeroStripActivity.ARG_HERO_VAL, playerProfile.heroes[position].name);
+		startActivity(heroIntent);
 	}
 }

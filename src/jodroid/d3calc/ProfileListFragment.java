@@ -137,8 +137,8 @@ public class ProfileListFragment extends ListFragment {
 			public boolean onItemLongClick(AdapterView<?> paramAdapterView, View paramView, int position, long paramLong) {
 
 				boolean b = getYesNoWithExecutionStop(
-						getText(R.string.deletion_title).toString(),
-						getText(R.string.deletion_message).toString()+"\n"+ProfileListContent.ITEMS.get(position).toString(),
+						getString(R.string.deletion_title),
+						getString(R.string.deletion_message)+"\n"+ProfileListContent.ITEMS.get(position).toString(),
 						getActivity());
 				if (b) {
 //							Toast.makeText(getActivity(),
