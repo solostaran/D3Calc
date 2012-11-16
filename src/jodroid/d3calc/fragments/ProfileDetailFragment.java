@@ -1,8 +1,9 @@
-package jodroid.d3calc;
+package jodroid.d3calc.fragments;
 
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
-
+import jodroid.d3calc.HeroStripActivity;
+import jodroid.d3calc.ProfileListContent;
+import jodroid.d3calc.R;
+import jodroid.d3calc.adapters.D3ObjArrayAdapter;
 import jodroid.d3obj.D3Profile;
 
 import org.json.JSONException;
@@ -18,17 +19,18 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
 import android.widget.Toast;
-import android.widget.AdapterView.OnItemClickListener;
 
 import com.loopj.android.http.JsonHttpResponseHandler;
 
+import d3api.D3Url;
 import d3api.D3json;
 
 public class ProfileDetailFragment extends Fragment implements OnItemClickListener {
 
-    public static final String ARG_ITEM_ID = "item_id";
+    public static final String ARG_PROFILE_ID = "profile_id";
     private D3Profile playerProfile = null;
 
     ProfileListContent.ProfileItem mItem;
@@ -41,13 +43,14 @@ public class ProfileDetailFragment extends Fragment implements OnItemClickListen
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments().containsKey(ARG_ITEM_ID)) {
-            mItem = ProfileListContent.ITEM_MAP.get(getArguments().getString(ARG_ITEM_ID));
+        if (getArguments().containsKey(ARG_PROFILE_ID)) {
+            mItem = ProfileListContent.ITEM_MAP.get(getArguments().getString(ARG_PROFILE_ID));
             playerProfile = new D3Profile();
-            Log.i(this.getClass().getName(), "btag:"+mItem.toString());
             progressDialog = ProgressDialog.show(getActivity(), "", "Loading profile ...");
-            getUrlProfile("http://www.ecole.ensicaen.fr/~reynaud/android/solo-2284.json"); // dev example
-//            getProfile(mItem.battlehost, mItem.battlename, mItem.battletag);
+//            getUrlProfile("http://www.ecole.ensicaen.fr/~reynaud/android/solo-2284.json"); // dev example
+            String url = D3Url.playerProfile2Url(mItem);
+            Log.i(this.getClass().getSimpleName(), url);
+            getUrlProfile(url);
         }
     }
     
@@ -110,42 +113,19 @@ public class ProfileDetailFragment extends Fragment implements OnItemClickListen
 			}
 			
 			public void onFailure(Throwable e, JSONObject obj) {
-				Log.e(D3Profile.class.getName(), "json failure: "+e.getMessage());
+				if (progressDialog != null) progressDialog.dismiss();
+				Log.e(D3Profile.class.getSimpleName(), "json failure: "+e.getMessage());
 			}
 		});
-	}
-	
-	/**
-	 * Get a profile by constructing the correct D3 api URL.
-	 * @see #getUrlProfile(String)
-	 */
-	public void getProfile(String battlehost, String battlename, String battletag) {
-		String url = null;
-		try {
-			url = "http://"+battlehost+"/api/d3/profile/"+URLEncoder.encode(battlename, "UTF-8")+"-"+battletag+"/";
-			getUrlProfile(url);
-		} catch (UnsupportedEncodingException e) {
-			Log.e(D3Profile.class.getName(), e.getClass().getName() + ": " + e.getMessage());
-		}
 	}
 
 	@Override
 	public void onItemClick(AdapterView<?> adapterView, View itemView, int position, long id) {
-//		Toast.makeText(getActivity(), "Hero choice = "+playerProfile.heroes[position].name, Toast.LENGTH_SHORT).show();
-//		Intent heroIntent = new Intent(getActivity(), HeroStripActivity.class);
-//		heroIntent.putExtra(ARG_ITEM_ID, mItem.id);
-//		heroIntent.putExtra(HeroStripActivity.ARG_HOST_VAL, mItem.battlehost);
-//		heroIntent.putExtra(HeroStripActivity.ARG_NAME_VAL, mItem.battlename);
-//		heroIntent.putExtra(HeroStripActivity.ARG_TAG_VAL, mItem.battletag);
-//		heroIntent.putExtra(HeroStripActivity.ARG_HERO_VAL, playerProfile.heroes[position].name);
-//		startActivity(heroIntent);
-		
-//		Intent heroIntent = new Intent(getActivity(), HeroTabActivity.class);
-//		startActivity(heroIntent);
-		
-		Intent heroIntent = new Intent(getActivity(), HeroDropdownActivity.class);
-		heroIntent.putExtra(ARG_ITEM_ID, mItem.id);
-		heroIntent.putExtra(HeroStripActivity.ARG_HERO_VAL, playerProfile.heroes[position].name);
+//		Intent heroIntent = new Intent(getActivity(), HeroDropdownActivity.class);
+		Intent heroIntent = new Intent(getActivity(), HeroStripActivity.class);
+		heroIntent.putExtra(ARG_PROFILE_ID, mItem.id);
+//		Log.i(this.getClass().getSimpleName(), "id="+playerProfile.heroes[position].id);
+		heroIntent.putExtra(HeroStripActivity.ARG_HERO_ID, Long.toString(playerProfile.heroes[position].id));
 		startActivity(heroIntent);
 	}
 }

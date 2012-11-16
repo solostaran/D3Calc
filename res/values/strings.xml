@@ -1,10 +1,12 @@
-<resources>
+<resources xmlns:android="http://schemas.android.com/apk/res/android">
 
     <string name="app_name">D3Calc</string>
     <string name="title_profile_detail">Profile Detail</string>
     <string name="title_profile_list">Profiles</string>
     <string name="bt_new">New Profile</string>
-
+    <string name="cd_swipeleft">Swipe left to remove</string>
+    <string name="cd_swiperight">Swipe right to navigate to</string>
+    
     <string-array name="battlehosts">
         <item>eu.battle.net</item>
         <item>us.battle.net</item>
@@ -34,16 +36,12 @@
     <string name="paragon">paragon</string>
     <string name="hardcore">hardcore</string>
     <string name="title_activity_hero_dropdown">HeroDropdownActivity</string>
-    <string name="title_activity_hero_tab">HeroFullActivity</string>
     <string name="title_activity_hero_strip">HeroActivity</string>
     <string name="title_section1">Section 1</string>
     <string name="title_section3">Section 3</string>
     <string name="title_section2">Section 2</string>
     <string name="title_sectionDetails">Details</string>
-    <string name="title_sectionHead">Head</string>
-    <string name="title_sectionShoulders">Shoulders</string>
-    <string name="title_sectionNeck">Neck</string>
-	<string name="title_sectionTorso">Torso</string>
+    <string name="title_sectionItems">Items</string>
 	<string-array name="HeroTabs">
 		<item >Details</item>
 		<item >Head</item>
@@ -76,11 +74,46 @@
 		<item >mainHand</item>
 		<item >offHand</item>
 	</string-array>
-	<string-array name="StatsNames">
+	<string name="title_attributes">ATTRIBUTES</string>
+	<string-array name="HeroStatsNames">
 		<item >Armor</item>
 		<item >Strength</item>
 		<item >Dexterity</item>
 		<item >Vitality</item>
 		<item >Intelligence</item>
 	</string-array>
+	<string name="title_offense">OFFENSE</string>
+	<string-array name="HeroOffenseNames">
+	    <item>Damage</item>
+		<item>Attacks per Second</item>
+		<item>Critical Hit Chance</item>
+		<item>Critical Hit Damage</item>
+	</string-array>
+	<string name="title_defense">DEFENSE</string>
+	<string-array name="HeroDefenseNames">
+	    <item>Damage Reduction</item>
+		<item>Physical Resist</item>
+		<item>Fire Resist</item>
+		<item>Cold Resist</item>
+		<item>Lightning Resist</item>
+		<item>Poison Resist</item>
+		<item>Arcane/Holy Resist</item>
+	</string-array>
+	<string name="slot_head">Head</string>
+    <string name="slot_neck">Neck</string>
+    <string name="slot_shoulders">Shoulders</string>
+    <string name="slot_torso">Torso</string>
+    <string name="slot_bracers">Bracers</string>
+    <string name="slot_hands">Hands</string>
+    <string name="slot_rightFinger">Right finger</string>
+    <string name="slot_leftFinger">Left finger</string>
+    <string name="slot_waist">Waist</string>
+    <string name="slot_legs">Legs</string>
+    <string name="slot_feet">Feet</string>
+    <string name="slot_mainHand">Main-hand</string>
+    <string name="slot_offHand">Off-hand</string>
+	
+	<string name="cd_item_icon">Item icon</string>
+	<string name="item_name">Item Name</string>
+	<string name="item_slot">Item Slot</string>
 </resources>

@@ -1,5 +1,6 @@
 package jodroid.d3calc;
 
+import jodroid.d3calc.fragments.ProfileDetailFragment;
 import jodroid.d3obj.D3Obj;
 import android.content.Intent;
 import android.os.Bundle;
@@ -20,8 +21,8 @@ public class ProfileDetailActivity extends FragmentActivity {
 
         if (savedInstanceState == null) {
             Bundle arguments = new Bundle();
-            arguments.putString(ProfileDetailFragment.ARG_ITEM_ID,
-                    getIntent().getStringExtra(ProfileDetailFragment.ARG_ITEM_ID));
+            arguments.putString(ProfileDetailFragment.ARG_PROFILE_ID,
+                    getIntent().getStringExtra(ProfileDetailFragment.ARG_PROFILE_ID));
             ProfileDetailFragment fragment = new ProfileDetailFragment();
             fragment.setArguments(arguments);
             getSupportFragmentManager().beginTransaction()

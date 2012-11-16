@@ -36,6 +36,7 @@ import android.widget.ListView;
 
 /**
  * README : Modified version from the original swipe-to-dismiss to a special version with swipe-to-action.
+ * From <a href="https://plus.google.com/u/0/113735310430199015092/posts/Fgo1p5uWZLu">Roman Nuric - Swipe-To-Dismiss</a>
  * There are two possible actions depending on the swipe direction : left or right.<br/>
  * 
  * A {@link android.view.View.OnTouchListener} that makes the list items in a {@link ListView}

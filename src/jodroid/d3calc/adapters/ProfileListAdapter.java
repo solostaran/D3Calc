@@ -1,7 +1,8 @@
-package jodroid.d3calc;
+package jodroid.d3calc.adapters;
 
 import java.util.List;
 
+import jodroid.d3calc.ProfileListContent;
 import jodroid.d3calc.ProfileListContent.ProfileItem;
 import android.app.Activity;
 import android.content.Context;

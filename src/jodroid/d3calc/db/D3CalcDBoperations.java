@@ -1,5 +1,6 @@
-package jodroid.d3calc;
+package jodroid.d3calc.db;
 
+import jodroid.d3calc.ProfileListContent;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;

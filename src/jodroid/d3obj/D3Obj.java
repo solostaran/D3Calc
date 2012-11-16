@@ -16,8 +16,11 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.os.StrictMode;
 import android.util.Log;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 @Retention(RetentionPolicy.RUNTIME)
@@ -26,6 +29,8 @@ import android.widget.TextView;
 @interface D3FieldAnnotation {
 	String jsonName() default "";
 	String method() default "";
+	boolean percent() default false;
+	boolean image() default false;
 }
 
 /**
@@ -42,6 +47,14 @@ public abstract class D3Obj {
 	}
 	public static Context getContext() {
 		return context;
+	}
+	
+	static{
+		StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder()
+		.permitAll()
+		.build();
+
+		StrictMode.setThreadPolicy(policy);
 	}
 
 	/**
@@ -60,10 +73,10 @@ public abstract class D3Obj {
 				t=t.substring(6);
 			}
 
+			// verify annotation : field name may be different of the json name 
 			D3FieldAnnotation annot = f.getAnnotation(D3FieldAnnotation.class);
 			String jsonName = f.getName();
 			if (annot != null && !annot.jsonName().isEmpty()) jsonName = annot.jsonName();
-			//			Log.i(this.getClass().getName(), t+" "+f.getName());
 
 			try {
 				// If we expect an array
@@ -76,34 +89,22 @@ public abstract class D3Obj {
 					Object tab = Array.newInstance(arrayComponentType, jsonArray.length());
 					// Setting the array to this new instance
 					f.set(this, tab);
-					//					Log.i(this.getClass().getName(), tab.getClass().getSimpleName() + " ["+jsonArray.length()+"]");
+//					Log.i(this.getClass().getName(), tab.getClass().getSimpleName() + " ["+jsonArray.length()+"]");
 					// Parsing each item of the array
 					for (int i =  0; i < jsonArray.length(); i++) {
-						// Getting one array item
 						JSONObject jsonTmp = jsonArray.getJSONObject(i);
-						// Allocating the new item
 						Object val = arrayComponentType.newInstance();
 						Array.set(tab, i, val);
-						// Parsing this item
 						((D3Obj)val).jsonBuild(jsonTmp);
 					}
 				} else { // if this is not an array
 
 					// Getting the object depends on type (other types invoke an exception)
 					if (f.getType().isPrimitive() || f.getType() == String.class) {
-						// primitive types and Strings
-						//						if (f.getName().startsWith("_"))
-						//							f.set(this, jsonObject.get(f.getName().substring(1)));
-						//						else
-						//							f.set(this, jsonObject.get(f.getName()));
 						f.set(this, jsonObject.get(jsonName));
 					} else { 
 						// all D3Obj types
 						JSONObject obj;
-						//						if (f.getName().startsWith("_"))
-						//							obj = jsonObject.getJSONObject(f.getName().substring(1)); 
-						//						else
-						//							obj = jsonObject.getJSONObject(f.getName());
 						obj = jsonObject.getJSONObject(jsonName);
 						Object val = f.getType().newInstance();
 						f.set(this, val);
@@ -204,75 +205,87 @@ public abstract class D3Obj {
 		return str;
 	}
 
+	private String fieldToString(Field f)
+			throws NoSuchMethodException,
+			IllegalArgumentException,
+			IllegalAccessException,
+			InvocationTargetException  {
+		Class<?> c=this.getClass();
+		if (f.getType().isPrimitive() || f.getType().getSimpleName().equals("String")) {
+			D3FieldAnnotation annot = f.getAnnotation(D3FieldAnnotation.class);
+			if (annot != null && !annot.method().isEmpty()) {
+				Method m = c.getMethod(annot.method());
+				return (String)(m.invoke(this));
+			} else {
+				if (annot != null && annot.percent())
+					return String.format("%.2f", ((Double)f.get(this)).doubleValue()*100)+"%";
+				else
+					return f.get(this).toString();
+			}
+		}
+		return null;
+	}
+
+	public String getFieldByName(String name) {
+		Class<?> c=this.getClass();
+		Field f;
+		try {
+			f = c.getField(name);
+			return fieldToString(f);
+		} catch (NoSuchFieldException e) {
+			Log.w(this.getClass().getName(), e.getClass().getName() + ": " + e.getMessage());
+		} catch (IllegalArgumentException e) {
+			Log.e(this.getClass().getName(), e.getClass().getName() + ": " + e.getMessage());
+		} catch (IllegalAccessException e) {
+			Log.e(this.getClass().getName(), e.getClass().getName() + ": " + e.getMessage());
+		} catch (NoSuchMethodException e) {
+			Log.e(this.getClass().getName(), e.getClass().getName() + ": " + e.getMessage());
+		} catch (InvocationTargetException e) {
+			Log.e(this.getClass().getName(), e.getClass().getName() + ": " + e.getMessage());
+		}
+		return null;
+	}
+
 	/**
 	 * Reflection through fields of this instance to fill in TextViews.<br/>
-	 * We are searching for TextView with android:tag = "&lt;simple name of this class&gt;.&lt;field name&gt;".<br/>
+	 * We are searching for a view with android:tag = "&lt;simple name of this class&gt;.&lt;field name&gt;".<br/>
+	 * For now, there is 2 possibles views : ImageView and TextView
 	 * @param view Android view source (gives us the context and the base view containing subviews for display)
 	 */
 	public void fieldsToView(View view) {
 		if (view == null) return;
 		Class<?> c=this.getClass();
 		Field[] fields=c.getFields();
-		TextView v = null;
+		View v = null;
 		for (Field f : fields) {
-			if ((f.getModifiers() & Modifier.TRANSIENT) != 0) continue;
-			if (f.getType().isPrimitive() || f.getType().getSimpleName().equals("String")) {
-				String tag = this.getClass().getSimpleName()+"."+f.getName();
-				v = (TextView)view.findViewWithTag(tag);
-				if (v != null) {
+			try {
+				if ((f.getModifiers() & Modifier.TRANSIENT) != 0) continue;
+				if (f.getType().isPrimitive() || f.getType().getSimpleName().equals("String")) {
+					String tag = this.getClass().getSimpleName()+"."+f.getName();
+					v = view.findViewWithTag(tag);
 //					Log.i(this.getClass().getName(), "tag="+tag);
-					try {
-						D3FieldAnnotation annot = f.getAnnotation(D3FieldAnnotation.class);
-						if (annot != null && !annot.method().isEmpty()) {
+					if (v != null) {
+						D3FieldAnnotation annot = f.getAnnotation(D3FieldAnnotation.class);	
+						if (annot != null && annot.image() == true) {
 							Method m = c.getMethod(annot.method());
-							v.setText((String)(m.invoke(this)));
+							Bitmap b = (Bitmap)(m.invoke(this));
+							((ImageView)v).setImageBitmap(b);
 						} else {
-							//							String value = convertValueToString(view.getContext(), f.getName(), f.get(this));
-							v.setText(""+f.get(this));
+							((TextView)v).setText(fieldToString(f));
 						}
-					} catch (IllegalArgumentException e) {
-						Log.e(this.getClass().getName(), e.getClass().getName() + ": " + e.getMessage());
-					} catch (IllegalAccessException e) {
-						Log.e(this.getClass().getName(), e.getClass().getName() + ": " + e.getMessage());
-					} catch (InvocationTargetException e) {
-						Log.e(this.getClass().getName(), e.getClass().getName() + ": " + e.getMessage());
-					} catch (NoSuchMethodException e) {
-						Log.e(this.getClass().getName(), e.getClass().getName() + ": " + e.getMessage());
 					}
 				}
+			} catch (IllegalArgumentException e) {
+				Log.e(this.getClass().getName(), e.getClass().getName() + ": " + e.getMessage());
+			} catch (IllegalAccessException e) {
+				Log.e(this.getClass().getName(), e.getClass().getName() + ": " + e.getMessage());
+			} catch (InvocationTargetException e) {
+				Log.e(this.getClass().getName(), e.getClass().getName() + ": " + e.getMessage());
+			} catch (NoSuchMethodException e) {
+				Log.e(this.getClass().getName(), e.getClass().getName() + ": " + e.getMessage());
 			}
 		}
 	}
-
-	/**
-	 * Some values need conversion before being displayed.<br/>
-	 * I do conversions depending on the field name.
-	 * @param c We need the context to access to resource strings
-	 * @param fieldName conversion based on field name
-	 * @param value the value to convert
-	 * @return this will be displayed
-	 *
-	private String convertValueToString(Context c, String fieldName, Object value) {
-		if (fieldName.equals("gender")) {
-			if (((Integer)value).intValue() == 0)
-				return c.getText(R.string.gendermale).toString();
-			else
-				return c.getText(R.string.genderfemale).toString();
-		}
-		if (fieldName.equals("paragonLevel")) {
-			if (((Integer)value).intValue() > 0)
-				return c.getText(R.string.paragon)+" ("+value.toString()+")";
-			else
-				return new String();
-		}
-		if (fieldName.equals("hardcore")) {
-			if (((Boolean)value).booleanValue())
-				return c.getText(R.string.hardcore).toString();
-			else
-				return new String();
-		}
-		return value.toString();
-	}*/
 
 	/**
 	 * classic toString

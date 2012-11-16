@@ -5,6 +5,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import jodroid.d3calc.adapters.ProfileListAdapter;
+import jodroid.d3calc.db.D3CalcDBoperations;
+
 import android.content.Context;
 import android.database.Cursor;
 import android.os.Bundle;

@@ -1,4 +1,4 @@
-package jodroid.d3calc;
+package jodroid.d3calc.db;
 
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;

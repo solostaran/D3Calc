@@ -13,6 +13,7 @@
         
         <ImageView
             android:id="@+id/imageLeft"
+            android:contentDescription="@string/cd_swipeleft"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
@@ -39,6 +40,7 @@
 
         <ImageView
             android:id="@+id/imageRight"
+            android:contentDescription="@string/cd_swiperight"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@+id/labelDisplay"

@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="HeroStatsFields">
+		<item >armor</item>
+		<item >strength</item>
+		<item >dexterity</item>
+		<item >vitality</item>
+		<item >intelligence</item>
+	</string-array>
+	<string-array name="HeroOffenseFields">
+	    <item>damage</item>
+		<item>attackSpeed</item>
+		<item>critChance</item>
+		<item>critDamage</item>
+	</string-array>
+	<string-array name="HeroDefenseFields">
+	    <item>damageReduction</item>
+	    <item>physicalResist</item>
+	    <item>fireResist</item>
+	    <item>coldResist</item>
+	    <item>lightningResist</item>
+	    <item>poisonResist</item>
+	    <item>arcaneResist</item>
+	</string-array>
+	<string-array name="ItemSlotFields">
+	    <item name="">head</item>
+	    <item>neck</item>
+	    <item>shoulders</item>
+	    <item>torso</item>
+	    <item>bracers</item>
+	    <item>hands</item>
+	    <item>rightFinger</item>
+	    <item>leftFinger</item>
+	    <item>waist</item>
+	    <item>legs</item>
+	    <item>feet</item>
+	    <item>mainHand</item>
+	    <item>offHand</item>
+	</string-array>
+</resources>

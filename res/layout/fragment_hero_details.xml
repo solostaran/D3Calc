@@ -8,31 +8,64 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Stats:"
+        android:text="@string/title_attributes"
         style="@style/SectionTitle" />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+	    <TextView
+	        android:layout_width="0dp"
+	        android:layout_weight="1"
+	        android:layout_height="wrap_content"
+	        android:id="@+id/hero_attributes_names"
+	        style="@style/SectionText" />
+	    <TextView
+	        android:layout_width="0dp"
+	        android:layout_weight="1"
+	        android:layout_height="wrap_content"
+	        android:id="@+id/hero_attributes_values"
+	        style="@style/SectionText" />
+    </LinearLayout>
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:tag="D3Stats.armor"
-        style="@style/SectionText" />
+        android:text="@string/title_offense"
+        style="@style/SectionTitle" />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+	    <TextView
+	        android:layout_width="0dp"
+	        android:layout_weight="1"
+	        android:layout_height="wrap_content"
+	        android:id="@+id/hero_offense_names"
+	        style="@style/SectionText" />
+	    <TextView
+	        android:layout_width="0dp"
+	        android:layout_weight="1"
+	        android:layout_height="wrap_content"
+	        android:id="@+id/hero_offense_values"
+	        style="@style/SectionText" />
+    </LinearLayout>
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:tag="D3Stats.strength"
-        style="@style/SectionText" />
-    <TextView
+        android:text="@string/title_defense"
+        style="@style/SectionTitle" />
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:tag="D3Stats.dexterity"
-        style="@style/SectionText" />
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:tag="D3Stats.vitality"
-        style="@style/SectionText" />
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:tag="D3Stats.intelligence"
-        style="@style/SectionText" />
+        android:layout_height="wrap_content">
+	    <TextView
+	        android:layout_width="0dp"
+	        android:layout_weight="1"
+	        android:layout_height="wrap_content"
+	        android:id="@+id/hero_defense_names"
+	        style="@style/SectionText" />
+	    <TextView
+	        android:layout_width="0dp"
+	        android:layout_weight="1"
+	        android:layout_height="wrap_content"
+	        android:id="@+id/hero_defense_values"
+	        style="@style/SectionText" />
+    </LinearLayout>
 </LinearLayout>

@@ -1,5 +1,10 @@
-package jodroid.d3calc;
+package jodroid.d3calc.fragments;
 
+import jodroid.d3calc.ProfileListContent;
+import jodroid.d3calc.R;
+import jodroid.d3calc.R.layout;
+import jodroid.d3calc.R.string;
+import jodroid.d3calc.adapters.ProfileListAdapter;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;

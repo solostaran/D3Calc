@@ -8,6 +8,12 @@
     <color name="lightblue">#ccccff</color>
     <color name="mediumblue">#6666ff</color>
     <color name="lightgrey">#eeeeee</color>
+    
+    <color name="legendary">#FF8C00</color>
+    <color name="set">#7FFF00</color>
+    <color name="magic">#2534FF</color>
+    <color name="rare">#FFD700</color>
+    
     <style name="AppTheme" parent="android:Theme.Light" />
     <style name="ButtonBW" parent="android:Theme.Light">
         <item name="android:textColor">@color/white</item>
@@ -16,12 +22,12 @@
     </style>
     <style name="SectionTitle" parent="android:Theme.Light">
         <item name="android:textColor">@color/blue</item>
-        <item name="android:textSize">16dp</item>
+        <item name="android:textSize">12dp</item>
+        <item name="android:textStyle">italic</item>
     </style>
     <style name="SectionText" parent="android:Theme.Light">
         <item name="android:textColor">@color/black</item>
         <item name="android:textSize">12dp</item>
-        <item name="android:textStyle">italic</item>
         <item name="android:layout_marginLeft">10dp</item>
     </style>
 </resources>
