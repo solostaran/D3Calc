@@ -233,8 +233,9 @@ public abstract class D3Obj {
 			} else {
 				if (annot != null && annot.percent())
 					return String.format("%.2f", ((Double)f.get(this)).doubleValue()*100)+"%";
-				else
-					return f.get(this).toString();
+				if (f.getType() == double.class)
+					return String.format("%.2f", ((Double)f.get(this)).doubleValue());
+				return f.get(this).toString();
 			}
 		}
 		return null;
