@@ -116,4 +116,6 @@
 	<string name="cd_item_icon">Item icon</string>
 	<string name="item_name">Item Name</string>
 	<string name="item_slot">Item Slot</string>
+	<string name="item_attributes">Attributes &#8230;</string>
+	<string name="item_armor">Armor</string>
 </resources>

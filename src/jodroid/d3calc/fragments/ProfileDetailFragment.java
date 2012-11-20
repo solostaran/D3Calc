@@ -100,16 +100,17 @@ public class ProfileDetailFragment extends Fragment implements OnItemClickListen
 	public void getUrlProfile(String url) {
 		D3json.get(url, null, new JsonHttpResponseHandler() {
 			public void onSuccess(JSONObject obj) {
-				if (progressDialog != null) progressDialog.dismiss();
 				try {
 					String code = obj.getString("code");
 					if (code != null) {
 						Log.w(getActivity().getClass().getName(), "code="+code);
 						Toast.makeText(getActivity(), obj.getString("reason"), Toast.LENGTH_LONG).show();
 						return;
-					}	
-				} catch (JSONException e) {}
+					}
+				}
+				catch (JSONException e) {}
 				buildAndDisplay(obj);
+				if (progressDialog != null) progressDialog.dismiss();
 			}
 			
 			public void onFailure(Throwable e, JSONObject obj) {

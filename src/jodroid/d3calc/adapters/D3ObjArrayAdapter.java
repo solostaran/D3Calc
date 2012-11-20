@@ -10,8 +10,8 @@ import android.widget.ArrayAdapter;
 
 public class D3ObjArrayAdapter extends ArrayAdapter<D3Obj> {
 
-	private Context context;
-	private int layoutResourceId;   
+	protected Context context;
+	protected int layoutResourceId;   
 	protected D3Obj [] objects = null;
 
 	public D3ObjArrayAdapter(Context context, int layoutResourceId, D3Obj[] objects) {

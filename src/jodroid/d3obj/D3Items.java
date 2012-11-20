@@ -77,7 +77,7 @@ public class D3Items extends D3Obj {
 		item.itemSlot = context.getResources().getString(resId);
 	}
 	
-	public D3ItemLite [] toItemArray() {
+	public void buildItemArray() {
 		ArrayList<D3ItemLite> list = new ArrayList<D3ItemLite>();
 		if (head != null) addItem(list, head, R.string.slot_head);
 		if (neck != null) addItem(list, neck, R.string.slot_neck);
@@ -92,6 +92,11 @@ public class D3Items extends D3Obj {
 		if (mainHand != null) addItem(list, mainHand, R.string.slot_mainHand);
 		if (offHand != null) addItem(list, offHand, R.string.slot_offHand);
 		itemArray = list.toArray(new D3ItemLite[1]);
-		return itemArray;
 	}
+	
+//	public void setItem(D3ItemLite item) {
+//		if (item.itemSlot == null || item.itemSlot.isEmpty()) return;
+//		if (item.itemSlot.equals(context.getString(R.string.slot_head))) head = item;
+//		// TODO : rest of item slots
+//	}
 }

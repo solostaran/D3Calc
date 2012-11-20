@@ -27,10 +27,11 @@ import android.widget.TextView;
 @Target(ElementType.FIELD)
 @Inherited
 @interface D3FieldAnnotation {
-	String jsonName() default "";
-	String method() default "";
-	boolean percent() default false;
-	boolean image() default false;
+	String jsonName() default "";  // jsonName in the file in case it different from the field name 
+	String method() default "";  // if we need to provide a different result than the field value
+	boolean percent() default false;  // in case of a percent value
+	boolean image() default false;  // in case it is an image it will change the fieldsToView
+	boolean debug() default true;  // false to avoid JSONException messages for this field
 }
 
 /**
@@ -41,13 +42,15 @@ import android.widget.TextView;
  */
 public abstract class D3Obj {
 
-	protected static Context context;
+	transient protected static Context context;
 	public static void setContext(Context c) {
 		context = c;
 	}
 	public static Context getContext() {
 		return context;
 	}
+	
+	transient protected boolean debug = true; 
 	
 	static{
 		StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder()
@@ -56,12 +59,16 @@ public abstract class D3Obj {
 
 		StrictMode.setThreadPolicy(policy);
 	}
+	
+	public void jsonBuild(JSONObject jsonObject) {
+		jsonBuild(jsonObject, true);
+	}
 
 	/**
 	 * Parse recursively a JSONObject.
 	 * @param jsonObject the json object to parse
 	 */
-	public void jsonBuild(JSONObject jsonObject) {
+	public void jsonBuild(JSONObject jsonObject, boolean debug) {
 		Class<?> c=this.getClass();
 		Field[] fields=c.getFields();  // Get all fields
 
@@ -77,6 +84,7 @@ public abstract class D3Obj {
 			D3FieldAnnotation annot = f.getAnnotation(D3FieldAnnotation.class);
 			String jsonName = f.getName();
 			if (annot != null && !annot.jsonName().isEmpty()) jsonName = annot.jsonName();
+			if (annot != null && !annot.debug()) debug = false;
 
 			try {
 				// If we expect an array
@@ -89,13 +97,16 @@ public abstract class D3Obj {
 					Object tab = Array.newInstance(arrayComponentType, jsonArray.length());
 					// Setting the array to this new instance
 					f.set(this, tab);
-//					Log.i(this.getClass().getName(), tab.getClass().getSimpleName() + " ["+jsonArray.length()+"]");
 					// Parsing each item of the array
 					for (int i =  0; i < jsonArray.length(); i++) {
-						JSONObject jsonTmp = jsonArray.getJSONObject(i);
-						Object val = arrayComponentType.newInstance();
-						Array.set(tab, i, val);
-						((D3Obj)val).jsonBuild(jsonTmp);
+						if (f.getType().getComponentType().isPrimitive() || f.getType().getComponentType() == String.class) {
+							Array.set(tab, i, jsonArray.get(i));
+						} else {
+							JSONObject jsonTmp = jsonArray.getJSONObject(i);
+							Object val = arrayComponentType.newInstance();
+							Array.set(tab, i, val);
+							((D3Obj)val).jsonBuild(jsonTmp, debug);
+						}
 					}
 				} else { // if this is not an array
 
@@ -108,7 +119,7 @@ public abstract class D3Obj {
 						obj = jsonObject.getJSONObject(jsonName);
 						Object val = f.getType().newInstance();
 						f.set(this, val);
-						((D3Obj)val).jsonBuild(obj); // exception if not a D3Obj
+						((D3Obj)val).jsonBuild(obj, debug); // exception if not a D3Obj
 					}
 				}
 			} catch (IllegalArgumentException e) {
@@ -116,10 +127,13 @@ public abstract class D3Obj {
 			} catch (IllegalAccessException e) {
 				Log.e(this.getClass().getName(), e.getClass().getName() + "["+f.getName()+"]: " + e.getMessage());
 			} catch (JSONException e) {
-				Log.w(this.getClass().getName(), e.getClass().getName() + ": " + e.getMessage());
+				if (debug)
+					Log.w(this.getClass().getName(), e.getClass().getName() + ": " + e.getMessage());
 			} catch (InstantiationException e) {
 				Log.e(this.getClass().getName(), e.getClass().getName() + "["+f.getName()+"]: " + e.getMessage());
 			}
+			
+			if (annot != null && !annot.debug()) debug = true;
 		}
 	}
 

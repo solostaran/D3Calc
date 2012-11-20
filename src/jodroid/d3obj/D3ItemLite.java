@@ -22,6 +22,17 @@ public class D3ItemLite extends D3Obj {
 	transient protected Bitmap itemIcon = null;
 	transient public String itemSlot = null;
 	
+	public D3ItemLite () {}
+	public D3ItemLite (D3ItemLite item) {
+		id = item.id;
+		name = item.name;
+		icon = item.icon;
+		displayColor = item.displayColor;
+		tooltipParams = item.tooltipParams;
+		itemIcon = item.itemIcon;
+		itemSlot = item.itemSlot;
+	}
+	
 	public String toString() {
 		return id+" / "+name;
 	}
