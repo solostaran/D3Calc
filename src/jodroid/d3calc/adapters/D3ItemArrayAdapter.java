@@ -5,6 +5,8 @@ import jodroid.d3obj.D3Item;
 import jodroid.d3obj.D3ItemLite;
 import android.app.Activity;
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.os.AsyncTask;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,12 +27,13 @@ public class D3ItemArrayAdapter extends D3ObjArrayAdapter {
 		TextView armorView;
 		ProgressBar progressBar;
 		TextView attributesView;
+		int position;
 	}
 	
 	/**
 	 * Full redefinition of {@link jodroid.d3calc.adapters.D3ObjArrayAdapter#getView(int, View, ViewGroup)}
 	 */
-	public View getView(int position, View convertView, ViewGroup parent)  {
+	public View getView(final int position, View convertView, ViewGroup parent)  {
 		
 		ViewHolder holder = null;
 		View row = convertView;
@@ -42,8 +45,36 @@ public class D3ItemArrayAdapter extends D3ObjArrayAdapter {
 	    	holder.nameView = (TextView)row.findViewById(R.id.itemName);
 	    	holder.slotView = (TextView)row.findViewById(R.id.itemSlot);
 	    	holder.iconView = (ImageView)row.findViewById(R.id.itemIcon);
+	    	holder.iconView.setVisibility(View.INVISIBLE);
 	    	holder.armorView = (TextView)row.findViewById(R.id.itemArmor);
 	    	holder.attributesView = (TextView)row.findViewById(R.id.itemAttributes);
+	    	holder.position = position;
+	    	holder.progressBar = (ProgressBar)row.findViewById(R.id.progressBarLoadImage);
+	    	
+	    	// Using an AsyncTask to load the slow images in a background thread
+			new AsyncTask<ViewHolder, Void, Bitmap>() {
+			    private ViewHolder v;
+
+			    @Override
+			    protected Bitmap doInBackground(ViewHolder... params) {
+			        v = params[0];
+			        D3ItemLite tmp = ((D3ItemLite[])objects)[v.position];
+			        return tmp.getIcon();
+			    }
+
+			    @Override
+			    protected void onPostExecute(Bitmap result) {
+			        super.onPostExecute(result);
+			        if (v.position == position) {
+			            // If this item hasn't been recycled already, hide the
+			            // progress and set and show the image
+			            v.progressBar.setVisibility(View.GONE);
+			            v.iconView.setVisibility(View.VISIBLE);
+			            v.iconView.setImageBitmap(result);
+			        }
+			    }
+			}.execute(holder);
+			
 	    	row.setTag(holder);
 	    } else {
 	    	holder = (ViewHolder)row.getTag();
@@ -58,6 +89,9 @@ public class D3ItemArrayAdapter extends D3ObjArrayAdapter {
 		
 		// DISPLAY ITEM SLOT's NAME
 		holder.slotView.setText(tmp.itemSlot);
+		
+		// DISPLAY ITEM ICON
+		holder.iconView.setImageBitmap(tmp.getIcon());
 		
 		// DISPLAY ITEM ATTRIBUTES
 		String str = new String();
