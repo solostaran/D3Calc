@@ -5,6 +5,8 @@ import jodroid.d3calc.fragments.HeroFragment;
 import jodroid.d3calc.fragments.ItemListFragment;
 import jodroid.d3calc.fragments.ProfileDetailFragment;
 import jodroid.d3obj.D3Hero;
+import jodroid.d3obj.D3Item;
+import jodroid.d3obj.D3ItemLite;
 import jodroid.d3obj.D3Profile;
 
 import org.json.JSONException;
@@ -19,13 +21,8 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
-import android.view.Gravity;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.loopj.android.http.JsonHttpResponseHandler;
@@ -44,6 +41,7 @@ public class HeroStripActivity extends FragmentActivity {
 	public static final String ARG_HERO_ID = "hero_id";
 	private String mHeroId;
 	private ProgressDialog mProgressDialog;
+	private int progressValue;
 	public static D3Hero mHero;
 
 	/**
@@ -60,7 +58,7 @@ public class HeroStripActivity extends FragmentActivity {
 	ViewPager mViewPager;
 	
 	static HeroFragment mHeroDetailsFrag = new HeroDetailsFragment();
-	static HeroFragment mHeroItemsFrag = new ItemListFragment();
+	static ItemListFragment mHeroItemsFrag = new ItemListFragment();
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -89,6 +87,7 @@ public class HeroStripActivity extends FragmentActivity {
 		this.overridePendingTransition(R.anim.enter_from_left, R.anim.exit_to_right);
 		if (savedInstanceState == null) {
 			mProgressDialog = ProgressDialog.show(this, "", "Loading hero ...");
+			mProgressDialog.setCancelable(true);
 			//			getUrlHero("http://www.ecole.ensicaen.fr/~reynaud/android/hero-4808413.json"); // dev example
 			String url = D3Url.hero2Url(mItem, mHeroId);
 			Log.i(this.getClass().getName(), ""+url);
@@ -122,7 +121,7 @@ public class HeroStripActivity extends FragmentActivity {
 	public void getUrlHero(String url) {
 		D3json.get(url, null, new JsonHttpResponseHandler() {
 			public void onSuccess(JSONObject obj) {
-				if (mProgressDialog != null) mProgressDialog.dismiss();
+//				if (mProgressDialog != null) mProgressDialog.dismiss();
 				try {
 					String code = obj.getString("code");
 					if (code != null) {
@@ -135,7 +134,7 @@ public class HeroStripActivity extends FragmentActivity {
 			}
 
 			public void onFailure(Throwable e, JSONObject obj) {
-				if (mProgressDialog != null) mProgressDialog.dismiss();
+//				if (mProgressDialog != null) mProgressDialog.dismiss();
 				Log.e(D3Profile.class.getName(), "json failure: "+e.getMessage());
 			}
 		});
@@ -150,8 +149,69 @@ public class HeroStripActivity extends FragmentActivity {
 		mHero.jsonBuild(obj);
 		getActionBar().setTitle(mHero.name);
 		mHeroDetailsFrag.setHero(mHero);
-		mHeroItemsFrag.setHero(mHero);
+		if (mHero.items.itemArray == null) mHero.items.buildItemArray();
+//		mProgressDialog = new ProgressDialog(this);
+//		mProgressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+//		mProgressDialog.setMax(mHero.items.itemArray.length);
+//		mProgressDialog.setProgress(mHero.items.itemArray.length);
+//		mProgressDialog.show();
+		progressValue = mHero.items.itemArray.length;
+		for (int i = 0; i < mHero.items.itemArray.length; i++) {
+			D3ItemLite item = mHero.items.itemArray[i];
+			if (!(item instanceof D3Item)) {
+				getUrlItem(D3Url.item2Url(item), i);
+			}
+		}
 		mViewPager.setCurrentItem(0);
+	}
+	
+	/**
+	 * Build an unique item in a specific position.<br/>
+	 * Parsing the item is done in background.
+	 * @param position item position in the items' array
+	 * @param obj the JSONObject in which it parses
+	 */
+	synchronized void buildItem(final int position, final JSONObject obj) {
+		D3Item item = new D3Item(mHero.items.itemArray[position]);
+		mProgressDialog.setMessage("Getting item ("+progressValue+")");
+		Log.i(this.getClass().getSimpleName(), "parsing item ("+position+") : "+item.itemSlot);
+		item.jsonBuild(obj);
+		mHero.items.itemArray[position] = item;
+		if (mProgressDialog != null) {
+			progressValue--;
+			if (progressValue == 0) {
+				mProgressDialog.dismiss();
+				mHeroItemsFrag.setHero(mHero);
+				mHeroItemsFrag.mAdapter.notifyDataSetChanged();
+			}
+		}
+	}
+	
+	/**
+	 * Get a JSON item (from D3api) to provide a hierarchical representation of this file in the form of D3Obj.<br/>
+	 * The HttpRequest is asynchronous.
+	 * @param url where to find the JSON file
+	 * @return the player profile's instance
+	 */
+	public void getUrlItem(String url, final int position) {
+		D3json.get(url, null, new JsonHttpResponseHandler() {
+			public synchronized void onSuccess(JSONObject obj) {
+				try {
+					String code = obj.getString("code");
+					if (code != null) {
+						Log.w(this.getClass().getName(), "code="+code);
+						Toast.makeText(HeroStripActivity.this, obj.getString("reason"), Toast.LENGTH_LONG).show();
+						return;
+					}
+				}
+				catch (JSONException e) {}
+				buildItem(position, obj);
+			}
+			
+			public synchronized void onFailure(Throwable e, JSONObject obj) {
+				Log.e(D3Profile.class.getSimpleName(), "json failure: "+e.getMessage());
+			}
+		});
 	}
 
 	/**
@@ -171,10 +231,6 @@ public class HeroStripActivity extends FragmentActivity {
 				fragment = mHeroDetailsFrag;
 			} else {
 				fragment = mHeroItemsFrag;
-//				fragment = new DummySectionFragment();
-//				Bundle args = new Bundle();
-//				args.putInt(DummySectionFragment.ARG_SECTION_NUMBER, i + 1);
-//				fragment.setArguments(args);
 			}
 			return fragment;
 		}
@@ -192,26 +248,6 @@ public class HeroStripActivity extends FragmentActivity {
 			//                case 2: return getString(R.string.title_sectionShoulders).toUpperCase();
 			}
 			return null;
-		}
-	}
-
-	/**
-	 * A dummy fragment representing a section of the app, but that simply displays dummy text.
-	 */
-	public static class DummySectionFragment extends HeroFragment {
-		public DummySectionFragment() {
-		}
-
-		public static final String ARG_SECTION_NUMBER = "section_number";
-
-		@Override
-		public View onCreateView(LayoutInflater inflater, ViewGroup container,
-				Bundle savedInstanceState) {
-			TextView textView = new TextView(getActivity());
-			textView.setGravity(Gravity.CENTER);
-			Bundle args = getArguments();
-			textView.setText(Integer.toString(args.getInt(ARG_SECTION_NUMBER)));
-			return textView;
 		}
 	}
 }

@@ -20,6 +20,10 @@ public class D3ItemArrayAdapter extends D3ObjArrayAdapter {
 		super(context, layoutResourceId, items);
 	}
 	
+	/**
+	 * Recycling mechanism data holder.
+	 * @see <a href="http://developer.android.com/training/improving-layouts/smooth-scrolling.html">Smooth Scrolling on ListView</a>
+	 */
 	static class ViewHolder {
 		TextView nameView;
 		TextView slotView;
@@ -31,13 +35,20 @@ public class D3ItemArrayAdapter extends D3ObjArrayAdapter {
 	}
 	
 	/**
-	 * Full redefinition of {@link jodroid.d3calc.adapters.D3ObjArrayAdapter#getView(int, View, ViewGroup)}
+	 * Fill in the item view with D3ItemLite or D3Item (if available) data.<br/>
+	 * Take care of ListView recycling mechanism.
+	 * @param position ListView item number (defined as <i>final</i> for use with AsyncTask)
+	 * @param convertView this is for view recycling in conjunction with a ViewHolder)
+	 * @param parent useful to inflate views
+	 * @see <a href="http://developer.android.com/training/improving-layouts/smooth-scrolling.html">Smooth Scrolling on ListView</a>
+	 * @see D3ItemArrayAdapter.ViewHolder
 	 */
 	public View getView(final int position, View convertView, ViewGroup parent)  {
 		
 		ViewHolder holder = null;
 		View row = convertView;
-		 
+
+		// NEW VIEW
 	    if (convertView == null) {
 	    	LayoutInflater inflater = ((Activity)context).getLayoutInflater();
 			row = inflater.inflate(layoutResourceId, parent, false);
@@ -77,6 +88,7 @@ public class D3ItemArrayAdapter extends D3ObjArrayAdapter {
 			
 	    	row.setTag(holder);
 	    } else {
+	    	// RECYCLED VIEW
 	    	holder = (ViewHolder)row.getTag();
 	    }
 	    
