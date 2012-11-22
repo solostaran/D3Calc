@@ -12,8 +12,12 @@ import jodroid.d3obj.D3Profile;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
+import android.animation.ValueAnimator;
 import android.app.ActionBar;
 import android.app.ProgressDialog;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
@@ -23,6 +27,10 @@ import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.loopj.android.http.JsonHttpResponseHandler;
@@ -41,8 +49,11 @@ public class HeroStripActivity extends FragmentActivity {
 	public static final String ARG_HERO_ID = "hero_id";
 	private String mHeroId;
 	private ProgressDialog mProgressDialog;
-	private int progressValue;
+	private int mProgressValue;
 	public static D3Hero mHero;
+	private JSONObject [] mJsonItems;
+	private ProgressBar mLoadBar;
+	private TextView mLoadMessage;
 
 	/**
 	 * The {@link android.support.v4.view.PagerAdapter} that will provide fragments for each of the
@@ -65,6 +76,9 @@ public class HeroStripActivity extends FragmentActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_hero_strip);
 		getActionBar().setDisplayHomeAsUpEnabled(true);
+		
+		mLoadBar = (ProgressBar)findViewById(R.id.loadbar);
+		mLoadMessage = (TextView)findViewById(R.id.loadmessage);
 
 		if (savedInstanceState == null) {
 			mItem = ProfileListContent.ITEM_MAP.get(getIntent().getStringExtra(ProfileDetailFragment.ARG_PROFILE_ID));
@@ -86,11 +100,11 @@ public class HeroStripActivity extends FragmentActivity {
 
 		this.overridePendingTransition(R.anim.enter_from_left, R.anim.exit_to_right);
 		if (savedInstanceState == null) {
-			mProgressDialog = ProgressDialog.show(this, "", "Loading hero ...");
+			mProgressDialog = ProgressDialog.show(this, "", getString(R.string.hero_load_message));
 			mProgressDialog.setCancelable(true);
 			//			getUrlHero("http://www.ecole.ensicaen.fr/~reynaud/android/hero-4808413.json"); // dev example
 			String url = D3Url.hero2Url(mItem, mHeroId);
-			Log.i(this.getClass().getName(), ""+url);
+			Log.i(this.getClass().getName(), url);
 			getUrlHero(url);
 		}
 	}
@@ -121,7 +135,6 @@ public class HeroStripActivity extends FragmentActivity {
 	public void getUrlHero(String url) {
 		D3json.get(url, null, new JsonHttpResponseHandler() {
 			public void onSuccess(JSONObject obj) {
-//				if (mProgressDialog != null) mProgressDialog.dismiss();
 				try {
 					String code = obj.getString("code");
 					if (code != null) {
@@ -130,59 +143,75 @@ public class HeroStripActivity extends FragmentActivity {
 						return;
 					}	
 				} catch (JSONException e) {}
-				buildAndDisplay(obj);
+				buildHero(obj);
 			}
 
 			public void onFailure(Throwable e, JSONObject obj) {
-//				if (mProgressDialog != null) mProgressDialog.dismiss();
 				Log.e(D3Profile.class.getName(), "json failure: "+e.getMessage());
 			}
 		});
 	}
 
 	/**
-	 * Build objects from the JSON file and display them
+	 * Build a D3Hero from the JSON file and display the hero details.<br/>
+	 * The JSON parsing is time consuming so we have to do it in background.
 	 * @param obj a JSON object parsed from the file
 	 */
-	private void buildAndDisplay(JSONObject obj) {
-		mHero = new D3Hero();
-		mHero.jsonBuild(obj);
-		getActionBar().setTitle(mHero.name);
-		mHeroDetailsFrag.setHero(mHero);
-		if (mHero.items.itemArray == null) mHero.items.buildItemArray();
+	private void buildHero(JSONObject obj) {
+		// Using an AsyncTask to parse a hero
+		new AsyncTask<JSONObject, Void, Void>() {
+			private JSONObject o;
+			
+			@Override
+			protected void onPreExecute() {
+				mProgressDialog.setMessage(getString(R.string.hero_parse_message));
+				mProgressDialog.setCancelable(true);
+				mHero = new D3Hero();
+			}
+
+			@Override
+			protected Void doInBackground(JSONObject... params) {
+				o = params[0];
+				mHero.jsonBuild(o);
+				return null;
+			}
+
+			@Override
+			protected void onPostExecute(Void v) {
+				super.onPostExecute(v);
+				mProgressDialog.dismiss();
+				getActionBar().setTitle(mHero.name);
+				mLoadBar.setVisibility(View.VISIBLE);
+				mLoadMessage.setVisibility(View.VISIBLE);
+				mHeroDetailsFrag.setHero(mHero);
+				mHeroItemsFrag.setHero(mHero);
+				mViewPager.setCurrentItem(0);
+				loadItems();
+			}
+		}.execute(obj);	
+	}
+	
+	/**
+	 * Load all items with AsyncHTTP.
+	 */
+	private void loadItems() {
+		mHero.items.buildItemArray();
 //		mProgressDialog = new ProgressDialog(this);
 //		mProgressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
 //		mProgressDialog.setMax(mHero.items.itemArray.length);
 //		mProgressDialog.setProgress(mHero.items.itemArray.length);
+//		mProgressDialog.setMessage(getString(R.string.items_load_message));
 //		mProgressDialog.show();
-		progressValue = mHero.items.itemArray.length;
+		mLoadBar.setMax(mHero.items.itemArray.length);
+		mLoadBar.setProgress(0);
+		mLoadMessage.setText(getString(R.string.items_load_message));
+		
+		mJsonItems = new JSONObject[mHero.items.itemArray.length];
+		mProgressValue = mHero.items.itemArray.length;
 		for (int i = 0; i < mHero.items.itemArray.length; i++) {
 			D3ItemLite item = mHero.items.itemArray[i];
 			if (!(item instanceof D3Item)) {
 				getUrlItem(D3Url.item2Url(item), i);
-			}
-		}
-		mViewPager.setCurrentItem(0);
-	}
-	
-	/**
-	 * Build an unique item in a specific position.<br/>
-	 * Parsing the item is done in background.
-	 * @param position item position in the items' array
-	 * @param obj the JSONObject in which it parses
-	 */
-	synchronized void buildItem(final int position, final JSONObject obj) {
-		D3Item item = new D3Item(mHero.items.itemArray[position]);
-		mProgressDialog.setMessage("Getting item ("+progressValue+")");
-		Log.i(this.getClass().getSimpleName(), "parsing item ("+position+") : "+item.itemSlot);
-		item.jsonBuild(obj);
-		mHero.items.itemArray[position] = item;
-		if (mProgressDialog != null) {
-			progressValue--;
-			if (progressValue == 0) {
-				mProgressDialog.dismiss();
-				mHeroItemsFrag.setHero(mHero);
-				mHeroItemsFrag.mAdapter.notifyDataSetChanged();
 			}
 		}
 	}
@@ -205,13 +234,117 @@ public class HeroStripActivity extends FragmentActivity {
 					}
 				}
 				catch (JSONException e) {}
-				buildItem(position, obj);
+				mJsonItems[position] = obj;
+				Log.i(HeroStripActivity.class.getName(), "Item("+position+","+mHero.items.itemArray[position].itemSlot+") loaded.");
+				mProgressValue--;
+//				mProgressDialog.setProgress(mProgressValue);
+				mLoadBar.setProgress(mProgressValue);
+				if (mProgressValue == 0) {
+					buildItems();
+				}
 			}
 			
 			public synchronized void onFailure(Throwable e, JSONObject obj) {
 				Log.e(D3Profile.class.getSimpleName(), "json failure: "+e.getMessage());
 			}
 		});
+	}
+	
+	/**
+	 * Parse all items in background.
+	 */
+	private void buildItems() {
+		// Using an AsyncTask to parse a hero
+		new AsyncTask<JSONObject [], Integer, Integer>() {
+			private JSONObject [] tab;
+			
+			@Override
+			protected void onPreExecute () {
+//				mProgressDialog.setMessage(getString(R.string.items_parse_message));
+//				mProgressDialog.setProgress(0);
+				mLoadMessage.setText(getString(R.string.items_parse_message));
+				mLoadBar.setProgress(0);
+			}
+
+			@Override
+			protected Integer doInBackground(JSONObject[]... params) {
+				tab = params[0];
+				for (int i = 0; i < tab.length; i++) {
+					D3Item item = new D3Item(mHero.items.itemArray[i]);
+					item.jsonBuild(tab[i]);
+					mHero.items.itemArray[i] = item;
+					publishProgress(i);
+				}
+				return tab.length;
+			}
+			
+			@Override
+			protected void onProgressUpdate(Integer... progress) {
+//				mProgressDialog.setProgress(progress[0]);
+				mLoadBar.setProgress(progress[0]);
+				Log.i(HeroStripActivity.class.getName(), "Parsing item "+progress[0]);
+			}
+
+			@Override
+			protected void onPostExecute(Integer n) {
+				super.onPostExecute(n);
+				mLoadBar.setProgress(mLoadBar.getMax());
+				// Undisplay the loading message and progress bar
+				reduceView(mLoadBar);
+				reduceView(mLoadMessage);
+//				mProgressDialog.dismiss();
+				mHeroItemsFrag.updateView();;
+			}
+		}.execute(mJsonItems);
+	}
+	
+	/**
+	 * Animate a view to its minimum height size of 1 and make it invisible at the end.<br/>
+	 * @param view the view to be reduced to none
+	 * @see ValueAnimator
+	 */
+	private void reduceView(final View view) {
+		final ViewGroup.LayoutParams lp = view.getLayoutParams();
+		final int originalHeight = view.getHeight();
+		ValueAnimator animator;
+		int animationTime = HeroStripActivity.this.getResources().getInteger(
+                android.R.integer.config_mediumAnimTime);
+		animator = ValueAnimator.ofInt(originalHeight, 1).setDuration(animationTime);
+		animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            @Override
+            public void onAnimationUpdate(ValueAnimator valueAnimator) {
+                lp.height = (Integer) valueAnimator.getAnimatedValue();
+                view.setLayoutParams(lp);
+            }
+        });
+		animator.addListener(new AnimatorListenerAdapter() {
+            @Override
+            public void onAnimationEnd(Animator animation) {
+            	view.setVisibility(View.INVISIBLE);
+            }
+		});
+		animator.start();
+	}
+	
+	/**
+	 * Build an unique item in a specific position.<br/>
+	 * Parsing the item is done in background.
+	 * @param position item position in the items' array
+	 * @param obj the JSONObject in which it parses
+	 */
+	synchronized void buildItem(final int position, final JSONObject obj) {
+		D3Item item = new D3Item(mHero.items.itemArray[position]);
+		mProgressDialog.setMessage("Getting item ("+mProgressValue+")");
+		Log.i(this.getClass().getSimpleName(), "parsing item ("+position+") : "+item.itemSlot);
+		item.jsonBuild(obj);
+		mHero.items.itemArray[position] = item;
+		if (mProgressDialog != null) {
+			mProgressValue--;
+			if (mProgressValue == 0) {
+				mProgressDialog.dismiss();
+				mHeroItemsFrag.setHero(mHero);
+			}
+		}
 	}
 
 	/**
