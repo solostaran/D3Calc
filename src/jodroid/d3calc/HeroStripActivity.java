@@ -15,6 +15,7 @@ import org.json.JSONObject;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.animation.ValueAnimator;
+import android.annotation.SuppressLint;
 import android.app.ActionBar;
 import android.app.ProgressDialog;
 import android.os.AsyncTask;
@@ -25,7 +26,6 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
-import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -40,7 +40,9 @@ import d3api.D3json;
 
 public class HeroStripActivity extends FragmentActivity {
 
-	public static final String ARG_HOST_VAL = "host_value";
+	private static final boolean DEBUG = false;
+	
+    public static final String ARG_HOST_VAL = "host_value";
 	public static final String ARG_NAME_VAL = "name_value";
 	public static final String ARG_TAG_VAL = "tag_value";
 	public static final String ARG_HERO_VAL = "hero_value";
@@ -68,7 +70,7 @@ public class HeroStripActivity extends FragmentActivity {
 	 */
 	ViewPager mViewPager;
 	
-	static HeroFragment mHeroDetailsFrag = new HeroDetailsFragment();
+	static HeroFragment mHeroDetailsFrag = new HeroDetailsFragment();;
 	static ItemListFragment mHeroItemsFrag = new ItemListFragment();
 
 	@Override
@@ -102,25 +104,42 @@ public class HeroStripActivity extends FragmentActivity {
 		if (savedInstanceState == null) {
 			mProgressDialog = ProgressDialog.show(this, "", getString(R.string.hero_load_message));
 			mProgressDialog.setCancelable(true);
-			//			getUrlHero("http://www.ecole.ensicaen.fr/~reynaud/android/hero-4808413.json"); // dev example
+//			getUrlHero("http://www.ecole.ensicaen.fr/~reynaud/android/hero-4808413.json"); // dev example
 			String url = D3Url.hero2Url(mItem, mHeroId);
 			Log.i(this.getClass().getName(), url);
 			getUrlHero(url);
+		} else {
+//			Log.i(this.getClass().getName(), "Recreate activity with : "+mHero.name);
+		}
+	}
+	
+	@Override
+	protected void onSaveInstanceState(Bundle outState) {
+		super.onSaveInstanceState(outState);
+	}
+	
+	@Override
+	protected void onRestoreInstanceState(Bundle savedInstanceState) {
+		super.onRestoreInstanceState(savedInstanceState);
+		if (mHero != null) {
+			getActionBar().setTitle(mHero.name);
+			reduceView(mLoadBar);
+			reduceView(mLoadMessage);
 		}
 	}
 
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		getMenuInflater().inflate(R.menu.activity_hero_strip, menu);
-		return true;
-	}
+//	@Override
+//	public boolean onCreateOptionsMenu(Menu menu) {
+//		getMenuInflater().inflate(R.menu.activity_hero_strip, menu);
+//		return true;
+//	}
 
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 		case android.R.id.home:
-			//			NavUtils.navigateUpFromSameTask(this);
+//			NavUtils.navigateUpFromSameTask(this);
 			finish();
 			return true;
 		}
@@ -138,7 +157,7 @@ public class HeroStripActivity extends FragmentActivity {
 				try {
 					String code = obj.getString("code");
 					if (code != null) {
-						Log.w(HeroDropdownActivity.class.getName(), "code="+code);
+						Log.w(HeroStripActivity.this.getClass().getName(), "code="+code);
 						Toast.makeText(HeroStripActivity.this, obj.getString("reason"), Toast.LENGTH_LONG).show();
 						return;
 					}	
@@ -202,6 +221,7 @@ public class HeroStripActivity extends FragmentActivity {
 //		mProgressDialog.setProgress(mHero.items.itemArray.length);
 //		mProgressDialog.setMessage(getString(R.string.items_load_message));
 //		mProgressDialog.show();
+
 		mLoadBar.setMax(mHero.items.itemArray.length);
 		mLoadBar.setProgress(0);
 		mLoadMessage.setText(getString(R.string.items_load_message));
@@ -235,7 +255,7 @@ public class HeroStripActivity extends FragmentActivity {
 				}
 				catch (JSONException e) {}
 				mJsonItems[position] = obj;
-				Log.i(HeroStripActivity.class.getName(), "Item("+position+","+mHero.items.itemArray[position].itemSlot+") loaded.");
+				if (DEBUG) Log.i(HeroStripActivity.class.getName(), "Item("+position+","+mHero.items.itemArray[position].itemSlot+") loaded.");
 				mProgressValue--;
 //				mProgressDialog.setProgress(mProgressValue);
 				mLoadBar.setProgress(mProgressValue);
@@ -282,7 +302,7 @@ public class HeroStripActivity extends FragmentActivity {
 			protected void onProgressUpdate(Integer... progress) {
 //				mProgressDialog.setProgress(progress[0]);
 				mLoadBar.setProgress(progress[0]);
-				Log.i(HeroStripActivity.class.getName(), "Parsing item "+progress[0]);
+				if (DEBUG) Log.d(this.getClass().getName(), "Parsing item ("+progress[0]+","+mHero.items.itemArray[progress[0]].itemSlot+")");
 			}
 
 			@Override
@@ -293,7 +313,7 @@ public class HeroStripActivity extends FragmentActivity {
 				reduceView(mLoadBar);
 				reduceView(mLoadMessage);
 //				mProgressDialog.dismiss();
-				mHeroItemsFrag.updateView();;
+				mHeroItemsFrag.updateView();
 			}
 		}.execute(mJsonItems);
 	}
@@ -325,31 +345,16 @@ public class HeroStripActivity extends FragmentActivity {
 		});
 		animator.start();
 	}
-	
-	/**
-	 * Build an unique item in a specific position.<br/>
-	 * Parsing the item is done in background.
-	 * @param position item position in the items' array
-	 * @param obj the JSONObject in which it parses
-	 */
-	synchronized void buildItem(final int position, final JSONObject obj) {
-		D3Item item = new D3Item(mHero.items.itemArray[position]);
-		mProgressDialog.setMessage("Getting item ("+mProgressValue+")");
-		Log.i(this.getClass().getSimpleName(), "parsing item ("+position+") : "+item.itemSlot);
-		item.jsonBuild(obj);
-		mHero.items.itemArray[position] = item;
-		if (mProgressDialog != null) {
-			mProgressValue--;
-			if (mProgressValue == 0) {
-				mProgressDialog.dismiss();
-				mHeroItemsFrag.setHero(mHero);
-			}
-		}
-	}
 
 	/**
-	 * A {@link FragmentPagerAdapter} that returns a fragment corresponding to one of the primary
-	 * sections of the app.
+	 * A {@link FragmentPagerAdapter} that returns a fragment corresponding to one of the primary sections of the app.
+	 * (ie. Hero Details, Item List, ...)<br/>
+	 * <br/>
+	 * Careful : getItem is called once at creation time but it is not called if you only recreate the activity
+	 * (ie. a change in the screen orientation). So if you manage fragments outside of the PagerAdapter then you have to
+	 * add a setRetainInstance(true) in each of your fragment.<br/>
+	 * If you do not do that then the fragments will be reallocated and the pager will display blank screens.
+	 * @see HeroFragment#HeroFragment()
 	 */
 	public class SectionsPagerAdapter extends FragmentPagerAdapter {
 
@@ -374,11 +379,12 @@ public class HeroStripActivity extends FragmentActivity {
 		}
 
 		@Override
+		@SuppressLint("DefaultLocale")
 		public CharSequence getPageTitle(int position) {
 			switch (position) {
 			case 0: return getString(R.string.title_sectionDetails).toUpperCase();
 			case 1: return getString(R.string.title_sectionItems).toUpperCase();
-			//                case 2: return getString(R.string.title_sectionShoulders).toUpperCase();
+//			case 2: return getString(R.string.title_sectionShoulders).toUpperCase();
 			}
 			return null;
 		}

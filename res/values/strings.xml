@@ -11,7 +11,7 @@
         <item>eu.battle.net</item>
         <item>us.battle.net</item>
     </string-array>
-
+    
     <string name="battlehost">Battlehost</string>
     <string name="battlename">Battlename (without #digits)</string>
     <string name="battletag">Battletag (digits only)</string>
@@ -36,11 +36,9 @@
     <string name="hardcore">hardcore</string>
     <string name="title_activity_hero_dropdown">HeroDropdownActivity</string>
     <string name="title_activity_hero_strip">HeroActivity</string>
-    <string name="title_section1">Section 1</string>
-    <string name="title_section3">Section 3</string>
-    <string name="title_section2">Section 2</string>
     <string name="title_sectionDetails">Details</string>
     <string name="title_sectionItems">Items</string>
+    <string name="title_sectionSkills">Skills</string>
 	<string-array name="HeroTabs">
 		<item >Details</item>
 		<item >Head</item>
@@ -97,6 +95,10 @@
 		<item>Lightning Resist</item>
 		<item>Poison Resist</item>
 		<item>Arcane/Holy Resist</item>
+	</string-array>
+	<string name="title_life">LIFE</string>
+	<string-array name="HeroLifeNames">
+	    <item>Hit Points</item>
 	</string-array>
 	<string name="slot_head">Head</string>
     <string name="slot_neck">Neck</string>

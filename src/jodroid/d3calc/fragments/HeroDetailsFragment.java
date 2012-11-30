@@ -1,6 +1,5 @@
 package jodroid.d3calc.fragments;
 
-import jodroid.d3calc.HeroDropdownActivity;
 import jodroid.d3calc.R;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -14,7 +13,9 @@ import android.widget.TextView;
  */
 public class HeroDetailsFragment extends HeroFragment {
 	
-	public HeroDetailsFragment() {}
+	public HeroDetailsFragment() {
+		super();
+	}
 	
 	private void buildSection(View container, int resLabelNames, int resFieldNames, int idViewLabels, int idViewValues) {
 		String strNames = new String();
@@ -41,6 +42,7 @@ public class HeroDetailsFragment extends HeroFragment {
 			buildSection(retView, R.array.HeroStatsNames, R.array.HeroStatsFields, R.id.hero_attributes_names, R.id.hero_attributes_values);
 			buildSection(retView, R.array.HeroOffenseNames, R.array.HeroOffenseFields, R.id.hero_offense_names, R.id.hero_offense_values);
 			buildSection(retView, R.array.HeroDefenseNames, R.array.HeroDefenseFields, R.id.hero_defense_names, R.id.hero_defense_values);
+			buildSection(retView, R.array.HeroLifeNames, R.array.HeroLifeFields, R.id.hero_life_names, R.id.hero_life_values);
 		}
 
 		return retView;

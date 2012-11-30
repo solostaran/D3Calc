@@ -6,11 +6,13 @@
     android:orientation="vertical"
     tools:context=".HeroDropdownActivity" >
     <TextView
+        android:id="@+id/title_attributes"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/title_attributes"
         style="@style/SectionTitle" />
     <LinearLayout
+        android:id="@+id/layout_attributes"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 	    <TextView
@@ -27,11 +29,13 @@
 	        style="@style/SectionText" />
     </LinearLayout>
     <TextView
+        android:id="@+id/title_offense"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/title_offense"
         style="@style/SectionTitle" />
     <LinearLayout
+        android:id="@+id/layout_offense"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 	    <TextView
@@ -48,11 +52,13 @@
 	        style="@style/SectionText" />
     </LinearLayout>
     <TextView
+        android:id="@+id/title_defense"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/title_defense"
         style="@style/SectionTitle" />
     <LinearLayout
+        android:id="@+id/layout_defense"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 	    <TextView
@@ -66,6 +72,29 @@
 	        android:layout_weight="1"
 	        android:layout_height="wrap_content"
 	        android:id="@+id/hero_defense_values"
+	        style="@style/SectionText" />
+    </LinearLayout>
+    <TextView
+        android:id="@+id/title_life"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/title_life"
+        style="@style/SectionTitle" />
+    <LinearLayout
+        android:id="@+id/layout_life"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+	    <TextView
+	        android:layout_width="0dp"
+	        android:layout_weight="1"
+	        android:layout_height="wrap_content"
+	        android:id="@+id/hero_life_names"
+	        style="@style/SectionText" />
+	    <TextView
+	        android:layout_width="0dp"
+	        android:layout_weight="1"
+	        android:layout_height="wrap_content"
+	        android:id="@+id/hero_life_values"
 	        style="@style/SectionText" />
     </LinearLayout>
 </LinearLayout>

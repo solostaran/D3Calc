@@ -52,13 +52,6 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="jodroid.d3calc.ProfileDetailActivity" />
         </activity>
-        <activity
-            android:name=".HeroDropdownActivity"
-            android:label="@string/title_activity_hero_dropdown" >
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="jodroid.d3calc.ProfileDetailActivity" />
-        </activity>
     </application>
 
 </manifest>

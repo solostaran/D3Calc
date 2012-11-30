@@ -19,7 +19,9 @@ public class ItemListFragment extends HeroFragment implements OnItemClickListene
 	private D3ItemArrayAdapter mAdapter = null;
 	private ListView v;
 
-	public ItemListFragment() {}
+	public ItemListFragment() {
+		super();
+	}
 	
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,

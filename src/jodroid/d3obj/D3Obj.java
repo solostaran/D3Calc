@@ -23,15 +23,42 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+/**
+ * Annotation made for JSON parsing.
+ * @see D3Obj
+ */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.FIELD)
 @Inherited
 @interface D3FieldAnnotation {
-	String jsonName() default "";  // jsonName in the file in case it different from the field name 
-	String method() default "";  // if we need to provide a different result than the field value
-	boolean percent() default false;  // in case of a percent value
-	boolean image() default false;  // in case it is an image it will change the fieldsToView
-	boolean debug() default true;  // false to avoid JSONException messages for this field
+	/**
+	 * jsonName in the file in case it different from the field name.
+	 */
+	String jsonName() default ""; 
+	/**
+	 * if we need to provide a different result than the field value.<br/>
+	 * The parsing will call this method to provide a formatted string value.
+	 */
+	String method() default "";
+	/**
+	 * in case of a percent value.<br>
+	 * If true, this will be displayed in percentage.
+	 */
+	boolean percent() default false;
+	/**
+	 * in case it is an image it will change the {@link D3Obj#fieldsToView(View)} to fill in an ImageView instead of a TextView.
+	 */
+	boolean image() default false;
+	/**
+	 * false to avoid JSONException messages for this field.<br/>
+	 * By default, everything is in debug mode.
+	 */
+	boolean debug() default true; 
+	/**
+	 * true if this field is not to be found in the JSON.<br/>
+	 * This has the same effect as <b>transient</b> in term of parsing (ie. no parsing) but it differs in term of serialization.
+	 */
+	boolean notInJson() default false; // 
 }
 
 /**
@@ -80,11 +107,14 @@ public abstract class D3Obj {
 				t=t.substring(6);
 			}
 
-			// verify annotation : field name may be different of the json name 
+			// General annotation 
 			D3FieldAnnotation annot = f.getAnnotation(D3FieldAnnotation.class);
 			String jsonName = f.getName();
-			if (annot != null && !annot.jsonName().isEmpty()) jsonName = annot.jsonName();
-			if (annot != null && !annot.debug()) debug = false;
+			if (annot != null) {
+				if (annot.notInJson()) continue;
+				if (!annot.jsonName().isEmpty()) jsonName = annot.jsonName();
+				if (!annot.debug()) debug = false;
+			}
 
 			try {
 				// If we expect an array

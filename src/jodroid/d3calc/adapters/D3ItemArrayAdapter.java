@@ -14,6 +14,10 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+/**
+ * Adapter to display items in a ListView.
+ * @author JRD
+ */
 public class D3ItemArrayAdapter extends D3ObjArrayAdapter {
 
 	public D3ItemArrayAdapter(Context context, int layoutResourceId, D3ItemLite [] items) {
@@ -21,7 +25,7 @@ public class D3ItemArrayAdapter extends D3ObjArrayAdapter {
 	}
 	
 	/**
-	 * Recycling mechanism data holder.
+	 * View recycling mechanism data holder.
 	 * @see <a href="http://developer.android.com/training/improving-layouts/smooth-scrolling.html">Smooth Scrolling on ListView</a>
 	 */
 	static class ViewHolder {
@@ -70,7 +74,7 @@ public class D3ItemArrayAdapter extends D3ObjArrayAdapter {
 			    protected Bitmap doInBackground(ViewHolder... params) {
 			        v = params[0];
 			        D3ItemLite tmp = ((D3ItemLite[])objects)[v.position];
-			        return tmp.getIcon();
+			        return tmp.getSmallIcon();
 			    }
 
 			    @Override
@@ -102,8 +106,8 @@ public class D3ItemArrayAdapter extends D3ObjArrayAdapter {
 		// DISPLAY ITEM SLOT's NAME
 		holder.slotView.setText(tmp.itemSlot);
 		
-		// DISPLAY ITEM ICON
-		holder.iconView.setImageBitmap(tmp.getIcon());
+		// DISPLAY ITEM ICON (see the AsyncTask)
+//		holder.iconView.setImageBitmap(tmp.getSmallIcon());
 		
 		// DISPLAY ITEM ATTRIBUTES
 		String str = new String();

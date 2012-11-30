@@ -22,6 +22,9 @@
 	    <item>poisonResist</item>
 	    <item>arcaneResist</item>
 	</string-array>
+	<string-array name="HeroLifeFields">
+	    <item>life</item>
+	</string-array>
 	<string-array name="ItemSlotFields">
 	    <item name="">head</item>
 	    <item>neck</item>

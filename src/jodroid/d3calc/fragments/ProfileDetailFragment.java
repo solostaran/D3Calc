@@ -115,7 +115,8 @@ public class ProfileDetailFragment extends Fragment implements OnItemClickListen
 			
 			public void onFailure(Throwable e, JSONObject obj) {
 				if (progressDialog != null) progressDialog.dismiss();
-				Log.e(D3Profile.class.getSimpleName(), "json failure: "+e.getMessage());
+				Log.e(this.getClass().getSimpleName(), "json failure: "+e.getMessage());
+				Toast.makeText(getActivity(), "Profile Loading failed !\n"+e.getMessage(), Toast.LENGTH_SHORT).show();
 			}
 		});
 	}

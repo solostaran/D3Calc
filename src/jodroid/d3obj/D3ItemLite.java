@@ -1,16 +1,8 @@
 package jodroid.d3obj;
 
-import java.io.BufferedInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.URL;
-import java.net.URLConnection;
-
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.util.Log;
 import d3api.D3Url;
 import jodroid.d3calc.R;
+import android.graphics.Bitmap;
 
 public class D3ItemLite extends D3Obj {
 	public String id;
@@ -19,7 +11,11 @@ public class D3ItemLite extends D3Obj {
 	public String icon;
 	public String displayColor;
 	public String tooltipParams;
-	transient protected Bitmap itemIcon = null;
+	@D3FieldAnnotation(notInJson=true)
+	public D3Icon iconSmall = null;
+	@D3FieldAnnotation(notInJson=true)
+	public D3Icon iconLarge = null;
+//	transient protected Bitmap itemIcon = null;
 	transient public String itemSlot = null;
 	
 	public D3ItemLite () {}
@@ -29,7 +25,8 @@ public class D3ItemLite extends D3Obj {
 		icon = item.icon;
 		displayColor = item.displayColor;
 		tooltipParams = item.tooltipParams;
-		itemIcon = item.itemIcon;
+		iconSmall = item.iconSmall;
+		iconLarge = item.iconLarge;
 		itemSlot = item.itemSlot;
 	}
 	
@@ -45,32 +42,17 @@ public class D3ItemLite extends D3Obj {
 		return defaultColor;
 	}
 	
-	public Bitmap getIcon() {
-		if (itemIcon == null) {
-			itemIcon = getImageBitmap(D3Url.itemIconSmall2Url(this));
+	public Bitmap getSmallIcon() {
+		if (iconSmall == null) {
+			iconSmall = new D3Icon(D3Url.itemIconSmall2Url(this.icon));
 		}
-		return itemIcon;
+		return iconSmall.icon;
 	}
 	
-	/**
-	 * Getting an image with {@link android.graphics.BitmapFactory}
-	 * @param url Where to get the image
-	 * @return Bitmap representation of the image
-	 */
-	private Bitmap getImageBitmap(String url) {
-		Bitmap bm = null;
-		try {
-			URL aURL = new URL(url);
-			URLConnection conn = aURL.openConnection();
-			conn.connect();
-			InputStream is = conn.getInputStream();
-			BufferedInputStream bis = new BufferedInputStream(is);
-			bm = BitmapFactory.decodeStream(bis);
-			bis.close();
-			is.close();
-		} catch (IOException e) {
-			Log.e(this.getClass().getName(), "Error getting bitmap : "+e.getMessage());
+	public Bitmap getLargeIcon() {
+		if (iconLarge == null) {
+			iconLarge = new D3Icon(D3Url.itemIconLarge2Url(this.icon));
 		}
-		return bm;
+		return iconLarge.icon;
 	}
 }

@@ -46,11 +46,11 @@ public class D3Url {
 		return item2Url(item.tooltipParams);
 	}
 	
-	public static String itemIconSmall2Url(D3ItemLite item) {
-		return "http://us.media.blizzard.com/d3/icons/items/small/" + item.icon + ".png";
+	public static String itemIconSmall2Url(String iconName) {
+		return "http://us.media.blizzard.com/d3/icons/items/small/" + iconName + ".png";
 	}
 	
-	public static String itemIconLarge2Url(D3ItemLite item) {
-		return "http://us.media.blizzard.com/d3/icons/items/large/" + item.icon + ".png";
+	public static String itemIconLarge2Url(String iconName) {
+		return "http://us.media.blizzard.com/d3/icons/items/large/" + iconName + ".png";
 	}
 }
