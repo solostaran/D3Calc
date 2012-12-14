@@ -107,7 +107,7 @@ public class D3ItemArrayAdapter extends D3ObjArrayAdapter {
 		holder.slotView.setText(tmp.itemSlot);
 		
 		// DISPLAY ITEM ICON (see the AsyncTask)
-//		holder.iconView.setImageBitmap(tmp.getSmallIcon());
+		holder.iconView.setImageBitmap(tmp.getSmallIcon());
 		
 		// DISPLAY ITEM ATTRIBUTES
 		String str = new String();

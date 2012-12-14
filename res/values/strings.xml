@@ -71,6 +71,7 @@
 		<item >mainHand</item>
 		<item >offHand</item>
 	</string-array>
+	<string name="last_updated">Last updated</string>
 	<string name="title_attributes">ATTRIBUTES</string>
 	<string-array name="HeroStatsNames">
 		<item >Armor</item>
@@ -123,4 +124,6 @@
 	<string name="hero_parse_message">Parsing hero &#8230;</string>
 	<string name="items_load_message">Loading items &#8230;</string>
 	<string name="items_parse_message">Parsing items &#8230;</string>
+	
+	<string name="menu_reload">Reload</string>
 </resources>

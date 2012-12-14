@@ -1,5 +1,6 @@
 package jodroid.d3obj;
 
+import d3api.D3Cache;
 import d3api.D3Url;
 import jodroid.d3calc.R;
 import android.graphics.Bitmap;
@@ -44,14 +45,14 @@ public class D3ItemLite extends D3Obj {
 	
 	public Bitmap getSmallIcon() {
 		if (iconSmall == null) {
-			iconSmall = new D3Icon(D3Url.itemIconSmall2Url(this.icon));
+			iconSmall = D3Cache.getItemIcon(D3Url.itemIconSmall2Url(this.icon));
 		}
 		return iconSmall.icon;
 	}
 	
 	public Bitmap getLargeIcon() {
 		if (iconLarge == null) {
-			iconLarge = new D3Icon(D3Url.itemIconLarge2Url(this.icon));
+			iconLarge = D3Cache.getItemIcon(D3Url.itemIconLarge2Url(this.icon));
 		}
 		return iconLarge.icon;
 	}

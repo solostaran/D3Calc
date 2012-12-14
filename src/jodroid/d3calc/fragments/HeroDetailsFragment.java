@@ -43,6 +43,14 @@ public class HeroDetailsFragment extends HeroFragment {
 			buildSection(retView, R.array.HeroOffenseNames, R.array.HeroOffenseFields, R.id.hero_offense_names, R.id.hero_offense_values);
 			buildSection(retView, R.array.HeroDefenseNames, R.array.HeroDefenseFields, R.id.hero_defense_names, R.id.hero_defense_values);
 			buildSection(retView, R.array.HeroLifeNames, R.array.HeroLifeFields, R.id.hero_life_names, R.id.hero_life_values);
+			
+			TextView tv = (TextView)retView.findViewById(R.id.hero_attributes_names);
+			CharSequence txt = tv.getText();
+			tv.setText(txt + "\n" + getActivity().getString(R.string.last_updated) + "\n");
+			
+			tv = (TextView)retView.findViewById(R.id.hero_attributes_values);
+			txt = tv.getText();
+			tv.setText(txt + "\n" + mHero.getLastUpdated() + "\n");
 		}
 
 		return retView;

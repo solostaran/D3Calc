@@ -1,6 +1,9 @@
 package jodroid.d3obj;
 
+import java.util.Date;
+
 import jodroid.d3calc.R;
+import android.text.format.DateFormat;
 
 /**
  * Represents a minimalist D3 Hero that the D3api provides in the player profile JSON file.
@@ -41,6 +44,7 @@ public class D3HeroLite extends D3Obj {
 	}
 	
 	public String getLastUpdated() {
-		return "DATE("+last_updated+")"; // TODO : return formatted date
+		Date date = new Date(last_updated*1000);
+		return DateFormat.getDateFormat(getContext()).format(date);
 	}
 }

@@ -31,6 +31,7 @@ import d3api.D3json;
 public class ProfileDetailFragment extends Fragment implements OnItemClickListener {
 
     public static final String ARG_PROFILE_ID = "profile_id";
+    public static final String ARG_FORCE_LOAD = "forceload";
     private D3Profile playerProfile = null;
 
     ProfileListContent.ProfileItem mItem;
@@ -45,7 +46,7 @@ public class ProfileDetailFragment extends Fragment implements OnItemClickListen
         super.onCreate(savedInstanceState);
         if (getArguments().containsKey(ARG_PROFILE_ID)) {
             mItem = ProfileListContent.ITEM_MAP.get(getArguments().getString(ARG_PROFILE_ID));
-            playerProfile = new D3Profile();
+            playerProfile = new D3Profile(mItem.battlehost);
             progressDialog = ProgressDialog.show(getActivity(), "", "Loading profile ...");
 //            getUrlProfile("http://www.ecole.ensicaen.fr/~reynaud/android/solo-2284.json"); // dev example
             String url = D3Url.playerProfile2Url(mItem);
@@ -100,6 +101,7 @@ public class ProfileDetailFragment extends Fragment implements OnItemClickListen
 	public void getUrlProfile(String url) {
 		D3json.get(url, null, new JsonHttpResponseHandler() {
 			public void onSuccess(JSONObject obj) {
+				// bad file test
 				try {
 					String code = obj.getString("code");
 					if (code != null) {
@@ -109,6 +111,8 @@ public class ProfileDetailFragment extends Fragment implements OnItemClickListen
 					}
 				}
 				catch (JSONException e) {}
+				// TODO : cache here ... at least for now
+				// Parse and display
 				buildAndDisplay(obj);
 				if (progressDialog != null) progressDialog.dismiss();
 			}

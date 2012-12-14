@@ -57,6 +57,27 @@
         android:layout_height="0dp"
         android:layout_weight="9" />
     
+    <LinearLayout 
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_marginBottom="10dp">
+        <Button
+	        android:id="@+id/btWriteSD"
+	        android:layout_width="wrap_content"
+	        android:layout_height="match_parent"
+	        style="@style/ButtonBW"
+	        android:onClick="onClickWriteSD"
+	        android:text="WriteSD" />
+        <Button
+	        android:id="@+id/btReadSD"
+	        android:layout_width="wrap_content"
+	        android:layout_height="match_parent"
+	        style="@style/ButtonBW"
+	        android:layout_marginLeft="10dp"
+	        android:onClick="onClickReadSD"
+	        android:text="ReadSD" />
+    </LinearLayout>
+    
     <Button
         android:id="@+id/btNewProfile"
         android:layout_width="match_parent"

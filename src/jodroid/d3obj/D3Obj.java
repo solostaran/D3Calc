@@ -15,6 +15,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.os.StrictMode;
@@ -94,6 +95,7 @@ public abstract class D3Obj {
 	/**
 	 * Parse recursively a JSONObject.
 	 * @param jsonObject the json object to parse
+	 * @param debug LogCat debug display or not
 	 */
 	public void jsonBuild(JSONObject jsonObject, boolean debug) {
 		Class<?> c=this.getClass();
@@ -249,6 +251,7 @@ public abstract class D3Obj {
 		return str;
 	}
 
+	@SuppressLint("DefaultLocale")
 	private String fieldToString(Field f)
 			throws NoSuchMethodException,
 			IllegalArgumentException,
