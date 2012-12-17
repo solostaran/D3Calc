@@ -50,7 +50,7 @@ public class ProfileDetailActivity extends FragmentActivity {
 		case android.R.id.home:
 			NavUtils.navigateUpTo(this, new Intent(this, ProfileListActivity.class));
 			return true;
-		case R.id.menu_reload:
+		case R.id.menu_reload_profile:
 			Log.i(this.getClass().getSimpleName(), "Reload ...");
 			Bundle arguments = new Bundle();
 			arguments.putString(ProfileDetailFragment.ARG_PROFILE_ID, id);

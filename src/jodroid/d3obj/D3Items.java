@@ -4,12 +4,13 @@ import java.lang.reflect.Field;
 import java.util.ArrayList;
 
 import jodroid.d3calc.R;
-
 import android.util.Log;
 
 
 public class D3Items extends D3Obj {
 	
+	private static final long serialVersionUID = 20121214L;
+
 	// on modification, change these string arrays :
 	// R.array.ItemsJsonNames and R.array.ItemsJsonFields
 	public D3ItemLite head;
@@ -26,6 +27,7 @@ public class D3Items extends D3Obj {
 	public D3ItemLite mainHand;
 	public D3ItemLite offHand;
 	
+	@D3FieldAnnotation(notInJson=true)
 	transient public D3ItemLite [] itemArray = null;
 	
 	/**
@@ -81,6 +83,7 @@ public class D3Items extends D3Obj {
 		ArrayList<D3ItemLite> list = new ArrayList<D3ItemLite>();
 		if (head != null) addItem(list, head, R.string.slot_head);
 		if (neck != null) addItem(list, neck, R.string.slot_neck);
+		if (shoulders != null) addItem(list, shoulders, R.string.slot_shoulders);
 		if (torso != null) addItem(list, torso, R.string.slot_torso);
 		if (bracers != null) addItem(list, bracers, R.string.slot_bracers);
 		if (hands != null) addItem(list, hands, R.string.slot_hands);
@@ -94,9 +97,23 @@ public class D3Items extends D3Obj {
 		itemArray = list.toArray(new D3ItemLite[1]);
 	}
 	
-//	public void setItem(D3ItemLite item) {
-//		if (item.itemSlot == null || item.itemSlot.isEmpty()) return;
-//		if (item.itemSlot.equals(context.getString(R.string.slot_head))) head = item;
-//		// TODO : rest of item slots
-//	}
+	/**
+	 * Made for Serialization
+	 */
+	public void itemArray2Items() {
+		int index = 0;
+		if (head != null) head = itemArray[index++];
+		if (neck != null) neck = itemArray[index++];
+		if (shoulders != null) shoulders = itemArray[index++];
+		if (torso != null) torso = itemArray[index++];
+		if (bracers != null) bracers = itemArray[index++];
+		if (hands != null) hands = itemArray[index++];
+		if (waist != null) waist = itemArray[index++];
+		if (rightFinger != null) rightFinger = itemArray[index++];
+		if (leftFinger != null) leftFinger = itemArray[index++];
+		if (legs != null) legs = itemArray[index++];
+		if (feet != null) feet = itemArray[index++];
+		if (mainHand != null) mainHand = itemArray[index++];
+		if (offHand != null) offHand = itemArray[index++];
+	}
 }

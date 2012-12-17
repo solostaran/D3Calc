@@ -25,14 +25,17 @@ import android.widget.Toast;
 
 import com.loopj.android.http.JsonHttpResponseHandler;
 
+import d3api.D3Cache;
+import d3api.D3JsonListener;
 import d3api.D3Url;
 import d3api.D3json;
 
-public class ProfileDetailFragment extends Fragment implements OnItemClickListener {
+public class ProfileDetailFragment extends Fragment implements OnItemClickListener, D3JsonListener<D3Profile> {
 
     public static final String ARG_PROFILE_ID = "profile_id";
     public static final String ARG_FORCE_LOAD = "forceload";
     private D3Profile playerProfile = null;
+    private boolean forceload = false;
 
     ProfileListContent.ProfileItem mItem;
     
@@ -44,18 +47,17 @@ public class ProfileDetailFragment extends Fragment implements OnItemClickListen
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        forceload = getArguments().getBoolean(ARG_FORCE_LOAD);
         if (getArguments().containsKey(ARG_PROFILE_ID)) {
             mItem = ProfileListContent.ITEM_MAP.get(getArguments().getString(ARG_PROFILE_ID));
-            playerProfile = new D3Profile(mItem.battlehost);
             progressDialog = ProgressDialog.show(getActivity(), "", "Loading profile ...");
+            progressDialog.setCancelable(true);
 //            getUrlProfile("http://www.ecole.ensicaen.fr/~reynaud/android/solo-2284.json"); // dev example
             String url = D3Url.playerProfile2Url(mItem);
-            Log.i(this.getClass().getSimpleName(), url);
             getUrlProfile(url);
         }
     }
     
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
             Bundle savedInstanceState) {
@@ -64,33 +66,11 @@ public class ProfileDetailFragment extends Fragment implements OnItemClickListen
         	String str = mItem.toString()+" on "+mItem.battlehost;
         	getActivity().setTitle(str);
         }
+		if (playerProfile != null) {
+			buildAndDisplay(rootView, null);
+		}
         return rootView;
     }
-    
-    /**
-     * Build objects from the JSON file and display them
-     * @param obj a JSON object parsed from the file
-     */
-    private void buildAndDisplay(JSONObject obj) {
-    	playerProfile.jsonBuild(obj);
-    	Activity act = getActivity();
-    	if (act == null) return;
-    	if (getView() == null) return;
-//    	if (act.getClass() == ProfileDetailActivity.class) return; // wrong : the master activity is sometimes another activity
-    	
-    	act.setTitle(playerProfile.toString());
-    	
-    	playerProfile.kills.fieldsToView(getView());
-    	
-    	ListView lv = (ListView)getView().findViewById(R.id.listHeroesLite);
-    	D3ObjArrayAdapter adapter = new D3ObjArrayAdapter(getActivity(), R.layout.hero_list_item, playerProfile.heroes);
-    	lv.setAdapter(adapter);
-//    	lv.setAdapter(new ArrayAdapter<D3HeroLite>(getActivity(), android.R.layout.simple_list_item_1, android.R.id.text1, playerProfile.heroes));
-    	adapter.notifyDataSetChanged();
-    	
-    	lv.setOnItemClickListener(this);
-    }
-    
     
     /**
 	 * Get and parse a JSON player profile (from D3api) to provide a hierarchical representation of this file in the form of D3Obj.<br/>
@@ -99,6 +79,16 @@ public class ProfileDetailFragment extends Fragment implements OnItemClickListen
 	 * @return the player profile's instance
 	 */
 	public void getUrlProfile(String url) {
+		// CACHE
+		if (!forceload) {
+			playerProfile = D3Cache.readProfile(mItem.battlehost, mItem.battlename+"-"+mItem.battletag);
+			if (playerProfile != null) {
+				Log.i(this.getClass().getSimpleName(), "Cached Profile : "+playerProfile);
+				if (progressDialog != null) progressDialog.dismiss();
+				return;
+			}
+		}
+		Log.i(this.getClass().getSimpleName(), url);
 		D3json.get(url, null, new JsonHttpResponseHandler() {
 			public void onSuccess(JSONObject obj) {
 				// bad file test
@@ -111,9 +101,8 @@ public class ProfileDetailFragment extends Fragment implements OnItemClickListen
 					}
 				}
 				catch (JSONException e) {}
-				// TODO : cache here ... at least for now
-				// Parse and display
-				buildAndDisplay(obj);
+	            playerProfile = new D3Profile(mItem.battlehost);
+				buildAndDisplay(getView(), obj);
 				if (progressDialog != null) progressDialog.dismiss();
 			}
 			
@@ -124,6 +113,32 @@ public class ProfileDetailFragment extends Fragment implements OnItemClickListen
 			}
 		});
 	}
+    
+    /**
+     * Build objects from the JSON file and display them
+     * @param obj a JSON object parsed from the file
+     */
+    private void buildAndDisplay(View parentview, JSONObject obj) {
+    	Activity act = getActivity();
+    	if (act == null) return;
+    	if (parentview == null) return;
+    	
+    	// CACHE
+    	if (obj != null) {
+    		playerProfile.jsonBuild(obj);
+    		D3Cache.writeProfile(playerProfile);
+    	}
+    	
+    	act.setTitle(playerProfile.toString());
+    	playerProfile.kills.fieldsToView(getView());
+    	
+    	ListView lv = (ListView)parentview.findViewById(R.id.listHeroesLite);
+    	D3ObjArrayAdapter adapter = new D3ObjArrayAdapter(getActivity(), R.layout.hero_list_item, playerProfile.heroes);
+    	lv.setAdapter(adapter);
+//    	lv.setAdapter(new ArrayAdapter<D3HeroLite>(getActivity(), android.R.layout.simple_list_item_1, android.R.id.text1, playerProfile.heroes));
+    	adapter.notifyDataSetChanged();
+    	lv.setOnItemClickListener(this);
+    }
 
 	@Override
 	public void onItemClick(AdapterView<?> adapterView, View itemView, int position, long id) {
@@ -133,5 +148,9 @@ public class ProfileDetailFragment extends Fragment implements OnItemClickListen
 //		Log.i(this.getClass().getSimpleName(), "id="+playerProfile.heroes[position].id);
 		heroIntent.putExtra(HeroStripActivity.ARG_HERO_ID, Long.toString(playerProfile.heroes[position].id));
 		startActivity(heroIntent);
+	}
+
+	@Override
+	public void displayD3Obj(D3Profile obj) {
 	}
 }

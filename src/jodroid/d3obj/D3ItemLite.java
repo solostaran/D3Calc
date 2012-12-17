@@ -6,6 +6,8 @@ import jodroid.d3calc.R;
 import android.graphics.Bitmap;
 
 public class D3ItemLite extends D3Obj {
+	private static final long serialVersionUID = 20121214L;
+	
 	public String id;
 	public String name;
 	@D3FieldAnnotation(image=true, method="getIcon")
@@ -13,9 +15,9 @@ public class D3ItemLite extends D3Obj {
 	public String displayColor;
 	public String tooltipParams;
 	@D3FieldAnnotation(notInJson=true)
-	public D3Icon iconSmall = null;
+	transient public D3Icon iconSmall = null;
 	@D3FieldAnnotation(notInJson=true)
-	public D3Icon iconLarge = null;
+	transient public D3Icon iconLarge = null;
 //	transient protected Bitmap itemIcon = null;
 	transient public String itemSlot = null;
 	

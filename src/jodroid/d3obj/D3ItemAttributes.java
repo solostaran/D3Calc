@@ -2,6 +2,8 @@ package jodroid.d3obj;
 
 public class D3ItemAttributes extends D3Obj {
 	
+	private static final long serialVersionUID = 20121214L;
+
 	////////// #region >> Fields
 	
 	// Find how it's used ?

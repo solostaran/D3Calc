@@ -29,7 +29,7 @@ public class NewProfileActivity extends Activity {
 	
 	public static final String BATTLEHOST_VALUE = "battlehost";
 	public static final String BATTLENAME_VALUE = "battlename";
-	public static final String BATTLETAG_VALUE = "battletag";
+	public static final String BATTLETAG_VALUE = "battleTag";
 
     @Override
     public void onCreate(Bundle savedInstanceState) {

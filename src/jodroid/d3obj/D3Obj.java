@@ -1,5 +1,6 @@
 package jodroid.d3obj;
 
+import java.io.Serializable;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Inherited;
 import java.lang.annotation.Retention;
@@ -68,8 +69,10 @@ import android.widget.TextView;
  * @author JRD
  * @see <a href="http://blizzard.github.com/d3-api-docs/">Diablo 3 Web API</a>
  */
-public abstract class D3Obj {
+public abstract class D3Obj implements Serializable {
 
+	private static final long serialVersionUID = 20121214L;
+	
 	transient protected static Context context;
 	public static void setContext(Context c) {
 		context = c;

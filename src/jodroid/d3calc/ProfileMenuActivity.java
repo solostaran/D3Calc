@@ -1,12 +1,5 @@
 package jodroid.d3calc;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
-
 import jodroid.d3calc.adapters.ProfileListAdapter;
 import jodroid.d3calc.fragments.ProfileDetailFragment;
 import jodroid.d3obj.D3Obj;
@@ -17,12 +10,10 @@ import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
 import android.os.Bundle;
-import android.os.Environment;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
 import android.support.v4.app.FragmentActivity;
-import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
@@ -240,55 +231,6 @@ public class ProfileMenuActivity extends FragmentActivity implements OnItemClick
 			Intent detailIntent = new Intent(this, ProfileDetailActivity.class);
 			detailIntent.putExtra(ProfileDetailFragment.ARG_PROFILE_ID, itemId);
 			startActivity(detailIntent);
-		}
-	}
-	
-	public File checkDataDirectory() {
-		File dataDirectory = new File(Environment.getExternalStorageDirectory(), "data");
-		if (!dataDirectory.exists()) {
-			Log.e(this.getClass().getSimpleName(), "Creating Data Dir : "+dataDirectory.getPath());
-			if (!dataDirectory.mkdir()) return null;
-		}
-		return dataDirectory;
-	}
-	
-	public void onClickWriteSD(View v) {
-		try {
-			File myFile = new File(checkDataDirectory(),"mysdfile.txt");
-			myFile.createNewFile();
-			FileOutputStream fOut = new FileOutputStream(myFile);
-			OutputStreamWriter myOutWriter = 
-									new OutputStreamWriter(fOut);
-			String aBuffer = "Texte  = "+(int)(Math.random()*1000);
-			myOutWriter.append(aBuffer);
-			myOutWriter.close();
-			fOut.close();
-			Toast.makeText(getBaseContext(),
-					"Write->"+aBuffer,
-					Toast.LENGTH_SHORT).show();
-		} catch (Exception e) {
-			Toast.makeText(getBaseContext(), e.getMessage(),
-					Toast.LENGTH_SHORT).show();
-		}
-	}
-	
-	public void onClickReadSD(View v) {
-		try {
-			File myFile = new File(checkDataDirectory(),"mysdfile.txt");
-			FileInputStream fIn = new FileInputStream(myFile);
-			BufferedReader myReader = new BufferedReader(new InputStreamReader(fIn));
-			String aDataRow = "";
-			String aBuffer = "";
-			while ((aDataRow = myReader.readLine()) != null) {
-				aBuffer += aDataRow + "\n";
-			}
-			myReader.close();
-			Toast.makeText(getBaseContext(),
-					"Read->"+aBuffer,
-					Toast.LENGTH_SHORT).show();
-		} catch (Exception e) {
-			Toast.makeText(getBaseContext(), e.getMessage(),
-					Toast.LENGTH_SHORT).show();
 		}
 	}
 }

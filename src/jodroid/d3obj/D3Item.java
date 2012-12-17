@@ -1,7 +1,10 @@
 package jodroid.d3obj;
 
 public class D3Item extends D3ItemLite {
-//	public int requiredLevel;
+
+	private static final long serialVersionUID = 20121214L;
+	
+	//	public int requiredLevel;
 //	public int itemLevel;
 //	public String flavorText;
 //	public String typeName;

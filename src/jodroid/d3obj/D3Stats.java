@@ -1,6 +1,9 @@
 package jodroid.d3obj;
 
 public class D3Stats extends D3Obj {
+
+	private static final long serialVersionUID = 20121214L;
+	
 	public int life;
 	// ATTRIBUTES
 	public int armor;

@@ -5,15 +5,18 @@ package jodroid.d3obj;
  * Represents a Diablo 3 player profile that the D3api provides in the form of a JSON file.<br/>
  * The JSON Resource file can be found with :
  * <ul>
- * <li>battletag-name ::= &lt;regional battletag allowed characters&gt;</li>
- * <li>battletag-code ::= &lt;integer&gt;</li>
- * <li>url ::= &lt;host&gt; "/api/d3/profile/" &lt;battletag-name&gt; "-" &lt;battletag-code&gt; "/"</li>
+ * <li>battleTag-name ::= &lt;regional battleTag allowed characters&gt;</li>
+ * <li>battleTag-code ::= &lt;integer&gt;</li>
+ * <li>url ::= &lt;host&gt; "/api/d3/profile/" &lt;battleTag-name&gt; "-" &lt;battleTag-code&gt; "/"</li>
  * </ul>
  * @author JRD
  * @see D3HeroLite
  * @see <a href="http://blizzard.github.com/d3-api-docs/">Diablo 3 Web API</a>
  */
 public class D3Profile extends D3Obj {
+
+	private static final long serialVersionUID = 20121214L;
+	
 	public D3HeroLite [] heroes;
 	public String battleTag;
 	public D3Kills kills;
@@ -21,7 +24,7 @@ public class D3Profile extends D3Obj {
 	@D3FieldAnnotation(notInJson=true)
 	public String battlehost;
 	
-//	public D3Profile() {}
+	public D3Profile() {}
 	
 	public D3Profile(String _server) {
 		this.battlehost = _server;
@@ -55,10 +58,10 @@ public class D3Profile extends D3Obj {
 	/**
 	 * @see #getStaticUrlProfile(String)
 	 */
-//	public static D3Profile getStaticProfile(String battlehost, String battlename, String battletag) {
+//	public static D3Profile getStaticProfile(String battlehost, String battlename, String battleTag) {
 //		String url = null;
 //		try {
-//			url = "http://"+battlehost+"/api/d3/profile/"+URLEncoder.encode(battlename, "UTF-8")+"-"+battletag+"/";
+//			url = "http://"+battlehost+"/api/d3/profile/"+URLEncoder.encode(battlename, "UTF-8")+"-"+battleTag+"/";
 //		} catch (UnsupportedEncodingException e) {
 //			Log.e(D3Profile.class.getName(), e.getClass().getName() + ": " + e.getMessage());
 //		}

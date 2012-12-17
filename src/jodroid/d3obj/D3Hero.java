@@ -14,10 +14,10 @@ import d3api.D3json;
  * Represents the complete D3 Hero that the D3api provides in a JSON file.<br/>
  * Resource JSON file can be found with :<br/>
  * <ul>
- * <li>battletag-name ::= &lt;regional battletag allowed characters&gt;</li>
- * <li>battletag-code ::= &lt;integer&gt;</li>
+ * <li>battleTag-name ::= &lt;regional battleTag allowed characters&gt;</li>
+ * <li>battleTag-code ::= &lt;integer&gt;</li>
  * <li>hero-id ::= &lt;integer&gt;</li>
- * <li>url ::= &lt;host&gt; "/api/d3/profile/" &lt;battletag-name&gt; "-" &lt;battletag-code&gt; "/hero/" &lt;hero-id&gt;</li>
+ * <li>url ::= &lt;host&gt; "/api/d3/profile/" &lt;battleTag-name&gt; "-" &lt;battleTag-code&gt; "/hero/" &lt;hero-id&gt;</li>
  * </ul>
  * The "hero-id" can be found in the player profile JSON file.
  * @author JRD
@@ -26,13 +26,25 @@ import d3api.D3json;
  * @see <a href="http://blizzard.github.com/d3-api-docs/">Diablo 3 Web API</a>
  */
 public class D3Hero extends D3HeroLite {
+
+	private static final long serialVersionUID = 20121214L;
+	
+	@D3FieldAnnotation(notInJson=true)
+	public String battlehost = null;
+	
 	public D3Items items;
 	public D3Stats stats;
 	public D3Kills kills;
 	// TODO : much more datas (at least passive and active skills and runes)
 	
+	public D3Hero() {}
+	
+	public D3Hero(String battlehost) {
+		this.battlehost = battlehost;
+	}
+	
 	public String toString() {
-		return name;
+		return id+" ("+name+")";
 	}
 	
 	/**

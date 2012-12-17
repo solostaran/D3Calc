@@ -12,6 +12,8 @@ import android.text.format.DateFormat;
  */
 public class D3HeroLite extends D3Obj {
 	
+	private static final long serialVersionUID = 20121214L;
+	
 	public String name;
 	public long id;
 	public int level;

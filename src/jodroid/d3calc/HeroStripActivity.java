@@ -18,14 +18,17 @@ import android.animation.ValueAnimator;
 import android.annotation.SuppressLint;
 import android.app.ActionBar;
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.app.NavUtils;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -35,6 +38,7 @@ import android.widget.Toast;
 
 import com.loopj.android.http.JsonHttpResponseHandler;
 
+import d3api.D3Cache;
 import d3api.D3Url;
 import d3api.D3json;
 
@@ -47,12 +51,13 @@ public class HeroStripActivity extends FragmentActivity {
 	public static final String ARG_TAG_VAL = "tag_value";
 	public static final String ARG_HERO_VAL = "hero_value";
 
-	private ProfileListContent.ProfileItem mItem;
+	private static ProfileListContent.ProfileItem mItem;
 	public static final String ARG_HERO_ID = "hero_id";
 	private String mHeroId;
 	private ProgressDialog mProgressDialog;
 	private int mProgressValue;
-	public static D3Hero mHero;
+	private boolean forceload = false;
+	public static D3Hero mHero = null;
 	private JSONObject [] mJsonItems;
 	private ProgressBar mLoadBar;
 	private TextView mLoadMessage;
@@ -85,6 +90,8 @@ public class HeroStripActivity extends FragmentActivity {
 		if (savedInstanceState == null) {
 			mItem = ProfileListContent.ITEM_MAP.get(getIntent().getStringExtra(ProfileDetailFragment.ARG_PROFILE_ID));
 			mHeroId = getIntent().getStringExtra(ARG_HERO_ID);
+			forceload = getIntent().getBooleanExtra(ProfileDetailFragment.ARG_FORCE_LOAD, false);
+			mHero = null;
 		}
 
 		// Create the adapter that will return a fragment for each of the three primary sections
@@ -106,7 +113,6 @@ public class HeroStripActivity extends FragmentActivity {
 			mProgressDialog.setCancelable(true);
 //			getUrlHero("http://www.ecole.ensicaen.fr/~reynaud/android/hero-4808413.json"); // dev example
 			String url = D3Url.hero2Url(mItem, mHeroId);
-			Log.i(this.getClass().getName(), url);
 			getUrlHero(url);
 		} else {
 //			Log.i(this.getClass().getName(), "Recreate activity with : "+mHero.name);
@@ -128,11 +134,11 @@ public class HeroStripActivity extends FragmentActivity {
 		}
 	}
 
-//	@Override
-//	public boolean onCreateOptionsMenu(Menu menu) {
-//		getMenuInflater().inflate(R.menu.activity_hero_strip, menu);
-//		return true;
-//	}
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		getMenuInflater().inflate(R.menu.activity_hero_strip, menu);
+		return true;
+	}
 
 
 	@Override
@@ -140,7 +146,18 @@ public class HeroStripActivity extends FragmentActivity {
 		switch (item.getItemId()) {
 		case android.R.id.home:
 //			NavUtils.navigateUpFromSameTask(this);
-			finish();
+//			finish(); // doesn't work if reload button is used
+			Intent profileIntent = new Intent(this, ProfileDetailActivity.class);
+			profileIntent.putExtra(ProfileDetailFragment.ARG_PROFILE_ID, mItem.id);
+			NavUtils.navigateUpTo(this, profileIntent);
+			return true;
+		case R.id.menu_reload_hero:
+			Log.i(this.getClass().getSimpleName(), "Reload ... "+mHero);
+			Intent heroIntent = new Intent(this, HeroStripActivity.class);
+			heroIntent.putExtra(ProfileDetailFragment.ARG_PROFILE_ID, mItem.id);
+			heroIntent.putExtra(HeroStripActivity.ARG_HERO_ID, mHeroId);
+			heroIntent.putExtra(ProfileDetailFragment.ARG_FORCE_LOAD, true);
+			startActivity(heroIntent);
 			return true;
 		}
 		return super.onOptionsItemSelected(item);
@@ -152,6 +169,22 @@ public class HeroStripActivity extends FragmentActivity {
 	 * @param url where to find the JSON file
 	 */
 	public void getUrlHero(String url) {
+		// CACHE
+		if (!forceload) {
+			mHero = D3Cache.readHero(mItem.battlehost, mHeroId);
+			if (mHero != null) {
+				Log.i(this.getClass().getSimpleName(), "Cached Hero : "+mHero);
+				if (mProgressDialog != null) mProgressDialog.dismiss();
+				// Undisplay the loading message and progress bar
+				reduceView(mLoadBar);
+				reduceView(mLoadMessage);
+				mHeroDetailsFrag.setHero(mHero);
+				mHeroItemsFrag.setHero(mHero);
+				getActionBar().setTitle(mHero.name);
+				return;
+			}
+		}
+		Log.i(this.getClass().getSimpleName(), url);
 		D3json.get(url, null, new JsonHttpResponseHandler() {
 			public void onSuccess(JSONObject obj) {
 				try {
@@ -185,7 +218,7 @@ public class HeroStripActivity extends FragmentActivity {
 			protected void onPreExecute() {
 				mProgressDialog.setMessage(getString(R.string.hero_parse_message));
 				mProgressDialog.setCancelable(true);
-				mHero = new D3Hero();
+				mHero = new D3Hero(mItem.battlehost);
 			}
 
 			@Override
@@ -314,6 +347,9 @@ public class HeroStripActivity extends FragmentActivity {
 				reduceView(mLoadMessage);
 //				mProgressDialog.dismiss();
 				mHeroItemsFrag.updateView();
+				
+				// CACHE
+				D3Cache.writeHero(mHero);
 			}
 		}.execute(mJsonItems);
 	}
