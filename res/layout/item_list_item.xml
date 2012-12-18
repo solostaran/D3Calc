@@ -21,6 +21,15 @@
         android:layout_toRightOf="@+id/itemIcon"
         android:text="@string/item_name"
         android:textAppearance="?android:attr/textAppearanceMedium" />
+    
+    <TextView
+        android:id="@+id/itemDamage"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentRight="true"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:textStyle="italic" />
 
     <TextView
         android:id="@+id/itemSlot"

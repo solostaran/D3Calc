@@ -29,6 +29,7 @@ public class D3HeroLite extends D3Obj {
 	@D3FieldAnnotation(jsonName="last-updated", method="getLastUpdated")
 	public long last_updated;
 	
+	@Override
 	public String toString() {
 		return level+" "+name+" {"+_class+"}"+(hardcore ? " hardcore":"");
 	}

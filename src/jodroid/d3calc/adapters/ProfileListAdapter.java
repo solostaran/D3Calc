@@ -30,6 +30,7 @@ public class ProfileListAdapter extends ArrayAdapter<ProfileListContent.ProfileI
 		this.objects = objects;
 	}
 
+	@Override
 	public View getView(int position, View convertView, ViewGroup parent)  {
 		View row = convertView;
 		if(row == null)

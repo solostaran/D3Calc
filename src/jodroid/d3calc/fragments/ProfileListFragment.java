@@ -231,13 +231,15 @@ public class ProfileListFragment extends ListFragment {
 	    alert.setTitle(title);
 	    alert.setMessage(message);
 	    alert.setPositiveButton(context.getText(R.string.delete), new DialogInterface.OnClickListener() {
-	        public void onClick(DialogInterface dialog, int whichButton) {
+	        @Override
+			public void onClick(DialogInterface dialog, int whichButton) {
 	            mResult = true;
 	            handler.sendMessage(handler.obtainMessage());
 	        }
 	    });
 	    alert.setNegativeButton(context.getText(R.string.cancel), new DialogInterface.OnClickListener() {
-	        public void onClick(DialogInterface dialog, int whichButton) {
+	        @Override
+			public void onClick(DialogInterface dialog, int whichButton) {
 	            mResult = false;
 	            handler.sendMessage(handler.obtainMessage());
 	        }

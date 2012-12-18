@@ -16,6 +16,7 @@ public class EditTextActivity extends Activity {
 	
 	public EditText editText;
 	
+	@Override
 	@SuppressWarnings("deprecation")
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);

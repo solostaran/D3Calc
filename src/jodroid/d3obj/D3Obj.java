@@ -341,6 +341,7 @@ public abstract class D3Obj implements Serializable {
 	/**
 	 * classic toString
 	 */
+	@Override
 	public String toString() {
 		return toFormattedString(0);
 	}

@@ -33,6 +33,7 @@ public class D3ItemLite extends D3Obj {
 		itemSlot = item.itemSlot;
 	}
 	
+	@Override
 	public String toString() {
 		return id+" / "+name;
 	}

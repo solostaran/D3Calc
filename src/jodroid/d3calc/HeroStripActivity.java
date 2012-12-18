@@ -19,8 +19,10 @@ import android.annotation.SuppressLint;
 import android.app.ActionBar;
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
@@ -107,7 +109,7 @@ public class HeroStripActivity extends FragmentActivity {
 		actionBar.setDisplayShowTitleEnabled(true);
 		actionBar.setTitle(mHeroId);
 
-		this.overridePendingTransition(R.anim.enter_from_left, R.anim.exit_to_right);
+		this.overridePendingTransition(R.anim.enter_from_right, R.anim.exit_to_right);
 		if (savedInstanceState == null) {
 			mProgressDialog = ProgressDialog.show(this, "", getString(R.string.hero_load_message));
 			mProgressDialog.setCancelable(true);
@@ -168,7 +170,9 @@ public class HeroStripActivity extends FragmentActivity {
 	 * The HttpRequest is asynchronous.
 	 * @param url where to find the JSON file
 	 */
-	public void getUrlHero(String url) {
+	public void getUrlHero(final String url) {
+		SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
+		if (sharedPref.getBoolean(PreferenceSettings.PREF_ALWAYS_LOAD, false)) forceload = true;
 		// CACHE
 		if (!forceload) {
 			mHero = D3Cache.readHero(mItem.battlehost, mHeroId);
@@ -186,6 +190,7 @@ public class HeroStripActivity extends FragmentActivity {
 		}
 		Log.i(this.getClass().getSimpleName(), url);
 		D3json.get(url, null, new JsonHttpResponseHandler() {
+			@Override
 			public void onSuccess(JSONObject obj) {
 				try {
 					String code = obj.getString("code");
@@ -198,8 +203,10 @@ public class HeroStripActivity extends FragmentActivity {
 				buildHero(obj);
 			}
 
+			@Override
 			public void onFailure(Throwable e, JSONObject obj) {
 				Log.e(D3Profile.class.getName(), "json failure: "+e.getMessage());
+				Toast.makeText(HeroStripActivity.this, url+"\n"+getString(R.string.error_loading_hero), Toast.LENGTH_LONG).show();
 			}
 		});
 	}
@@ -275,8 +282,9 @@ public class HeroStripActivity extends FragmentActivity {
 	 * @param url where to find the JSON file
 	 * @return the player profile's instance
 	 */
-	public void getUrlItem(String url, final int position) {
+	public void getUrlItem(final String url, final int position) {
 		D3json.get(url, null, new JsonHttpResponseHandler() {
+			@Override
 			public synchronized void onSuccess(JSONObject obj) {
 				try {
 					String code = obj.getString("code");
@@ -297,8 +305,11 @@ public class HeroStripActivity extends FragmentActivity {
 				}
 			}
 			
+			@Override
 			public synchronized void onFailure(Throwable e, JSONObject obj) {
 				Log.e(D3Profile.class.getSimpleName(), "json failure: "+e.getMessage());
+				String msg = mHero.items.itemArray[position].name + " (" + mHero.items.itemArray[position].itemSlot + ")";
+				Toast.makeText(HeroStripActivity.this, msg+"\n"+getString(R.string.error_loading_item), Toast.LENGTH_LONG).show();
 			}
 		});
 	}

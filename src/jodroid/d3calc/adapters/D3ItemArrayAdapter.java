@@ -30,6 +30,7 @@ public class D3ItemArrayAdapter extends D3ObjArrayAdapter {
 	 */
 	static class ViewHolder {
 		TextView nameView;
+		TextView damageView;
 		TextView slotView;
 		ImageView iconView;
 		TextView armorView;
@@ -47,6 +48,7 @@ public class D3ItemArrayAdapter extends D3ObjArrayAdapter {
 	 * @see <a href="http://developer.android.com/training/improving-layouts/smooth-scrolling.html">Smooth Scrolling on ListView</a>
 	 * @see D3ItemArrayAdapter.ViewHolder
 	 */
+	@Override
 	public View getView(final int position, View convertView, ViewGroup parent)  {
 		
 		ViewHolder holder = null;
@@ -58,6 +60,7 @@ public class D3ItemArrayAdapter extends D3ObjArrayAdapter {
 			row = inflater.inflate(layoutResourceId, parent, false);
 	    	holder = new ViewHolder();
 	    	holder.nameView = (TextView)row.findViewById(R.id.itemName);
+	    	holder.damageView = (TextView)row.findViewById(R.id.itemDamage);
 	    	holder.slotView = (TextView)row.findViewById(R.id.itemSlot);
 	    	holder.iconView = (ImageView)row.findViewById(R.id.itemIcon);
 	    	holder.iconView.setVisibility(View.INVISIBLE);
@@ -102,6 +105,12 @@ public class D3ItemArrayAdapter extends D3ObjArrayAdapter {
 		// MODIFY ITEM NAME AND COLOR
 		holder.nameView.setText(tmp.name);
 		holder.nameView.setTextColor(tmp.getColor(R.color.black));
+		
+		// ITEM DAMAGE
+		if (fullitem && ((D3Item)tmp).dps != null) {
+			double dps = ((D3Item)tmp).dps.min;
+			if (dps > 0) holder.damageView.setText(String.format("%.1f", dps)+" DPS");
+		}
 		
 		// DISPLAY ITEM SLOT's NAME
 		holder.slotView.setText(tmp.itemSlot);

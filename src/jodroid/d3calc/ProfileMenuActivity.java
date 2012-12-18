@@ -14,6 +14,8 @@ import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
 import android.support.v4.app.FragmentActivity;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
@@ -102,6 +104,12 @@ public class ProfileMenuActivity extends FragmentActivity implements OnItemClick
 		getActionBar().setTitle("D3Calc YODA");
 		getActionBar().setSubtitle("Yet anOther Diablo App");
 	}
+	
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		getMenuInflater().inflate(R.menu.activity_profiles, menu);
+		return true;
+	}
 
 	/**
 	 * Button "New Profile" starts a "new player profile input" activity with an intent.
@@ -120,6 +128,7 @@ public class ProfileMenuActivity extends FragmentActivity implements OnItemClick
 	 * @param data contains the response datas 
 	 * @see NewProfileActivity#onClickValidate(View)
 	 */
+	@Override
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
 		switch (requestCode) {
 		case NewProfileActivity.NEWPROFILE_REQUESTCODE:
@@ -162,12 +171,14 @@ public class ProfileMenuActivity extends FragmentActivity implements OnItemClick
 		alert.setTitle(title);
 		alert.setMessage(message);
 		alert.setPositiveButton(context.getText(R.string.delete), new DialogInterface.OnClickListener() {
+			@Override
 			public void onClick(DialogInterface dialog, int whichButton) {
 				mResult = true;
 				handler.sendMessage(handler.obtainMessage());
 			}
 		});
 		alert.setNegativeButton(context.getText(R.string.cancel), new DialogInterface.OnClickListener() {
+			@Override
 			public void onClick(DialogInterface dialog, int whichButton) {
 				mResult = false;
 				handler.sendMessage(handler.obtainMessage());
@@ -232,5 +243,16 @@ public class ProfileMenuActivity extends FragmentActivity implements OnItemClick
 			detailIntent.putExtra(ProfileDetailFragment.ARG_PROFILE_ID, itemId);
 			startActivity(detailIntent);
 		}
+	}
+	
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		switch (item.getItemId()) {
+		case R.id.menu_settings:
+			Intent settings = new Intent(this, PreferenceSettings.class);
+			startActivity(settings);
+			return true;
+		}
+		return super.onOptionsItemSelected(item);
 	}
 }

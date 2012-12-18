@@ -1,6 +1,7 @@
 package jodroid.d3calc.fragments;
 
 import jodroid.d3calc.HeroStripActivity;
+import jodroid.d3calc.PreferenceSettings;
 import jodroid.d3calc.ProfileListContent;
 import jodroid.d3calc.R;
 import jodroid.d3calc.adapters.D3ObjArrayAdapter;
@@ -12,7 +13,9 @@ import org.json.JSONObject;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -78,7 +81,9 @@ public class ProfileDetailFragment extends Fragment implements OnItemClickListen
 	 * @param url where to find the JSON file
 	 * @return the player profile's instance
 	 */
-	public void getUrlProfile(String url) {
+	public void getUrlProfile(final String url) {
+		SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(getActivity());
+		if (sharedPref.getBoolean(PreferenceSettings.PREF_ALWAYS_LOAD, false)) forceload = true;
 		// CACHE
 		if (!forceload) {
 			playerProfile = D3Cache.readProfile(mItem.battlehost, mItem.battlename+"-"+mItem.battletag);
@@ -90,6 +95,7 @@ public class ProfileDetailFragment extends Fragment implements OnItemClickListen
 		}
 		Log.i(this.getClass().getSimpleName(), url);
 		D3json.get(url, null, new JsonHttpResponseHandler() {
+			@Override
 			public void onSuccess(JSONObject obj) {
 				// bad file test
 				try {
@@ -106,10 +112,11 @@ public class ProfileDetailFragment extends Fragment implements OnItemClickListen
 				if (progressDialog != null) progressDialog.dismiss();
 			}
 			
+			@Override
 			public void onFailure(Throwable e, JSONObject obj) {
 				if (progressDialog != null) progressDialog.dismiss();
 				Log.e(this.getClass().getSimpleName(), "json failure: "+e.getMessage());
-				Toast.makeText(getActivity(), "Profile Loading failed !\n"+e.getMessage(), Toast.LENGTH_SHORT).show();
+				Toast.makeText(getActivity(), url+"\n"+getString(R.string.error_loading_profile), Toast.LENGTH_SHORT).show();
 			}
 		});
 	}

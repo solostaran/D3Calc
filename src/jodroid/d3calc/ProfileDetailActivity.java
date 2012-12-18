@@ -35,7 +35,7 @@ public class ProfileDetailActivity extends FragmentActivity {
 				.commit();
 		}
 
-		this.overridePendingTransition(R.anim.enter_from_right, R.anim.exit_to_left);
+		this.overridePendingTransition(R.anim.enter_from_right, R.anim.exit_to_right);
 	}
 
 	@Override
@@ -48,7 +48,7 @@ public class ProfileDetailActivity extends FragmentActivity {
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch(item.getItemId()) {
 		case android.R.id.home:
-			NavUtils.navigateUpTo(this, new Intent(this, ProfileListActivity.class));
+			NavUtils.navigateUpTo(this, new Intent(this, ProfileMenuActivity.class));
 			return true;
 		case R.id.menu_reload_profile:
 			Log.i(this.getClass().getSimpleName(), "Reload ...");

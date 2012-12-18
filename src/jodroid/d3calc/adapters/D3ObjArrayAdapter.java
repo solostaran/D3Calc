@@ -21,6 +21,7 @@ public class D3ObjArrayAdapter extends ArrayAdapter<D3Obj> {
 		this.objects = objects;
 	}
 
+	@Override
 	public View getView(int position, View convertView, ViewGroup parent)  {
 		View row = convertView;
 		if(row == null)

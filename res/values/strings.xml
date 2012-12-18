@@ -1,6 +1,7 @@
 <resources xmlns:android="http://schemas.android.com/apk/res/android">
 
     <string name="app_name">D3Calc</string>
+    <string name="title_settings">Settings</string>
     <string name="title_profile_detail">Profile Detail</string>
     <string name="title_profile_list">Profiles</string>
     <string name="bt_new">New Profile</string>
@@ -126,4 +127,9 @@
 	<string name="items_parse_message">Parsing items &#8230;</string>
 	
 	<string name="menu_reload">Reload</string>
+	
+	<string name="always_load">Always load</string>
+	<string name="error_loading_profile">Sorry ! There was an error while loading this career from the Diablo 3 API.</string>
+	<string name="error_loading_hero">Sorry ! There was an error while loading the hero description from the Diablo 3 API.</string>
+	<string name="error_loading_item">Sorry ! There was an error while loading an item from the Diablo 3 API.</string>
 </resources>

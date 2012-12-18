@@ -30,6 +30,7 @@ public class D3Profile extends D3Obj {
 		this.battlehost = _server;
 	}
 	
+	@Override
 	public String toString() {
 		return battleTag;
 	}

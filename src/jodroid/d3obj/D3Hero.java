@@ -43,6 +43,7 @@ public class D3Hero extends D3HeroLite {
 		this.battlehost = battlehost;
 	}
 	
+	@Override
 	public String toString() {
 		return id+" ("+name+")";
 	}
