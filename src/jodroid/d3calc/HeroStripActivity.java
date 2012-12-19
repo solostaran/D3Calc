@@ -109,7 +109,6 @@ public class HeroStripActivity extends FragmentActivity {
 		actionBar.setDisplayShowTitleEnabled(true);
 		actionBar.setTitle(mHeroId);
 
-		this.overridePendingTransition(R.anim.enter_from_right, R.anim.exit_to_right);
 		if (savedInstanceState == null) {
 			mProgressDialog = ProgressDialog.show(this, "", getString(R.string.hero_load_message));
 			mProgressDialog.setCancelable(true);
@@ -119,6 +118,7 @@ public class HeroStripActivity extends FragmentActivity {
 		} else {
 //			Log.i(this.getClass().getName(), "Recreate activity with : "+mHero.name);
 		}
+		this.overridePendingTransition(R.anim.enter_from_right, R.anim.exit_to_right);
 	}
 	
 	@Override

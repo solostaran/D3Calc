@@ -1,10 +1,14 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:scrollbars="vertical" >
+    <LinearLayout 
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/hero_details_container"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     android:orientation="vertical"
-    tools:context=".HeroDropdownActivity" >
+    tools:context=".HeroStripActivity" >
     <TextView
         android:id="@+id/title_attributes"
         android:layout_width="match_parent"
@@ -98,3 +102,4 @@
 	        style="@style/SectionText" />
     </LinearLayout>
 </LinearLayout>
+</ScrollView>

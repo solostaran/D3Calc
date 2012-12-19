@@ -1,6 +1,7 @@
 package jodroid.d3calc.adapters;
 
 import jodroid.d3calc.R;
+import jodroid.d3obj.D3Gem;
 import jodroid.d3obj.D3Item;
 import jodroid.d3obj.D3ItemLite;
 import android.app.Activity;
@@ -10,8 +11,10 @@ import android.os.AsyncTask;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewGroup.LayoutParams;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 /**
@@ -36,6 +39,7 @@ public class D3ItemArrayAdapter extends D3ObjArrayAdapter {
 		TextView armorView;
 		ProgressBar progressBar;
 		TextView attributesView;
+		RelativeLayout gemsView;
 		int position;
 	}
 	
@@ -66,6 +70,7 @@ public class D3ItemArrayAdapter extends D3ObjArrayAdapter {
 	    	holder.iconView.setVisibility(View.INVISIBLE);
 	    	holder.armorView = (TextView)row.findViewById(R.id.itemArmor);
 	    	holder.attributesView = (TextView)row.findViewById(R.id.itemAttributes);
+	    	holder.gemsView = (RelativeLayout)row.findViewById(R.id.itemGems);
 	    	holder.position = position;
 	    	holder.progressBar = (ProgressBar)row.findViewById(R.id.progressBarLoadImage);
 	    	
@@ -77,7 +82,7 @@ public class D3ItemArrayAdapter extends D3ObjArrayAdapter {
 			    protected Bitmap doInBackground(ViewHolder... params) {
 			        v = params[0];
 			        D3ItemLite tmp = ((D3ItemLite[])objects)[v.position];
-			        return tmp.getSmallIcon();
+			        return tmp.getLargeIcon();
 			    }
 
 			    @Override
@@ -107,26 +112,69 @@ public class D3ItemArrayAdapter extends D3ObjArrayAdapter {
 		holder.nameView.setTextColor(tmp.getColor(R.color.black));
 		
 		// ITEM DAMAGE
+		String str = new String();
 		if (fullitem && ((D3Item)tmp).dps != null) {
 			double dps = ((D3Item)tmp).dps.min;
-			if (dps > 0) holder.damageView.setText(String.format("%.1f", dps)+" DPS");
+			if (dps > 0) str = String.format("%.1f", dps)+" DPS";
 		}
+		holder.damageView.setText(str);
 		
 		// DISPLAY ITEM SLOT's NAME
 		holder.slotView.setText(tmp.itemSlot);
 		
 		// DISPLAY ITEM ICON (see the AsyncTask)
-		holder.iconView.setImageBitmap(tmp.getSmallIcon());
+		holder.iconView.setImageBitmap(tmp.getLargeIcon());
 		
 		// DISPLAY ITEM ATTRIBUTES
-		String str = new String();
+		str = new String();
 		if (fullitem) {
 			D3Item item = (D3Item)tmp;
-			for (String s : item.attributes) {
-				str += s+"\n";
+			for (int i = 0; i < item.attributes.length; i++) {
+				if (i > 0) str += "\n";
+				str += item.attributes[i];
 			}
 		}
 		holder.attributesView.setText(str);
+		
+		// DISPLAY GEMS
+		holder.gemsView.removeAllViews();
+		if (fullitem) {
+			D3Item item = (D3Item)tmp;
+			if (item.gems != null) {
+				View previous = holder.gemsView;
+				
+				int i = 0;
+				for (D3Gem g : item.gems) {
+					RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(holder.gemsView.getLayoutParams());
+					lp.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
+					if (i++ == 0) {
+						lp.addRule(RelativeLayout.ALIGN_PARENT_TOP);
+					} else {
+						lp.addRule(RelativeLayout.BELOW, previous.getId());
+					}
+					lp.width = LayoutParams.WRAP_CONTENT;
+					lp.height = LayoutParams.WRAP_CONTENT;
+					ImageView v = new ImageView(context);
+					v.setImageBitmap(g.item.getSmallIcon());
+					v.setLayoutParams(lp);
+					v.setId(433+2*i);
+					holder.gemsView.addView(v);
+					
+					lp = new RelativeLayout.LayoutParams(holder.gemsView.getLayoutParams());
+					lp.addRule(RelativeLayout.RIGHT_OF, v.getId());
+					lp.addRule(RelativeLayout.ALIGN_TOP, v.getId());
+					lp.width = LayoutParams.WRAP_CONTENT;
+					lp.height = LayoutParams.WRAP_CONTENT;
+					TextView tv = new TextView(context);
+					tv.setText(g.attributes[0]);
+					tv.setLayoutParams(lp);
+					tv.setId(433+2*i+1);
+					holder.gemsView.addView(tv);
+					
+					previous = v;
+				}
+			}
+		}
 		
 		// CALCULATE AND DISPLAY ITEM TOTAL ARMOR
 		str = new String();

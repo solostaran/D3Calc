@@ -87,6 +87,7 @@ public final class R {
         public static final int itemArmor=0x7f0b0040;
         public static final int itemAttributes=0x7f0b0041;
         public static final int itemDamage=0x7f0b003e;
+        public static final int itemGems=0x7f0b0042;
         public static final int itemIcon=0x7f0b003c;
         public static final int itemName=0x7f0b003d;
         public static final int itemSlot=0x7f0b003f;
@@ -104,9 +105,9 @@ public final class R {
         public static final int listHeroesLite=0x7f0b0033;
         public static final int loadbar=0x7f0b0003;
         public static final int loadmessage=0x7f0b0002;
-        public static final int menu_reload_hero=0x7f0b0044;
-        public static final int menu_reload_profile=0x7f0b0045;
-        public static final int menu_settings=0x7f0b0043;
+        public static final int menu_reload_hero=0x7f0b0045;
+        public static final int menu_reload_profile=0x7f0b0046;
+        public static final int menu_settings=0x7f0b0044;
         public static final int pager=0x7f0b0004;
         public static final int pager_title_strip=0x7f0b0005;
         public static final int parangonLevel=0x7f0b003a;
@@ -114,7 +115,7 @@ public final class R {
         public static final int profile_detail_container=0x7f0b000d;
         public static final int profile_detail_frame=0x7f0b002a;
         public static final int profile_listfrag=0x7f0b000e;
-        public static final int progressBarLoadImage=0x7f0b0042;
+        public static final int progressBarLoadImage=0x7f0b0043;
         public static final int relativeLayout1=0x7f0b002b;
         public static final int relativeLayout2=0x7f0b002f;
         public static final int spinHosts=0x7f0b0007;
@@ -223,7 +224,8 @@ public final class R {
     public static final class style {
         public static final int AppTheme=0x7f090000;
         public static final int ButtonBW=0x7f090001;
-        public static final int SectionText=0x7f090003;
+        public static final int NormalText=0x7f090003;
+        public static final int SectionText=0x7f090004;
         public static final int SectionTitle=0x7f090002;
     }
     public static final class xml {

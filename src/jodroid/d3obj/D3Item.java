@@ -17,6 +17,8 @@ public class D3Item extends D3ItemLite {
 	@D3FieldAnnotation(debug=false)
 	public D3ItemAttributes attributesRaw;
 	
+	public D3Gem [] gems;
+	
 	public D3Item() {}
 	public D3Item(D3ItemLite item) {
 		super(item);
