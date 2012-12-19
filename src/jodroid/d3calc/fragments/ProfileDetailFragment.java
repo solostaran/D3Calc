@@ -50,7 +50,7 @@ public class ProfileDetailFragment extends Fragment implements OnItemClickListen
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         forceload = getArguments().getBoolean(ARG_FORCE_LOAD);
-        forceload = PreferenceSettings.forceload(getActivity(), forceload);
+        forceload = PreferenceSettings.loadondemand(getActivity(), forceload);
         if (getArguments().containsKey(ARG_PROFILE_ID)) {
             mItem = ProfileListContent.ITEM_MAP.get(getArguments().getString(ARG_PROFILE_ID));
             progressDialog = ProgressDialog.show(getActivity(), "", "Loading profile ...");
@@ -128,15 +128,19 @@ public class ProfileDetailFragment extends Fragment implements OnItemClickListen
     	if (act == null) return;
     	if (parentview == null) return;
     	
+    	TextView tv = (TextView)parentview.findViewById(R.id.textProfileLastUpdated);
+    	
     	// CACHE
     	if (obj != null) {
     		playerProfile.jsonBuild(obj);
+    		tv.setText(getString(R.string.last_updated)+" : "+playerProfile.getLastUpdated());
+    		playerProfile.lastUpdated = PreferenceSettings.saveloaddate(getActivity(), playerProfile.lastUpdated);
     		D3Cache.writeProfile(playerProfile);
+    	} else {
+    		tv.setText(getString(R.string.last_updated)+" : "+playerProfile.getLastUpdated());
     	}
     	
     	act.setTitle(playerProfile.toString());
-    	TextView tv = (TextView)parentview.findViewById(R.id.textProfileLastUpdated);
-    	tv.setText(getString(R.string.last_updated)+" : "+playerProfile.getLastUpdated());
     	playerProfile.kills.fieldsToView(getView());
     	
     	ListView lv = (ListView)parentview.findViewById(R.id.listHeroesLite);

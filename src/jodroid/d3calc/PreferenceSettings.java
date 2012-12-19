@@ -20,6 +20,7 @@ public class PreferenceSettings extends PreferenceActivity {
 	public static final String PREF_LOAD_ON_DEMAND = "ondemandload";
 	public static final String PREF_LOAD_IF_OLD = "loadifold";
 	public static final String PREF_OLDER_THAN = "olderthan";
+	public static final String PREF_SAVE_LOAD_DATE = "saveloaddate";
 	
 	@Override
     public void onCreate(Bundle savedInstanceState) {
@@ -69,15 +70,23 @@ public class PreferenceSettings extends PreferenceActivity {
 		return super.onOptionsItemSelected(item);
 	}
 	
-	public static boolean forceload(Context context, boolean currentval) {
+	public static long saveloaddate(Context context, long lastUpdated) {
+		SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(context);
+		if (sharedPref.getBoolean(PREF_SAVE_LOAD_DATE, true)) {
+			return (new Date().getTime())/1000;
+		}
+		return lastUpdated;
+	}
+	
+	public static boolean loadondemand(Context context, boolean currentval) {
 		if (currentval) return true;
 		SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(context);
-		if (!sharedPref.getBoolean(PreferenceSettings.PREF_LOAD_ON_DEMAND, true)) return true;
+		if (!sharedPref.getBoolean(PREF_LOAD_ON_DEMAND, true)) return true;
 		return currentval;
 	}
 	
 	public static boolean loadold(Context context, boolean currentval, long lastupdated) {
-		if (forceload(context, currentval)) return true;
+		if (loadondemand(context, currentval)) return true;
 		SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(context);
 		if (sharedPref.getBoolean(PREF_LOAD_IF_OLD, false)){
 			long days = Long.parseLong(sharedPref.getString(PREF_OLDER_THAN, "10"));

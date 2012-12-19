@@ -172,9 +172,9 @@ public final class R {
         public static final int display=0x7f070017;
         public static final int editText=0x7f07000e;
         public static final int elite_kills=0x7f070015;
-        public static final int error_loading_hero=0x7f070047;
-        public static final int error_loading_item=0x7f070048;
-        public static final int error_loading_profile=0x7f070046;
+        public static final int error_loading_hero=0x7f07004a;
+        public static final int error_loading_item=0x7f07004b;
+        public static final int error_loading_profile=0x7f070049;
         public static final int genderfemale=0x7f07001a;
         public static final int gendermale=0x7f070019;
         public static final int hardcore=0x7f07001c;
@@ -187,6 +187,9 @@ public final class R {
         public static final int items_load_message=0x7f07003b;
         public static final int items_parse_message=0x7f07003c;
         public static final int last_updated=0x7f070022;
+        public static final int last_updated_over=0x7f070046;
+        public static final int last_updated_over_summaryOff=0x7f070048;
+        public static final int last_updated_over_summaryOn=0x7f070047;
         public static final int level=0x7f070018;
         public static final int lifetime_kills=0x7f070014;
         public static final int load_if_old=0x7f070041;

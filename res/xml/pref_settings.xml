@@ -20,4 +20,10 @@
          android:dialogMessage="@string/old_dialog_message"
          android:defaultValue="10"
          android:dependency="loadifold" />
+     <CheckBoxPreference
+         android:key="saveloaddate"
+         android:defaultValue="true"
+         android:title="@string/last_updated_over"
+         android:summaryOn="@string/last_updated_over_summaryOn"
+         android:summaryOff="@string/last_updated_over_summaryOff" />
 </PreferenceScreen>

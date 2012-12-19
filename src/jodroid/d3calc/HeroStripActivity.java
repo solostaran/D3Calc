@@ -91,7 +91,7 @@ public class HeroStripActivity extends FragmentActivity {
 			mItem = ProfileListContent.ITEM_MAP.get(getIntent().getStringExtra(ProfileDetailFragment.ARG_PROFILE_ID));
 			mHeroId = getIntent().getStringExtra(ARG_HERO_ID);
 			forceload = getIntent().getBooleanExtra(ProfileDetailFragment.ARG_FORCE_LOAD, false);
-			forceload = PreferenceSettings.forceload(this, forceload);
+			forceload = PreferenceSettings.loadondemand(this, forceload);
 			mHero = null;
 		}
 
@@ -362,6 +362,7 @@ public class HeroStripActivity extends FragmentActivity {
 				mHeroItemsFrag.updateView();
 				
 				// CACHE
+				mHero.last_updated = PreferenceSettings.saveloaddate(HeroStripActivity.this, mHero.last_updated);
 				D3Cache.writeHero(mHero);
 			}
 		}.execute(mJsonItems);
