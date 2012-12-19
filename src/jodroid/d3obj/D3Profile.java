@@ -1,5 +1,9 @@
 package jodroid.d3obj;
 
+import java.util.Date;
+
+import android.text.format.DateFormat;
+
 
 /**
  * Represents a Diablo 3 player profile that the D3api provides in the form of a JSON file.<br/>
@@ -15,9 +19,10 @@ package jodroid.d3obj;
  */
 public class D3Profile extends D3Obj {
 
-	private static final long serialVersionUID = 20121214L;
+	private static final long serialVersionUID = 20121219L;
 	
 	public D3HeroLite [] heroes;
+	public long lastUpdated;
 	public String battleTag;
 	public D3Kills kills;
 	public D3Artisan [] artisans;
@@ -33,6 +38,11 @@ public class D3Profile extends D3Obj {
 	@Override
 	public String toString() {
 		return battleTag;
+	}
+	
+	public String getLastUpdated() {
+		Date date = new Date(lastUpdated*1000);
+		return DateFormat.getDateFormat(getContext()).format(date);
 	}
 	
 	/**

@@ -1,7 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
-     <SwitchPreference
-         android:key="alwaysload"
-         android:title="@string/always_load"
-         android:defaultValue="false" />
+     <CheckBoxPreference
+         android:key="loadondemand"
+         android:title="@string/load_on_demand"
+         android:summaryOn="@string/load_on_demand_summaryOn"
+         android:summaryOff="@string/load_on_demand_summaryOff"
+         android:defaultValue="true" />
+     <CheckBoxPreference 
+         android:key="loadifold"
+         android:title="@string/load_if_old"
+         android:defaultValue="true"
+         android:dependency="loadondemand" />
+     <EditTextPreference
+         android:key="olderthan"
+         android:inputType="number"
+         android:numeric="integer"
+         android:title="@string/old_dialog_title"
+         android:dialogTitle="@string/old_dialog_title"
+         android:dialogMessage="@string/old_dialog_message"
+         android:defaultValue="10"
+         android:dependency="loadifold" />
 </PreferenceScreen>

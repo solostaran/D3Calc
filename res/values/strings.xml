@@ -128,7 +128,15 @@
 	
 	<string name="menu_reload">Reload</string>
 	
-	<string name="always_load">Always load</string>
+	<string name="load_on_demand">Load on demand</string>
+	<string name="load_on_demand_summaryOn">Once in cache, datas will be loaded on demand.</string>
+	<string name="load_on_demand_summaryOff">Datas are always loaded from the D3 API.</string>
+	<string name="load_if_old">Load if data is old &#8230;</string>
+	<string name="older_than_1">More than</string>
+	<string name="older_than_2">days old</string>
+	<string name="old_dialog_title">Old datas</string>
+	<string name="old_dialog_message">If datas is more than N days old (value below) then it will load from the Diablo 3 API.</string>
+	
 	<string name="error_loading_profile">Sorry ! There was an error while loading this career from the Diablo 3 API.</string>
 	<string name="error_loading_hero">Sorry ! There was an error while loading the hero description from the Diablo 3 API.</string>
 	<string name="error_loading_item">Sorry ! There was an error while loading an item from the Diablo 3 API.</string>

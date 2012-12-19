@@ -25,6 +25,8 @@ import android.widget.Toast;
 import com.example.android.swipedismiss.SwipeListViewTouchListener;
 
 public class ProfileMenuActivity extends FragmentActivity implements OnItemClickListener {
+	
+	public static final String ARG_BACK = "back";
 
 	private static boolean mResult;
 

@@ -13,9 +13,7 @@ import org.json.JSONObject;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -24,6 +22,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.loopj.android.http.JsonHttpResponseHandler;
@@ -51,6 +50,7 @@ public class ProfileDetailFragment extends Fragment implements OnItemClickListen
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         forceload = getArguments().getBoolean(ARG_FORCE_LOAD);
+        forceload = PreferenceSettings.forceload(getActivity(), forceload);
         if (getArguments().containsKey(ARG_PROFILE_ID)) {
             mItem = ProfileListContent.ITEM_MAP.get(getArguments().getString(ARG_PROFILE_ID));
             progressDialog = ProgressDialog.show(getActivity(), "", "Loading profile ...");
@@ -82,12 +82,10 @@ public class ProfileDetailFragment extends Fragment implements OnItemClickListen
 	 * @return the player profile's instance
 	 */
 	public void getUrlProfile(final String url) {
-		SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(getActivity());
-		if (sharedPref.getBoolean(PreferenceSettings.PREF_ALWAYS_LOAD, false)) forceload = true;
 		// CACHE
 		if (!forceload) {
 			playerProfile = D3Cache.readProfile(mItem.battlehost, mItem.battlename+"-"+mItem.battletag);
-			if (playerProfile != null) {
+			if (playerProfile != null && !PreferenceSettings.loadold(getActivity(), forceload, playerProfile.lastUpdated)) {
 				Log.i(this.getClass().getSimpleName(), "Cached Profile : "+playerProfile);
 				if (progressDialog != null) progressDialog.dismiss();
 				return;
@@ -137,6 +135,8 @@ public class ProfileDetailFragment extends Fragment implements OnItemClickListen
     	}
     	
     	act.setTitle(playerProfile.toString());
+    	TextView tv = (TextView)parentview.findViewById(R.id.textProfileLastUpdated);
+    	tv.setText(getString(R.string.last_updated)+" : "+playerProfile.getLastUpdated());
     	playerProfile.kills.fieldsToView(getView());
     	
     	ListView lv = (ListView)parentview.findViewById(R.id.listHeroesLite);

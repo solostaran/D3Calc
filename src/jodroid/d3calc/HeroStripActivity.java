@@ -19,10 +19,8 @@ import android.annotation.SuppressLint;
 import android.app.ActionBar;
 import android.app.ProgressDialog;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
@@ -93,6 +91,7 @@ public class HeroStripActivity extends FragmentActivity {
 			mItem = ProfileListContent.ITEM_MAP.get(getIntent().getStringExtra(ProfileDetailFragment.ARG_PROFILE_ID));
 			mHeroId = getIntent().getStringExtra(ARG_HERO_ID);
 			forceload = getIntent().getBooleanExtra(ProfileDetailFragment.ARG_FORCE_LOAD, false);
+			forceload = PreferenceSettings.forceload(this, forceload);
 			mHero = null;
 		}
 
@@ -118,7 +117,11 @@ public class HeroStripActivity extends FragmentActivity {
 		} else {
 //			Log.i(this.getClass().getName(), "Recreate activity with : "+mHero.name);
 		}
-		this.overridePendingTransition(R.anim.enter_from_right, R.anim.exit_to_right);
+		
+		if (getIntent().getBooleanExtra(ProfileMenuActivity.ARG_BACK, false))
+			this.overridePendingTransition(R.anim.enter_from_left, R.anim.exit_to_right);
+		else
+			this.overridePendingTransition(R.anim.enter_from_right, R.anim.exit_to_left);
 	}
 	
 	@Override
@@ -151,6 +154,7 @@ public class HeroStripActivity extends FragmentActivity {
 //			finish(); // doesn't work if reload button is used
 			Intent profileIntent = new Intent(this, ProfileDetailActivity.class);
 			profileIntent.putExtra(ProfileDetailFragment.ARG_PROFILE_ID, mItem.id);
+			profileIntent.putExtra(ProfileMenuActivity.ARG_BACK, true);
 			NavUtils.navigateUpTo(this, profileIntent);
 			return true;
 		case R.id.menu_reload_hero:
@@ -171,12 +175,10 @@ public class HeroStripActivity extends FragmentActivity {
 	 * @param url where to find the JSON file
 	 */
 	public void getUrlHero(final String url) {
-		SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
-		if (sharedPref.getBoolean(PreferenceSettings.PREF_ALWAYS_LOAD, false)) forceload = true;
 		// CACHE
 		if (!forceload) {
 			mHero = D3Cache.readHero(mItem.battlehost, mHeroId);
-			if (mHero != null) {
+			if (mHero != null && !PreferenceSettings.loadold(this, forceload, mHero.last_updated)) {
 				Log.i(this.getClass().getSimpleName(), "Cached Hero : "+mHero);
 				if (mProgressDialog != null) mProgressDialog.dismiss();
 				// Undisplay the loading message and progress bar

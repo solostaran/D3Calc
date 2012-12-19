@@ -168,6 +168,7 @@ public class D3ItemArrayAdapter extends D3ObjArrayAdapter {
 					TextView tv = new TextView(context);
 					tv.setText(g.attributes[0]);
 					tv.setLayoutParams(lp);
+					tv.setTextAppearance(getContext(), R.style.NormalText);
 					tv.setId(433+2*i+1);
 					holder.gemsView.addView(tv);
 					

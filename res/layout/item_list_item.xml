@@ -28,7 +28,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:layout_alignParentRight="true"
-        android:textAppearance="?android:attr/textAppearanceSmall"
+        style="@style/NormalText"
         android:textStyle="italic" />
 
     <TextView
@@ -38,7 +38,7 @@
         android:layout_alignLeft="@+id/itemName"
         android:layout_below="@+id/itemName"
         android:text="@string/item_slot"
-        android:textAppearance="?android:attr/textAppearanceSmall" />
+        style="@style/NormalText" />
     
     <TextView
         android:id="@+id/itemArmor"
@@ -46,7 +46,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
         android:layout_below="@+id/itemName"
-        android:textAppearance="?android:attr/textAppearanceSmall" />
+        style="@style/NormalText" />
     
     <TextView
         android:id="@+id/itemAttributes"
@@ -54,15 +54,14 @@
         android:layout_height="wrap_content"
         android:layout_alignLeft="@+id/itemName"
         android:layout_below="@+id/itemSlot"
-        android:textAppearance="?android:attr/textAppearanceSmall" />
+        style="@style/NormalText" />
     
     <RelativeLayout 
         android:id="@+id/itemGems"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignLeft="@+id/itemName"
-        android:layout_below="@+id/itemAttributes">
-    </RelativeLayout>
+        android:layout_below="@+id/itemAttributes" />
 
     <ProgressBar
         android:id="@+id/progressBarLoadImage"
