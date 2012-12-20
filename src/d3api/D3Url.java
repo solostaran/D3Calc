@@ -53,4 +53,12 @@ public class D3Url {
 	public static String itemIconLarge2Url(String iconName) {
 		return "http://us.media.blizzard.com/d3/icons/items/large/" + iconName + ".png";
 	}
+	
+	public static String skillIconSmall2Url(String iconName) {
+		return "http://us.media.blizzard.com/d3/icons/skills/21/"+iconName+".png";
+	}
+	
+	public static String skillIconLarge2Url(String iconName) {
+		return "http://us.media.blizzard.com/d3/icons/skills/64/"+iconName+".png";
+	}
 }

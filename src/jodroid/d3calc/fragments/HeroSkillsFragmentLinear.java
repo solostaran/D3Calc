@@ -5,7 +5,10 @@ import jodroid.d3obj.D3Rune;
 import jodroid.d3obj.D3Skill;
 import jodroid.d3obj.D3SkillActive;
 import jodroid.d3obj.D3SkillPassive;
+import android.graphics.Bitmap;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,6 +25,8 @@ public class HeroSkillsFragmentLinear extends HeroFragment {
 	private RuneHolder rh = null;
 	private RelativeLayout rl = null;
 	
+	private static final String [] skillPositions = {"Left button", "Right button", "1", "2", "3", "4"};
+	
 	public HeroSkillsFragmentLinear() {
 		super();
 	}
@@ -30,6 +35,7 @@ public class HeroSkillsFragmentLinear extends HeroFragment {
 		TextView nameView;
 		TextView descriptionView;
 		ImageView skillIcon;
+		D3Skill skill;
 	}
 	
 	static class RuneHolder {
@@ -49,8 +55,9 @@ public class HeroSkillsFragmentLinear extends HeroFragment {
 			
 			LinearLayout ll = (LinearLayout)retView.findViewById(R.id.skillsContainer);
 			id = BASE_ID;
+			int i = 0;
 			for (D3SkillActive sa : mHero.skills.active)
-				addActiveSkill(inflater, ll, sa);
+				addActiveSkill(inflater, ll, sa, skillPositions[i++]);
 			for (D3SkillPassive sp : mHero.skills.passive)
 				addPassiveSkill(inflater, ll, sp);
 		}
@@ -58,14 +65,34 @@ public class HeroSkillsFragmentLinear extends HeroFragment {
 	}
 	
 	private void addSkill(LayoutInflater inflater, LinearLayout ll, D3Skill s) {
-		if (sh != null) {
-			rl = (RelativeLayout)inflater.inflate(R.layout.skill_item, ll, false);
-			sh.nameView = (TextView)rl.findViewById(R.id.skillName);
-			sh.descriptionView = (TextView)rl.findViewById(R.id.skillDescription);
-			sh.nameView.setText(s.name);
-			sh.descriptionView.setText(s.description);
-			ll.addView(rl);
-		}
+		
+		rl = (RelativeLayout)inflater.inflate(R.layout.skill_item, ll, false);
+		sh = new SkillHolder();
+		sh.nameView = (TextView)rl.findViewById(R.id.skillName);
+		sh.descriptionView = (TextView)rl.findViewById(R.id.skillDescription);
+		sh.nameView.setText(s.name);
+		sh.descriptionView.setText(s.description);
+		sh.skill = s;
+		sh.skillIcon =(ImageView)rl.findViewById(R.id.skillIcon);
+		ll.addView(rl);
+
+		// Using an AsyncTask to load the slow images in a background thread
+		new AsyncTask<SkillHolder, Void, Bitmap>() {
+			private SkillHolder h;
+
+			@Override
+			protected Bitmap doInBackground(SkillHolder... params) {
+				h = params[0];
+				return h.skill.getLargeIcon();
+			}
+
+			@Override
+			protected void onPostExecute(Bitmap result) {
+				super.onPostExecute(result);
+				h.skillIcon.setImageBitmap(result);
+			}
+		}.execute(sh);
+		
 	}
 	
 	private void addRune(LayoutInflater inflater, LinearLayout ll, D3Rune r) {
@@ -79,15 +106,19 @@ public class HeroSkillsFragmentLinear extends HeroFragment {
 		}
 	}
 	
-	private void addActiveSkill(LayoutInflater inflater, LinearLayout ll, D3SkillActive sa) {
+	private void addActiveSkill(LayoutInflater inflater, LinearLayout ll, D3SkillActive sa, String skillpos) {
 		TextView title = new TextView(getActivity());
-		title.setText(getString(R.string.title_active_skill));
+		title.setText(getString(R.string.title_active_skill)+" ("+skillpos+")");
 		title.setTextAppearance(getActivity(), R.style.SectionTitle);
 		title.setId(id++);
 		ll.addView(title);
 		
-		addSkill(inflater, ll, sa.skill);
-		addRune(inflater, ll, sa.rune);
+		try {
+			addSkill(inflater, ll, sa.skill);
+			addRune(inflater, ll, sa.rune);
+		} catch (NullPointerException e) {
+			Log.e(this.getClass().getSimpleName(), "Skill="+sa.skill+" ,rune="+sa.rune+" ,pos="+skillpos);
+		}
 	}
 	
 	private void addPassiveSkill(LayoutInflater inflater, LinearLayout ll, D3SkillPassive sp) {
@@ -97,6 +128,10 @@ public class HeroSkillsFragmentLinear extends HeroFragment {
 		title.setId(id++);
 		ll.addView(title);
 		
-		addSkill(inflater, ll, sp.skill);
+		try {
+			addSkill(inflater, ll, sp.skill);
+		} catch (NullPointerException e) {
+			Log.e(this.getClass().getSimpleName(), "Skill="+sp.skill);
+		}
 	}
 }

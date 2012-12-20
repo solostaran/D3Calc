@@ -163,14 +163,7 @@ public abstract class D3Obj implements Serializable {
 				Log.e(this.getClass().getName(), e.getClass().getName() + "["+f.getName()+"]: " + e.getMessage());
 			} catch (JSONException e) {
 				if (debug)
-					Log.w(this.getClass().getName(), e.getClass().getName() + ": " + e.getMessage());
-				try {
-					if (c == D3Skill.class) {
-						Log.i(this.getClass().getName(), jsonObject.toString(2));
-					}
-				} catch (JSONException e1) {
-					e1.printStackTrace();
-				}
+					Log.w(this.getClass().getName(), e.getClass().getSimpleName() + ": " + e.getMessage() + " in "+this.getClass().getSimpleName());
 			} catch (InstantiationException e) {
 				Log.e(this.getClass().getName(), e.getClass().getName() + "["+f.getName()+"]: " + e.getMessage());
 			}
