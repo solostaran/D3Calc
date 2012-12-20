@@ -27,7 +27,7 @@ import d3api.D3json;
  */
 public class D3Hero extends D3HeroLite {
 
-	private static final long serialVersionUID = 20121214L;
+	private static final long serialVersionUID = 20121219L;
 	
 	@D3FieldAnnotation(notInJson=true)
 	public String battlehost = null;
@@ -35,7 +35,7 @@ public class D3Hero extends D3HeroLite {
 	public D3Items items;
 	public D3Stats stats;
 	public D3Kills kills;
-	// TODO : much more datas (at least passive and active skills and runes)
+	public D3Skills skills;
 	
 	public D3Hero() {}
 	

@@ -2,6 +2,7 @@ package jodroid.d3calc;
 
 import jodroid.d3calc.fragments.HeroDetailsFragment;
 import jodroid.d3calc.fragments.HeroFragment;
+import jodroid.d3calc.fragments.HeroSkillsFragmentLinear;
 import jodroid.d3calc.fragments.ItemListFragment;
 import jodroid.d3calc.fragments.ProfileDetailFragment;
 import jodroid.d3obj.D3Hero;
@@ -75,8 +76,9 @@ public class HeroStripActivity extends FragmentActivity {
 	 */
 	ViewPager mViewPager;
 	
-	static HeroFragment mHeroDetailsFrag = new HeroDetailsFragment();;
+	static HeroFragment mHeroDetailsFrag = new HeroDetailsFragment();
 	static ItemListFragment mHeroItemsFrag = new ItemListFragment();
+	static HeroFragment mHeroSkillsFrag = new HeroSkillsFragmentLinear();
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -186,6 +188,7 @@ public class HeroStripActivity extends FragmentActivity {
 				reduceView(mLoadMessage);
 				mHeroDetailsFrag.setHero(mHero);
 				mHeroItemsFrag.setHero(mHero);
+				mHeroSkillsFrag.setHero(mHero);
 				getActionBar().setTitle(mHero.name);
 				return;
 			}
@@ -246,6 +249,7 @@ public class HeroStripActivity extends FragmentActivity {
 				mLoadMessage.setVisibility(View.VISIBLE);
 				mHeroDetailsFrag.setHero(mHero);
 				mHeroItemsFrag.setHero(mHero);
+				mHeroSkillsFrag.setHero(mHero);
 				mViewPager.setCurrentItem(0);
 				loadItems();
 			}
@@ -415,17 +419,23 @@ public class HeroStripActivity extends FragmentActivity {
 		@Override
 		public Fragment getItem(int i) {
 			Fragment fragment = null;
-			if (i == 0) {
+			switch (i) {
+			case 0:
 				fragment = mHeroDetailsFrag;
-			} else {
+				break;
+			case 1:
 				fragment = mHeroItemsFrag;
+				break;
+			case 2:
+				fragment = mHeroSkillsFrag;
+				break;
 			}
 			return fragment;
 		}
 
 		@Override
 		public int getCount() {
-			return 2;
+			return 3;
 		}
 
 		@Override
@@ -434,7 +444,7 @@ public class HeroStripActivity extends FragmentActivity {
 			switch (position) {
 			case 0: return getString(R.string.title_sectionDetails).toUpperCase();
 			case 1: return getString(R.string.title_sectionItems).toUpperCase();
-//			case 2: return getString(R.string.title_sectionShoulders).toUpperCase();
+			case 2: return getString(R.string.title_sectionSkills).toUpperCase();
 			}
 			return null;
 		}

@@ -141,7 +141,7 @@ public class ProfileDetailFragment extends Fragment implements OnItemClickListen
     	}
     	
     	act.setTitle(playerProfile.toString());
-    	playerProfile.kills.fieldsToView(getView());
+    	playerProfile.kills.fieldsToView(parentview);
     	
     	ListView lv = (ListView)parentview.findViewById(R.id.listHeroesLite);
     	D3ObjArrayAdapter adapter = new D3ObjArrayAdapter(getActivity(), R.layout.hero_list_item, playerProfile.heroes);

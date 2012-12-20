@@ -35,7 +35,6 @@
     <string name="genderfemale">female</string>
     <string name="paragon">paragon</string>
     <string name="hardcore">hardcore</string>
-    <string name="title_activity_hero_dropdown">HeroDropdownActivity</string>
     <string name="title_activity_hero_strip">HeroActivity</string>
     <string name="title_sectionDetails">Details</string>
     <string name="title_sectionItems">Items</string>
@@ -143,4 +142,13 @@
 	<string name="error_loading_profile">Sorry ! There was an error while loading this career from the Diablo 3 API.</string>
 	<string name="error_loading_hero">Sorry ! There was an error while loading the hero description from the Diablo 3 API.</string>
 	<string name="error_loading_item">Sorry ! There was an error while loading an item from the Diablo 3 API.</string>
+	
+	<string name="title_active_skill">Active skill</string>
+	<string name="title_passive_skill">Passive Skill</string>
+	<string name="cd_skill_icon">Skill Icon</string>
+	<string name="skill_name">Skill Name</string>
+	<string name="skill_description">Skill Description</string>
+	<string name="cd_rune_icon">Rune Icon</string>
+	<string name="rune_name">Rune Name</string>
+	<string name="rune_description">Rune Description</string>
 </resources>

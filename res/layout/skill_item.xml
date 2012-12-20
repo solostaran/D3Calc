@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content" >
+
+    <ImageView
+        android:id="@+id/skillIcon"
+        android:tag="D3Skill.icon"
+        android:contentDescription="@string/cd_skill_icon"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:src="@drawable/ic_menu_refresh" />
+
+    <TextView
+        android:id="@+id/skillName"
+        android:tag="D3Skill.name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_marginLeft="15dp"
+        android:layout_toRightOf="@+id/skillIcon"
+        android:text="@string/skill_name"
+        android:textAppearance="?android:attr/textAppearanceMedium" />
+
+    <TextView
+        android:id="@+id/skillDescription"
+        android:tag="D3Skill.description"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/skillName"
+        android:layout_below="@+id/skillName"
+        android:text="@string/skill_description"
+        android:textAppearance="?android:attr/textAppearanceSmall" />
+</RelativeLayout>
