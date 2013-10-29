@@ -2,6 +2,7 @@ package jodroid.d3calc;
 
 import jodroid.d3calc.fragments.ProfileDetailFragment;
 import jodroid.d3obj.D3Obj;
+import jodroid.util.Constants;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
@@ -25,9 +26,9 @@ public class ProfileDetailActivity extends FragmentActivity {
 
 		if (savedInstanceState == null) {
 			Bundle arguments = new Bundle();
-			arguments.putString(ProfileDetailFragment.ARG_PROFILE_ID,
-					id = getIntent().getStringExtra(ProfileDetailFragment.ARG_PROFILE_ID));
-			arguments.putBoolean(ProfileDetailFragment.ARG_FORCE_LOAD, false);
+			arguments.putString(Constants.ARG_PROFILE_ID,
+					id = getIntent().getStringExtra(Constants.ARG_PROFILE_ID));
+			arguments.putBoolean(Constants.ARG_FORCE_LOAD, false);
 			ProfileDetailFragment fragment = new ProfileDetailFragment();
 			fragment.setArguments(arguments);
 			getSupportFragmentManager().beginTransaction()
@@ -35,7 +36,7 @@ public class ProfileDetailActivity extends FragmentActivity {
 				.commit();
 		}
 		
-		if (getIntent().getBooleanExtra(ProfileMenuActivity.ARG_BACK, false))
+		if (getIntent().getBooleanExtra(Constants.ARG_BACK, false))
 			this.overridePendingTransition(R.anim.enter_from_left, R.anim.exit_to_right);
 		else
 			this.overridePendingTransition(R.anim.enter_from_right, R.anim.exit_to_left);
@@ -52,14 +53,14 @@ public class ProfileDetailActivity extends FragmentActivity {
 		switch(item.getItemId()) {
 		case android.R.id.home:
 			Intent intent = new Intent(this, ProfileMenuActivity.class);
-			intent.putExtra(ProfileMenuActivity.ARG_BACK, true);
+			intent.putExtra(Constants.ARG_BACK, true);
 			NavUtils.navigateUpTo(this, intent);
 			return true;
 		case R.id.menu_reload_profile:
 			Log.i(this.getClass().getSimpleName(), "Reload ...");
 			Bundle arguments = new Bundle();
-			arguments.putString(ProfileDetailFragment.ARG_PROFILE_ID, id);
-			arguments.putBoolean(ProfileDetailFragment.ARG_FORCE_LOAD, true);
+			arguments.putString(Constants.ARG_PROFILE_ID, id);
+			arguments.putBoolean(Constants.ARG_FORCE_LOAD, true);
 			ProfileDetailFragment fragment = new ProfileDetailFragment();
 			fragment.setArguments(arguments);
 			getSupportFragmentManager().beginTransaction()

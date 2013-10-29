@@ -39,18 +39,27 @@ public class HeroDetailsFragment extends HeroFragment {
 		View retView = null;
 		if (mHero != null) {
 			retView = inflater.inflate(R.layout.fragment_hero_details, container, false);
-			buildSection(retView, R.array.HeroStatsNames, R.array.HeroStatsFields, R.id.hero_attributes_names, R.id.hero_attributes_values);
+			buildSection(retView, R.array.HeroAttributesNames, R.array.HeroAttributesFields, R.id.hero_attributes_names, R.id.hero_attributes_values);
 			buildSection(retView, R.array.HeroOffenseNames, R.array.HeroOffenseFields, R.id.hero_offense_names, R.id.hero_offense_values);
 			buildSection(retView, R.array.HeroDefenseNames, R.array.HeroDefenseFields, R.id.hero_defense_names, R.id.hero_defense_values);
 			buildSection(retView, R.array.HeroLifeNames, R.array.HeroLifeFields, R.id.hero_life_names, R.id.hero_life_values);
 			
-			TextView tv = (TextView)retView.findViewById(R.id.hero_attributes_names);
-			CharSequence txt = tv.getText();
-			tv.setText(txt + "\n" + getActivity().getString(R.string.last_updated) + "\n");
 			
-			tv = (TextView)retView.findViewById(R.id.hero_attributes_values);
-			txt = tv.getText();
-			tv.setText(txt + "\n" + mHero.getLastUpdated() + "\n");
+			
+			TextView tv = (TextView)retView.findViewById(R.id.hero_stats_names);
+			StringBuffer txt = new StringBuffer();
+			for (String s : getResources().getStringArray(R.array.HeroStatsNames)) {
+				txt.append(s+"\n");
+			}
+			tv.setText(txt);
+			
+			tv = (TextView)retView.findViewById(R.id.hero_stats_values);
+			txt = new StringBuffer();
+			txt.append(mHero.level + "\n");
+			txt.append(mHero.paragonLevel + "\n");
+			txt.append(mHero.kills.elites + "\n");
+			txt.append(mHero.getLastUpdated());
+			tv.setText(txt);
 		}
 
 		return retView;

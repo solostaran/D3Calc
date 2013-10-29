@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:android="http://schemas.android.com/apk/res/android">
 
     <string name="app_name">D3Calc</string>
@@ -7,12 +8,12 @@
     <string name="bt_new">New Profile</string>
     <string name="cd_swipeleft">Swipe left to remove</string>
     <string name="cd_swiperight">Swipe right to navigate to</string>
-    
+
     <string-array name="battlehosts">
         <item>eu.battle.net</item>
         <item>us.battle.net</item>
     </string-array>
-    
+
     <string name="battlehost">Battlehost</string>
     <string name="battlename">Battlename (without #digits)</string>
     <string name="battletag">Battletag (digits only)</string>
@@ -39,69 +40,88 @@
     <string name="title_sectionDetails">Details</string>
     <string name="title_sectionItems">Items</string>
     <string name="title_sectionSkills">Skills</string>
-	<string-array name="HeroTabs">
-		<item >Details</item>
-		<item >Head</item>
-		<item >Shoulders</item>
-		<item >Neck</item>
-		<item >Torso</item>
-		<item >Wrists</item>
-		<item >Hands</item>
-		<item >Waist</item>
-		<item >Right finger</item>
-		<item >Left finger</item>
-		<item >Legs</item>
-		<item >Feet</item>
-		<item >Main-hand</item>
-		<item >Off-hand</item>
-	</string-array>
-	<string-array name="ItemsJsonNames">
-		<item >filler</item>
-		<item >head</item>
-		<item >shoulders</item>
-		<item >neck</item>
-		<item >torso</item>
-		<item >bracers</item>
-		<item >hands</item>
-		<item >waist</item>
-		<item >rightFinger</item>
-		<item >leftFinger</item>
-		<item >legs</item>
-		<item >feet</item>
-		<item >mainHand</item>
-		<item >offHand</item>
-	</string-array>
-	<string name="last_updated">Last updated</string>
-	<string name="title_attributes">ATTRIBUTES</string>
-	<string-array name="HeroStatsNames">
-		<item >Armor</item>
-		<item >Strength</item>
-		<item >Dexterity</item>
-		<item >Vitality</item>
-		<item >Intelligence</item>
-	</string-array>
-	<string name="title_offense">OFFENSE</string>
-	<string-array name="HeroOffenseNames">
-	    <item>Damage</item>
-		<item>Attacks per Second</item>
-		<item>Critical Hit Chance</item>
-		<item>Critical Hit Damage</item>
-	</string-array>
-	<string name="title_defense">DEFENSE</string>
-	<string-array name="HeroDefenseNames">
-	    <item>Damage Reduction</item>
-		<item>Physical Resist</item>
-		<item>Fire Resist</item>
-		<item>Cold Resist</item>
-		<item>Lightning Resist</item>
-		<item>Poison Resist</item>
-		<item>Arcane/Holy Resist</item>
-	</string-array>
-	<string name="title_life">LIFE</string>
-	<string-array name="HeroLifeNames">
-	    <item>Hit Points</item>
-	</string-array>
-	<string name="slot_head">Head</string>
+
+    <string-array name="HeroTabs">
+        <item>Details</item>
+        <item>Head</item>
+        <item>Shoulders</item>
+        <item>Neck</item>
+        <item>Torso</item>
+        <item>Wrists</item>
+        <item>Hands</item>
+        <item>Waist</item>
+        <item>Right finger</item>
+        <item>Left finger</item>
+        <item>Legs</item>
+        <item>Feet</item>
+        <item>Main-hand</item>
+        <item>Off-hand</item>
+    </string-array>
+    <string-array name="ItemsJsonNames">
+        <item>filler</item>
+        <item>head</item>
+        <item>shoulders</item>
+        <item>neck</item>
+        <item>torso</item>
+        <item>bracers</item>
+        <item>hands</item>
+        <item>waist</item>
+        <item>rightFinger</item>
+        <item>leftFinger</item>
+        <item>legs</item>
+        <item>feet</item>
+        <item>mainHand</item>
+        <item>offHand</item>
+    </string-array>
+
+    <string name="title_stats">STATS</string>
+    
+    <string-array name="HeroStatsNames">
+        <item>Level</item>
+        <item>Parangon</item>
+        <item>Elite kills</item>
+        <item>Last updated</item>
+    </string-array>
+    
+    <string name="last_updated">Last updated</string>
+    <string name="title_attributes">ATTRIBUTES</string>
+
+    <string-array name="HeroAttributesNames">
+        <item>Armor</item>
+        <item>Strength</item>
+        <item>Dexterity</item>
+        <item>Vitality</item>
+        <item>Intelligence</item>
+    </string-array>
+
+    <string name="title_offense">OFFENSE</string>
+
+    <string-array name="HeroOffenseNames">
+        <item>Damage</item>
+        <item>Attacks per Second</item>
+        <item>Critical Hit Chance</item>
+        <item>Critical Hit Damage</item>
+    </string-array>
+
+    <string name="title_defense">DEFENSE</string>
+
+    <string-array name="HeroDefenseNames">
+        <item>Damage Reduction</item>
+        <item>Physical Resist</item>
+        <item>Fire Resist</item>
+        <item>Cold Resist</item>
+        <item>Lightning Resist</item>
+        <item>Poison Resist</item>
+        <item>Arcane/Holy Resist</item>
+    </string-array>
+
+    <string name="title_life">LIFE</string>
+
+    <string-array name="HeroLifeNames">
+        <item>Hit Points</item>
+    </string-array>
+
+    <string name="slot_head">Head</string>
     <string name="slot_neck">Neck</string>
     <string name="slot_shoulders">Shoulders</string>
     <string name="slot_torso">Torso</string>
@@ -114,41 +134,43 @@
     <string name="slot_feet">Feet</string>
     <string name="slot_mainHand">Main-hand</string>
     <string name="slot_offHand">Off-hand</string>
-	
-	<string name="cd_item_icon">Item icon</string>
-	<string name="item_name">Item Name</string>
-	<string name="item_slot">Item Slot</string>
-	<string name="item_attributes">Attributes &#8230;</string>
-	<string name="item_armor">Armor</string>
-	<string name="hero_load_message">Loading hero &#8230;</string>
-	<string name="hero_parse_message">Parsing hero &#8230;</string>
-	<string name="items_load_message">Loading items &#8230;</string>
-	<string name="items_parse_message">Parsing items &#8230;</string>
-	
-	<string name="menu_reload">Reload</string>
-	
-	<string name="load_on_demand">Load on demand</string>
-	<string name="load_on_demand_summaryOn">Once in cache, datas will be loaded on demand or if old.</string>
-	<string name="load_on_demand_summaryOff">Datas are always loaded from the D3 API.</string>
-	<string name="load_if_old">Load if data is old &#8230;</string>
-	<string name="older_than_1">More than</string>
-	<string name="older_than_2">days old</string>
-	<string name="old_dialog_title">Old datas</string>
-	<string name="old_dialog_message">If datas is more than N days old (value below) then it will load from the Diablo 3 API.</string>
-	<string name="last_updated_over">Last updated overwrite</string>
-	<string name="last_updated_over_summaryOn">When updating datas, the Last Updated field will be overwritten with the current date.</string>
-	<string name="last_updated_over_summaryOff">The Last Updated field will be saved same as from the Diablo 3 API files.</string>
-	
-	<string name="error_loading_profile">Sorry ! There was an error while loading this career from the Diablo 3 API.</string>
-	<string name="error_loading_hero">Sorry ! There was an error while loading the hero description from the Diablo 3 API.</string>
-	<string name="error_loading_item">Sorry ! There was an error while loading an item from the Diablo 3 API.</string>
-	
-	<string name="title_active_skill">Active skill</string>
-	<string name="title_passive_skill">Passive Skill</string>
-	<string name="cd_skill_icon">Skill Icon</string>
-	<string name="skill_name">Skill Name</string>
-	<string name="skill_description">Skill Description</string>
-	<string name="cd_rune_icon">Rune Icon</string>
-	<string name="rune_name">Rune Name</string>
-	<string name="rune_description">Rune Description</string>
+    <string name="cd_item_icon">Item icon</string>
+    <string name="item_name">Item Name</string>
+    <string name="item_slot">Item Slot</string>
+    <string name="item_attributes">Attributes &#8230;</string>
+    <string name="item_armor">Armor</string>
+    <string name="hero_load_message">Loading hero &#8230;</string>
+    <string name="hero_parse_message">Parsing hero &#8230;</string>
+    <string name="items_load_message">Loading items &#8230;</string>
+    <string name="items_parse_message">Parsing items &#8230;</string>
+    <string name="menu_reload">Reload</string>
+    <string name="load_on_demand">Load on demand</string>
+    <string name="load_on_demand_summaryOn">Once in cache, datas will be loaded on demand or if old.</string>
+    <string name="load_on_demand_summaryOff">Datas are always loaded from the D3 API.</string>
+    <string name="load_if_old">Load if data is old &#8230;</string>
+    <string name="older_than_1">More than</string>
+    <string name="older_than_2">days old</string>
+    <string name="old_dialog_title">Old datas</string>
+    <string name="old_dialog_message">If datas is more than N days old (value below) then it will load from the Diablo 3 API.</string>
+    <string name="last_updated_over">Last updated overwrite</string>
+    <string name="last_updated_over_summaryOn">When updating datas, the Last Updated field will be overwritten with the current date.</string>
+    <string name="last_updated_over_summaryOff">The Last Updated field will be saved same as from the Diablo 3 API files.</string>
+    <string name="error_loading_profile">Sorry ! There was an error while loading this career from the Diablo 3 API.</string>
+    <string name="error_loading_hero">Sorry ! There was an error while loading the hero description from the Diablo 3 API.</string>
+    <string name="error_loading_item">Sorry ! There was an error while loading an item from the Diablo 3 API.</string>
+    <string name="title_active_skill">Active skill</string>
+    <string name="title_passive_skill">Passive Skill</string>
+    <string name="cd_skill_icon">Skill Icon</string>
+    <string name="skill_name">Skill Name</string>
+    <string name="skill_description">Skill Description</string>
+    <string name="cd_rune_icon">Rune Icon</string>
+    <string name="rune_name">Rune Name</string>
+    <string name="rune_description">Rune Description</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="title_activity_item_stats">ItemStatsActivity</string>
+    
+    <string name="attribute_name">Attribute name</string>
+    <string name="value_min">Min value</string>
+    <string name="value_max">Max value</string>
+
 </resources>

@@ -4,11 +4,11 @@ import jodroid.d3calc.fragments.HeroDetailsFragment;
 import jodroid.d3calc.fragments.HeroFragment;
 import jodroid.d3calc.fragments.HeroSkillsFragmentLinear;
 import jodroid.d3calc.fragments.ItemListFragment;
-import jodroid.d3calc.fragments.ProfileDetailFragment;
 import jodroid.d3obj.D3Hero;
 import jodroid.d3obj.D3Item;
 import jodroid.d3obj.D3ItemLite;
 import jodroid.d3obj.D3Profile;
+import jodroid.util.Constants;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -45,15 +45,10 @@ import d3api.D3json;
 
 public class HeroStripActivity extends FragmentActivity {
 
-	private static final boolean DEBUG = false;
-	
-    public static final String ARG_HOST_VAL = "host_value";
-	public static final String ARG_NAME_VAL = "name_value";
-	public static final String ARG_TAG_VAL = "tag_value";
-	public static final String ARG_HERO_VAL = "hero_value";
+	private static boolean DEBUG = false;
 
 	private static ProfileListContent.ProfileItem mItem;
-	public static final String ARG_HERO_ID = "hero_id";
+	
 	private String mHeroId;
 	private ProgressDialog mProgressDialog;
 	private int mProgressValue;
@@ -90,9 +85,9 @@ public class HeroStripActivity extends FragmentActivity {
 		mLoadMessage = (TextView)findViewById(R.id.loadmessage);
 
 		if (savedInstanceState == null) {
-			mItem = ProfileListContent.ITEM_MAP.get(getIntent().getStringExtra(ProfileDetailFragment.ARG_PROFILE_ID));
-			mHeroId = getIntent().getStringExtra(ARG_HERO_ID);
-			forceload = getIntent().getBooleanExtra(ProfileDetailFragment.ARG_FORCE_LOAD, false);
+			mItem = ProfileListContent.ITEM_MAP.get(getIntent().getStringExtra(Constants.ARG_PROFILE_ID));
+			mHeroId = getIntent().getStringExtra(Constants.ARG_HERO_ID);
+			forceload = getIntent().getBooleanExtra(Constants.ARG_FORCE_LOAD, false);
 			forceload = PreferenceSettings.loadondemand(this, forceload);
 			mHero = null;
 		}
@@ -120,7 +115,7 @@ public class HeroStripActivity extends FragmentActivity {
 //			Log.i(this.getClass().getName(), "Recreate activity with : "+mHero.name);
 		}
 		
-		if (getIntent().getBooleanExtra(ProfileMenuActivity.ARG_BACK, false))
+		if (getIntent().getBooleanExtra(Constants.ARG_BACK, false))
 			this.overridePendingTransition(R.anim.enter_from_left, R.anim.exit_to_right);
 		else
 			this.overridePendingTransition(R.anim.enter_from_right, R.anim.exit_to_left);
@@ -155,16 +150,16 @@ public class HeroStripActivity extends FragmentActivity {
 //			NavUtils.navigateUpFromSameTask(this);
 //			finish(); // doesn't work if reload button is used
 			Intent profileIntent = new Intent(this, ProfileDetailActivity.class);
-			profileIntent.putExtra(ProfileDetailFragment.ARG_PROFILE_ID, mItem.id);
-			profileIntent.putExtra(ProfileMenuActivity.ARG_BACK, true);
+			profileIntent.putExtra(Constants.ARG_PROFILE_ID, mItem.id);
+			profileIntent.putExtra(Constants.ARG_BACK, true);
 			NavUtils.navigateUpTo(this, profileIntent);
 			return true;
 		case R.id.menu_reload_hero:
 			Log.i(this.getClass().getSimpleName(), "Reload ... "+mHero);
 			Intent heroIntent = new Intent(this, HeroStripActivity.class);
-			heroIntent.putExtra(ProfileDetailFragment.ARG_PROFILE_ID, mItem.id);
-			heroIntent.putExtra(HeroStripActivity.ARG_HERO_ID, mHeroId);
-			heroIntent.putExtra(ProfileDetailFragment.ARG_FORCE_LOAD, true);
+			heroIntent.putExtra(Constants.ARG_PROFILE_ID, mItem.id);
+			heroIntent.putExtra(Constants.ARG_HERO_ID, mHeroId);
+			heroIntent.putExtra(Constants.ARG_FORCE_LOAD, true);
 			startActivity(heroIntent);
 			return true;
 		}

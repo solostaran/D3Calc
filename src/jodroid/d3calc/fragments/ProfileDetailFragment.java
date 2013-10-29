@@ -6,6 +6,7 @@ import jodroid.d3calc.ProfileListContent;
 import jodroid.d3calc.R;
 import jodroid.d3calc.adapters.D3ObjArrayAdapter;
 import jodroid.d3obj.D3Profile;
+import jodroid.util.Constants;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -25,6 +26,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.android.swipedismiss.SwipeListViewTouchListener;
 import com.loopj.android.http.JsonHttpResponseHandler;
 
 import d3api.D3Cache;
@@ -34,8 +36,6 @@ import d3api.D3json;
 
 public class ProfileDetailFragment extends Fragment implements OnItemClickListener, D3JsonListener<D3Profile> {
 
-    public static final String ARG_PROFILE_ID = "profile_id";
-    public static final String ARG_FORCE_LOAD = "forceload";
     private D3Profile playerProfile = null;
     private boolean forceload = false;
 
@@ -49,10 +49,10 @@ public class ProfileDetailFragment extends Fragment implements OnItemClickListen
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        forceload = getArguments().getBoolean(ARG_FORCE_LOAD);
+        forceload = getArguments().getBoolean(Constants.ARG_FORCE_LOAD);
         forceload = PreferenceSettings.loadondemand(getActivity(), forceload);
-        if (getArguments().containsKey(ARG_PROFILE_ID)) {
-            mItem = ProfileListContent.ITEM_MAP.get(getArguments().getString(ARG_PROFILE_ID));
+        if (getArguments().containsKey(Constants.ARG_PROFILE_ID)) {
+            mItem = ProfileListContent.ITEM_MAP.get(getArguments().getString(Constants.ARG_PROFILE_ID));
             progressDialog = ProgressDialog.show(getActivity(), "", "Loading profile ...");
             progressDialog.setCancelable(true);
 //            getUrlProfile("http://www.ecole.ensicaen.fr/~reynaud/android/solo-2284.json"); // dev example
@@ -91,6 +91,7 @@ public class ProfileDetailFragment extends Fragment implements OnItemClickListen
 				return;
 			}
 		}
+		// D3 API LOAD
 		Log.i(this.getClass().getSimpleName(), url);
 		D3json.get(url, null, new JsonHttpResponseHandler() {
 			@Override
@@ -149,19 +150,37 @@ public class ProfileDetailFragment extends Fragment implements OnItemClickListen
 //    	lv.setAdapter(new ArrayAdapter<D3HeroLite>(getActivity(), android.R.layout.simple_list_item_1, android.R.id.text1, playerProfile.heroes));
     	adapter.notifyDataSetChanged();
     	lv.setOnItemClickListener(this);
+    	
+    	// Activate hero on swipe right
+    	SwipeListViewTouchListener touchListener =
+			new SwipeListViewTouchListener(
+				lv,
+				new SwipeListViewTouchListener.OnSwipeCallback() {
+					@Override
+					public void onSwipeLeft(ListView listView, int [] reverseSortedPositions) {
+					}
+					@Override
+					public void onSwipeRight(ListView listView, int [] reverseSortedPositions) {
+						onItemClick(null, null, reverseSortedPositions[0], 0);
+					}
+				},
+				false,
+				false);
+    	lv.setOnTouchListener(touchListener);
+    	lv.setOnScrollListener(touchListener.makeScrollListener());
     }
 
 	@Override
 	public void onItemClick(AdapterView<?> adapterView, View itemView, int position, long id) {
-//		Intent heroIntent = new Intent(getActivity(), HeroDropdownActivity.class);
 		Intent heroIntent = new Intent(getActivity(), HeroStripActivity.class);
-		heroIntent.putExtra(ARG_PROFILE_ID, mItem.id);
+		heroIntent.putExtra(Constants.ARG_PROFILE_ID, mItem.id);
 //		Log.i(this.getClass().getSimpleName(), "id="+playerProfile.heroes[position].id);
-		heroIntent.putExtra(HeroStripActivity.ARG_HERO_ID, Long.toString(playerProfile.heroes[position].id));
+		heroIntent.putExtra(Constants.ARG_HERO_ID, Long.toString(playerProfile.heroes[position].id));
 		startActivity(heroIntent);
 	}
 
 	@Override
 	public void displayD3Obj(D3Profile obj) {
+		// unused for now, future callback method when finished loading profile, either by cache or internet.
 	}
 }

@@ -1,105 +1,128 @@
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:scrollbars="vertical" >
-    <LinearLayout 
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/hero_details_container"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:orientation="vertical"
-    tools:context=".HeroStripActivity" >
-    <TextView
-        android:id="@+id/title_attributes"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/title_attributes"
-        style="@style/SectionTitle" />
-    <LinearLayout
-        android:id="@+id/layout_attributes"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+    android:scrollbars="vertical"
+    xmlns:tools="http://schemas.android.com/tools" >
+    <LinearLayout  
+	    android:id="@+id/hero_details_container"
+	    android:layout_width="match_parent"
+	    android:layout_height="wrap_content"
+	    android:orientation="vertical"
+	    tools:context=".HeroStripActivity" >
 	    <TextView
-	        android:layout_width="0dp"
-	        android:layout_weight="1"
+	        android:id="@+id/title_stats"
+	        android:layout_width="match_parent"
 	        android:layout_height="wrap_content"
-	        android:id="@+id/hero_attributes_names"
-	        style="@style/SectionText" />
+	        android:text="@string/title_stats"
+	        style="@style/SectionTitle" />
+	    <LinearLayout
+	        android:id="@+id/layout_stats"
+	        android:layout_width="match_parent"
+	        android:layout_height="wrap_content">
+		    <TextView
+		        android:layout_width="0dp"
+		        android:layout_weight="1"
+		        android:layout_height="wrap_content"
+		        android:id="@+id/hero_stats_names"
+		        style="@style/SectionText" />
+		    <TextView
+		        android:layout_width="0dp"
+		        android:layout_weight="1"
+		        android:layout_height="wrap_content"
+		        android:id="@+id/hero_stats_values"
+		        style="@style/SectionText" />
+	    </LinearLayout>
 	    <TextView
-	        android:layout_width="0dp"
-	        android:layout_weight="1"
+	        android:id="@+id/title_attributes"
+	        android:layout_width="match_parent"
 	        android:layout_height="wrap_content"
-	        android:id="@+id/hero_attributes_values"
-	        style="@style/SectionText" />
-    </LinearLayout>
-    <TextView
-        android:id="@+id/title_offense"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/title_offense"
-        style="@style/SectionTitle" />
-    <LinearLayout
-        android:id="@+id/layout_offense"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+	        android:text="@string/title_attributes"
+	        style="@style/SectionTitle" />
+	    <LinearLayout
+	        android:id="@+id/layout_attributes"
+	        android:layout_width="match_parent"
+	        android:layout_height="wrap_content">
+		    <TextView
+		        android:layout_width="0dp"
+		        android:layout_weight="1"
+		        android:layout_height="wrap_content"
+		        android:id="@+id/hero_attributes_names"
+		        style="@style/SectionText" />
+		    <TextView
+		        android:layout_width="0dp"
+		        android:layout_weight="1"
+		        android:layout_height="wrap_content"
+		        android:id="@+id/hero_attributes_values"
+		        style="@style/SectionText" />
+	    </LinearLayout>
 	    <TextView
-	        android:layout_width="0dp"
-	        android:layout_weight="1"
+	        android:id="@+id/title_offense"
+	        android:layout_width="match_parent"
 	        android:layout_height="wrap_content"
-	        android:id="@+id/hero_offense_names"
-	        style="@style/SectionText" />
+	        android:text="@string/title_offense"
+	        style="@style/SectionTitle" />
+	    <LinearLayout
+	        android:id="@+id/layout_offense"
+	        android:layout_width="match_parent"
+	        android:layout_height="wrap_content">
+		    <TextView
+		        android:layout_width="0dp"
+		        android:layout_weight="1"
+		        android:layout_height="wrap_content"
+		        android:id="@+id/hero_offense_names"
+		        style="@style/SectionText" />
+		    <TextView
+		        android:layout_width="0dp"
+		        android:layout_weight="1"
+		        android:layout_height="wrap_content"
+		        android:id="@+id/hero_offense_values"
+		        style="@style/SectionText" />
+	    </LinearLayout>
 	    <TextView
-	        android:layout_width="0dp"
-	        android:layout_weight="1"
+	        android:id="@+id/title_defense"
+	        android:layout_width="match_parent"
 	        android:layout_height="wrap_content"
-	        android:id="@+id/hero_offense_values"
-	        style="@style/SectionText" />
-    </LinearLayout>
-    <TextView
-        android:id="@+id/title_defense"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/title_defense"
-        style="@style/SectionTitle" />
-    <LinearLayout
-        android:id="@+id/layout_defense"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+	        android:text="@string/title_defense"
+	        style="@style/SectionTitle" />
+	    <LinearLayout
+	        android:id="@+id/layout_defense"
+	        android:layout_width="match_parent"
+	        android:layout_height="wrap_content">
+		    <TextView
+		        android:layout_width="0dp"
+		        android:layout_weight="1"
+		        android:layout_height="wrap_content"
+		        android:id="@+id/hero_defense_names"
+		        style="@style/SectionText" />
+		    <TextView
+		        android:layout_width="0dp"
+		        android:layout_weight="1"
+		        android:layout_height="wrap_content"
+		        android:id="@+id/hero_defense_values"
+		        style="@style/SectionText" />
+	    </LinearLayout>
 	    <TextView
-	        android:layout_width="0dp"
-	        android:layout_weight="1"
+	        android:id="@+id/title_life"
+	        android:layout_width="match_parent"
 	        android:layout_height="wrap_content"
-	        android:id="@+id/hero_defense_names"
-	        style="@style/SectionText" />
-	    <TextView
-	        android:layout_width="0dp"
-	        android:layout_weight="1"
-	        android:layout_height="wrap_content"
-	        android:id="@+id/hero_defense_values"
-	        style="@style/SectionText" />
-    </LinearLayout>
-    <TextView
-        android:id="@+id/title_life"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/title_life"
-        style="@style/SectionTitle" />
-    <LinearLayout
-        android:id="@+id/layout_life"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-	    <TextView
-	        android:layout_width="0dp"
-	        android:layout_weight="1"
-	        android:layout_height="wrap_content"
-	        android:id="@+id/hero_life_names"
-	        style="@style/SectionText" />
-	    <TextView
-	        android:layout_width="0dp"
-	        android:layout_weight="1"
-	        android:layout_height="wrap_content"
-	        android:id="@+id/hero_life_values"
-	        style="@style/SectionText" />
-    </LinearLayout>
-</LinearLayout>
+	        android:text="@string/title_life"
+	        style="@style/SectionTitle" />
+	    <LinearLayout
+	        android:id="@+id/layout_life"
+	        android:layout_width="match_parent"
+	        android:layout_height="wrap_content">
+		    <TextView
+		        android:layout_width="0dp"
+		        android:layout_weight="1"
+		        android:layout_height="wrap_content"
+		        android:id="@+id/hero_life_names"
+		        style="@style/SectionText" />
+		    <TextView
+		        android:layout_width="0dp"
+		        android:layout_weight="1"
+		        android:layout_height="wrap_content"
+		        android:id="@+id/hero_life_values"
+		        style="@style/SectionText" />
+	    </LinearLayout>
+	</LinearLayout>
 </ScrollView>

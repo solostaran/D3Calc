@@ -1,8 +1,46 @@
 package jodroid.d3obj;
 
+import java.lang.reflect.Field;
+import java.util.ArrayList;
+
+import android.util.Log;
+
 public class D3ItemAttributes extends D3Obj {
 	
 	private static final long serialVersionUID = 20121214L;
+	
+	private transient static ArrayList<String> attributeNamesList;
+	
+	public static ArrayList<String> getAttributeNamesList() {
+		if (attributeNamesList != null) return attributeNamesList;
+		attributeNamesList = new ArrayList<String>();
+		Class<?> c= D3ItemAttributes.class;
+		Field[] fields=c.getFields();
+		for (Field f : fields) {
+			attributeNamesList.add(f.getName());
+		}
+		return attributeNamesList;
+	}
+	
+	
+	public ArrayList<D3ItemValueRange> getAttributeList() {
+		ArrayList<D3ItemValueRange> attributesList = new ArrayList<D3ItemValueRange>();
+		
+		Class<?> c= this.getClass();
+		Field[] fields=c.getFields();
+		try {
+			for (Field f : fields) {
+				if (f.get(this) != null)
+					attributesList.add( (D3ItemValueRange)f.get(this) );
+			}
+		} catch (IllegalArgumentException e) {
+			Log.e(this.getClass().getSimpleName(), e.getMessage());
+		} catch (IllegalAccessException e) {
+			Log.e(this.getClass().getSimpleName(), e.getMessage());
+		}
+		
+		return attributesList;
+	}
 
 	////////// #region >> Fields
 	

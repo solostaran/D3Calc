@@ -3,6 +3,7 @@ package jodroid.d3calc;
 import jodroid.d3calc.adapters.ProfileListAdapter;
 import jodroid.d3calc.fragments.ProfileDetailFragment;
 import jodroid.d3obj.D3Obj;
+import jodroid.util.Constants;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -25,8 +26,6 @@ import android.widget.Toast;
 import com.example.android.swipedismiss.SwipeListViewTouchListener;
 
 public class ProfileMenuActivity extends FragmentActivity implements OnItemClickListener {
-	
-	public static final String ARG_BACK = "back";
 
 	private static boolean mResult;
 
@@ -233,7 +232,7 @@ public class ProfileMenuActivity extends FragmentActivity implements OnItemClick
 			lv.setItemChecked(position, true);
 
 			Bundle arguments = new Bundle();
-			arguments.putString(ProfileDetailFragment.ARG_PROFILE_ID, itemId);
+			arguments.putString(Constants.ARG_PROFILE_ID, itemId);
 			ProfileDetailFragment fragment = new ProfileDetailFragment();
 			fragment.setArguments(arguments);
 			getSupportFragmentManager().beginTransaction()
@@ -242,7 +241,7 @@ public class ProfileMenuActivity extends FragmentActivity implements OnItemClick
 
 		} else {
 			Intent detailIntent = new Intent(this, ProfileDetailActivity.class);
-			detailIntent.putExtra(ProfileDetailFragment.ARG_PROFILE_ID, itemId);
+			detailIntent.putExtra(Constants.ARG_PROFILE_ID, itemId);
 			startActivity(detailIntent);
 		}
 	}

@@ -230,10 +230,10 @@ public abstract class D3Obj implements Serializable {
 						else
 							strtmp = f.get(this).toString();
 					}
-					//					if (f.getName().startsWith("_"))
-					//						str += blankStr(marginleft)+f.getName().substring(1)+"="+strtmp+"\n";
-					//					else
-					//						str += blankStr(marginleft)+f.getName()+"="+strtmp+"\n";
+//					if (f.getName().startsWith("_"))
+//						str += blankStr(marginleft)+f.getName().substring(1)+"="+strtmp+"\n";
+//					else
+//						str += blankStr(marginleft)+f.getName()+"="+strtmp+"\n";
 					str += blankStr(marginleft)+jsonName+"="+strtmp+"\n";
 				} catch (IllegalArgumentException e) {
 					Log.e(this.getClass().getName(), e.getClass().getName() + ": " + e.getMessage());
